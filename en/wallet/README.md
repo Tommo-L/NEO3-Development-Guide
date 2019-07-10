@@ -1,11 +1,25 @@
 Wallets
 ===
 
-[TOC]
+<!-- TOC -->
+
+- [Wallets](#wallets)
+    - [一、Accounts](#%E4%B8%80accounts)
+      - [1.1 Private Key](#11-private-key)
+      - [1.2 Public Key](#12-public-key)
+      - [1.3 Address](#13-address)
+    - [二、Wallet File](#%E4%BA%8Cwallet-file)
+      - [2.1 DB3 File](#21-db3-file)
+      - [2.2 NEP6 File](#22-nep6-file)
+        - [Encryption Steps](#encryption-steps)
+        - [Decryption Steps](#decryption-steps)
+    - [三、Sign](#%E4%B8%89sign)
+
+<!-- /TOC -->
 
 &emsp;&emsp;Wallets is a basic component of NEO and the bridge for users to access NEO network. It's responsible for transaction operations such as transfer, contract deployment, asset registration, etc.
 
-​	NEO wallets can be redesigned and modified on their own, but need to meet the following rules and patterns.
+&emsp;&emsp;NEO wallets can be redesigned and modified on their own, but need to meet the following rules and patterns.
 
 ### 一、Accounts
 
@@ -233,7 +247,7 @@ NEP6 wallet file meets the NEP6 standard, and the file suffix is `.json`. The JS
 
 NEP6 wallet uses scrypt algorithm as the core method of wallet encryption and decryption.
 
-##### Encryption Steps:
+##### Encryption Steps
 
 ![nep2key](../../images/nep2key.png)
 
@@ -258,7 +272,7 @@ NEP6 wallet uses scrypt algorithm as the core method of wallet encryption and de
 
    
 
-##### Decryption steps:
+##### Decryption Steps
 
 1. Decode NEP2Key with Base58Check.
 2. Check whether the length of decoded data is 39, and the first three bytes are `0x01`, `0x42` and `0xe0`.
@@ -277,7 +291,7 @@ NEP6 proposal: <https://github.com/neo-project/proposals/blob/master/nep-6.media
 
 
 
-> The NEPwallet is currently recommended for higher security and cross-platform features.
+> The NEP6 wallet is currently recommended for higher security and cross-platform features.
 
 ### 三、Sign
 
@@ -325,10 +339,12 @@ Java code：
 
 Example:
 
-| Format    | Value                                                        |
-| --------- | ------------------------------------------------------------ |
-| data      | hello world                                                  |
-| signature | 261e894dd456a190f9e99e39cea9f64ca4f939b24cf47ee3498bf883967035b446f554753d5f76219397bc2abb281a13a3c3acce43978c02c510ccb91cb03f87 |
+| Format      | Value                                                        |
+| ----------- | ------------------------------------------------------------ |
+| data        | hello world                                                  |
+| Private Key | f72b8fab85fdcc1bdd20b107e5da1ab4713487bc88fc53b5b134f5eddeaa1a19 |
+| Public Key  | 031f64da8a38e6c1e5423a72ddd6d4fc4a777abe537e5cb5aa0425685cda8e063b |
+| signature   | 261e894dd456a190f9e99e39cea9f64ca4f939b24cf47ee3498bf883967035b446f554753d5f76219397bc2abb281a13a3c3acce43978c02c510ccb91cb03f87 |
 
 
 
