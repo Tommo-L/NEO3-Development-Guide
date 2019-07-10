@@ -4,16 +4,16 @@ Wallets
 <!-- TOC -->
 
 - [Wallets](#wallets)
-    - [一、Accounts](#%E4%B8%80accounts)
+    - [1. Accounts](#1-accounts)
       - [1.1 Private Key](#11-private-key)
       - [1.2 Public Key](#12-public-key)
       - [1.3 Address](#13-address)
-    - [二、Wallet File](#%E4%BA%8Cwallet-file)
+    - [2. Wallet File](#2-wallet-file)
       - [2.1 DB3 File](#21-db3-file)
       - [2.2 NEP6 File](#22-nep6-file)
         - [Encryption Steps](#encryption-steps)
         - [Decryption Steps](#decryption-steps)
-    - [三、Sign](#%E4%B8%89sign)
+    - [3. Sign](#3-sign)
 
 <!-- /TOC -->
 
@@ -21,7 +21,7 @@ Wallets
 
 &emsp;&emsp;NEO wallets can be redesigned and modified on their own, but need to meet the following rules and patterns.
 
-### 一、Accounts
+### 1. Accounts
 
 ​	In Neo, the account is the smart contract, the address represents a contract script. The flow diagram from private key to the public key, to the address is as shown below:
 
@@ -139,7 +139,7 @@ Example
 
 > Note: The address script in NEO3 has changed, no longer using the Opcode.CheckSig, OpCode.CheckMultiSig directive, and changed to the interoperable service call, ie `SysCall "Neo.Crypto.CheckSig".hash2uint`, `SysCall "Neo.Crypto .CheckMultiSig".hash2unit` mode.
 
-### 二、Wallet File	
+### 2. Wallet File	
 
 #### 2.1 DB3 File
 
@@ -293,7 +293,7 @@ NEP6 proposal: <https://github.com/neo-project/proposals/blob/master/nep-6.media
 
 > The NEP6 wallet is currently recommended for higher security and cross-platform features.
 
-### 三、Sign
+### 3. Sign
 
 ​	When use wallet to sign the transaction, Neo uses the ECDSA algorithm with nistP256 ECC curve, and SHA256 hash method.
 
