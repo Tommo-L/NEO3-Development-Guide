@@ -1,20 +1,37 @@
-# Wallets
+Wallets
+===
 
-Wallets is a basic component of NEO and the bridge for users to access NEO network. It's responsible for transaction operations such as transfer, contract deployment, asset registration, etc.
+<!-- TOC -->
 
-​	NEO wallets can be redesigned and modified on their own, but need to meet the following rules and patterns.
+- [Wallets](#wallets)
+    - [1. Accounts](#1-accounts)
+      - [1.1 Private Key](#11-private-key)
+      - [1.2 Public Key](#12-public-key)
+      - [1.3 Address](#13-address)
+    - [2. Wallet File](#2-wallet-file)
+      - [2.1 DB3 File](#21-db3-file)
+      - [2.2 NEP6 File](#22-nep6-file)
+        - [Encryption Steps](#encryption-steps)
+        - [Decryption Steps](#decryption-steps)
+    - [3. Sign](#3-sign)
 
-## Accounts
+<!-- /TOC -->
 
-​In Neo, the account is the smart contract, the address represents a contract script. The flow diagram from private key to the public key, to the address is as shown below:
+&emsp;&emsp;Wallets is a basic component of NEO and the bridge for users to access NEO network. It's responsible for transaction operations such as transfer, contract deployment, asset registration, etc.
+
+&emsp;&emsp;NEO wallets can be redesigned and modified on their own, but need to meet the following rules and patterns.
+
+### 1. Accounts
+
+​	In Neo, the account is the smart contract, the address represents a contract script. The flow diagram from private key to the public key, to the address is as shown below:
 
 
 
 ![private key 2 address](../../images/privatekey-2-publickey-address.png)
 
-### Private Key
+#### 1.1 Private Key
 
-A private key is a random value generated between 1 and N(N is a constant, less than 2^256 slightly), and is represented by a 256 bit (32 bytes) number generally.
+&emsp;&emsp;A private key is a random value generated between 1 and N(N is a constant, less than 2^256 slightly), and is represented by a 256 bit (32 bytes) number generally.
 
 ​	There are two main encoding formats for private keys in NEO.
 
@@ -36,9 +53,9 @@ Example:
 | WIF | L3tgppXLgdaeqSGSFw1Go3skBiy8vQAM7YMXvTHsKQtE16PBncSU |
 
 
-### Public Key
+#### 1.2 Public Key
 
-The public key is a point (x, y) obtained through the ECC algorithm with the private key. The X, Y points can be represented by 32-byte data. Different from bitcoin, NEO chooses secp256r1 as the curve of the ECC algorithm. There are two public key formats as following.
+&emsp;&emsp;The public key is a point (x, y) obtained through the ECC algorithm with the private key. The X, Y points can be represented by 32-byte data. Different from bitcoin, NEO chooses secp256r1 as the curve of the ECC algorithm. There are two public key formats as following.
 
 * **Uncompressed Public Key**
   0x04 + X (32 bytes) + Y (32 bytes)
@@ -54,10 +71,10 @@ Example:
 | Public Key (Compressed) | 035a928f201639204e06b4368b1a93365462a8ebbff0b8818151b74faab3a2b61a |
 | Public Key (Uncompressed) | 045a928f201639204e06b4368b1a93365462a8ebbff0b8818151b74faab3a2b61a35dfabcb79ac492a2a88588d2f2e73f045cd8af58059282e09d693dc340e113f |
 
-### Address
+#### 1.3 Address
 
 * Normal Address
-1. Build a `CheckSig` script with the public key, and format as following:
+  1. Build a `CheckSig` script with the public key, and format as following:
 
   ```bash
   0x21 + Public Key(Compressed 33 bytes) + 0x68 + 0x747476aa
@@ -83,7 +100,7 @@ Example
 
 * Multi-Signature Address
 
-1. Construct an N-of-M `CheckMultiSig` script with multiple addresses. The script format is as follows:
+  1. Construct an N-of-M `CheckMultiSig` script with multiple addresses. The script format is as follows:
 
 
 ```bash
@@ -122,26 +139,26 @@ Example
 
 > Note: The address script in NEO3 has changed, no longer using the Opcode.CheckSig, OpCode.CheckMultiSig directive, and changed to the interoperable service call, ie `SysCall "Neo.Crypto.CheckSig".hash2uint`, `SysCall "Neo.Crypto .CheckMultiSig".hash2unit` mode.
 
-## Wallet File	
+### 2. Wallet File	
 
-### DB3 File
+#### 2.1 DB3 File
 
-db3 wallet file uses SQLite to store data, and the file suffix is `.db3`. There are four tables created in db3 file：
+&emsp;&emsp;db3 wallet file uses SQLite to store data, and the file suffix is `.db3`. There are four tables created in db3 file：
 
-**Account**
+1. **Account**
 
 | Field               | Type          | isRequired | Note             |
 | ------------------- | ------------- | ---------- | ---------------- |
 | PrivateKeyEncrypted | VarBinary(96) | Yes        | AES256 encrypted |
 | PublicKeyHash       | Binary(20)    | Yes        | Primary Key      |
 
-**Address**
+2. **Address**
 
 | Field      | Type       | isRequired | Note        |
 | ---------- | ---------- | ---------- | ----------- |
 | ScriptHash | Binary(20) | Yes        | Primary Key |
 
-**Contract**
+3. **Contract**
 
 | Field         | Type       | isRequired | Note                                               |
 | ------------- | ---------- | ---------- | -------------------------------------------------- |
@@ -149,7 +166,7 @@ db3 wallet file uses SQLite to store data, and the file suffix is `.db3`. There 
 | ScriptHash    | Binary(20) | Yes        | Primary Key，Foreign Key，associated Address table |
 | PublicKeyHash | Binary(20) | Yes        | Index，Foreign Key，associated Account table       |
 
-**Key**
+4. **Key**
 
 | Field | Type        | isRequired | Note        |
 | ----- | ----------- | ---------- | ----------- |
@@ -173,7 +190,7 @@ In `Key` table，it mainly stored the AES256 attributes:：
 
 
 
-### NEP6 File
+#### 2.2 NEP6 File
 
 NEP6 wallet file meets the NEP6 standard, and the file suffix is `.json`. The JSON format is as follows:
 
@@ -230,7 +247,7 @@ NEP6 wallet file meets the NEP6 standard, and the file suffix is `.json`. The JS
 
 NEP6 wallet uses scrypt algorithm as the core method of wallet encryption and decryption.
 
-#### Encryption Steps:
+##### Encryption Steps
 
 ![nep2key](../../images/nep2key.png)
 
@@ -255,7 +272,7 @@ NEP6 wallet uses scrypt algorithm as the core method of wallet encryption and de
 
    
 
-#### Decryption steps:
+##### Decryption Steps
 
 1. Decode NEP2Key with Base58Check.
 2. Check whether the length of decoded data is 39, and the first three bytes are `0x01`, `0x42` and `0xe0`.
@@ -274,9 +291,9 @@ NEP6 proposal: <https://github.com/neo-project/proposals/blob/master/nep-6.media
 
 
 
-> The NEPwallet is currently recommended for higher security and cross-platform features.
+> The NEP6 wallet is currently recommended for higher security and cross-platform features.
 
-## Signing
+### 3. Sign
 
 ​	When use wallet to sign the transaction, Neo uses the ECDSA algorithm with nistP256 ECC curve, and SHA256 hash method.
 
@@ -322,11 +339,12 @@ Java code：
 
 Example:
 
-| Format    | Value                                                        |
-| --------- | ------------------------------------------------------------ |
-| data      | hello world                                                  |
-| signature | 261e894dd456a190f9e99e39cea9f64ca4f939b24cf47ee3498bf883967035b446f554753d5f76219397bc2abb281a13a3c3acce43978c02c510ccb91cb03f87 |
-
+| Format      | Value                                                        |
+| ----------- | ------------------------------------------------------------ |
+| data        | hello world                                                  |
+| Private Key | f72b8fab85fdcc1bdd20b107e5da1ab4713487bc88fc53b5b134f5eddeaa1a19 |
+| Public Key  | 031f64da8a38e6c1e5423a72ddd6d4fc4a777abe537e5cb5aa0425685cda8e063b |
+| signature   | 261e894dd456a190f9e99e39cea9f64ca4f939b24cf47ee3498bf883967035b446f554753d5f76219397bc2abb281a13a3c3acce43978c02c510ccb91cb03f87 |
 
 
 
