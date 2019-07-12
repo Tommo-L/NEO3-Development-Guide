@@ -1,7 +1,4 @@
-Wallets
-===
-
-<!-- TOC -->
+﻿<center> <h2> Wallets </h2> </center>
 
 - [Wallets](#wallets)
     - [1. Accounts](#1-accounts)
@@ -15,7 +12,7 @@ Wallets
         - [Decryption Steps](#decryption-steps)
     - [3. Sign](#3-sign)
 
-<!-- /TOC -->
+<hr/>
 
 &emsp;&emsp;Wallets is a basic component of NEO and the bridge for users to access NEO network. It's responsible for transaction operations such as transfer, contract deployment, asset registration, etc.
 
