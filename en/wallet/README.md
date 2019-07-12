@@ -1,16 +1,15 @@
 ﻿<center> <h2> Wallets </h2> </center>
 
-- [Wallets](#wallets)
-    - [1. Accounts](#1-accounts)
+   - [1. Accounts](#1-accounts)
       - [1.1 Private Key](#11-private-key)
       - [1.2 Public Key](#12-public-key)
       - [1.3 Address](#13-address)
-    - [2. Wallet File](#2-wallet-file)
+   - [2. Wallet File](#2-wallet-file)
       - [2.1 DB3 File](#21-db3-file)
       - [2.2 NEP6 File](#22-nep6-file)
         - [Encryption Steps](#encryption-steps)
         - [Decryption Steps](#decryption-steps)
-    - [3. Sign](#3-sign)
+   - [3. Sign](#3-sign)
 
 <hr/>
 
