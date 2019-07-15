@@ -1,7 +1,5 @@
-Wallets
-===
 
-<!-- TOC -->
+﻿<center> <h2> Wallets </h2> </center>
 
 - [一、账户](#一账户)
     - [1.1 私钥](#11-私钥)
@@ -14,10 +12,9 @@ Wallets
         - [解密方法](#解密方法)
 - [三、签名](#三签名)
 
-<!-- /TOC -->
+<hr/>
 
-
- 钱包是NEO的基础组件，是用户接入NEO网络的载体，负责完成与之相关一系列的工作和任务。NEO的钱包可以自行设计和修改，但需要满足一定的规则。
+&emsp;&emsp;钱包是NEO的基础组件，是用户接入NEO网络的载体，负责完成与之相关一系列的工作和任务。NEO的钱包可以自行设计和修改，但需要满足一定的规则。
 
 ### 一、账户
 
@@ -303,16 +300,15 @@ C# 示例代码：
 ```C#
  public byte[] Sign(byte[] message, byte[] prikey, byte[] pubkey)
  {
-     using (var ecdsa = ECDsa.Create(new ECParameters
-                                     {
-                                         Curve = ECCurve.NamedCurves.nistP256,
-                                         D = prikey,
-                                         Q = new ECPoint
-                                         {
-                                             X = pubkey.Take(32).ToArray(),
-                                             Y = pubkey.Skip(32).ToArray()
-                                         }
-                                     }))
+     using (var ecdsa = ECDsa.Create(new ECParameters{
+         Curve = ECCurve.NamedCurves.nistP256,
+         D = prikey,
+         Q = new ECPoint
+             {
+                 X = pubkey.Take(32).ToArray(),
+                 Y = pubkey.Skip(32).ToArray()
+             }
+     }))
      {
          return ecdsa.SignData(message, HashAlgorithmName.SHA256);
      }
