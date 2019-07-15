@@ -171,7 +171,7 @@ Example
 
 
 
-In `Key` table，it mainly stored the AES256 attributes:：
+In `Key` table，it mainly stored the AES256 attributes:
 
 * `PasswordHash`:  is the hash of the passowrd, by using SHA256 method.
 * `IV`: is an initial vector of AES, randomly generated.
