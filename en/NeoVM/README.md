@@ -1,10 +1,32 @@
 ﻿<center> <h2> Neo Virtual Machine</h2> </center>
 
-&emsp;&emsp;NeoVM is a lightweighted, general-purpose virtual machine that executes NEO smart contract code. The concept of virtual machine described in this paper is in narrow sense, it's not a simulation of physical machine by operating system. Unlike VMware or Hyper-V, it's mainly aimed at specific usage.
+<!-- TOC -->
+
+- [NeoVM Architecture](#neovm-architecture)
+  - [Execution Engine](#execution-engine)
+  - [Temporary Storage](#temporary-storage)
+- [Interoperable service layer](#interoperable-service-layer)
+- [Built-in data types](#built-in-data-types)
+- [Instructions](#instructions)
+  - [1. Contrant](#1-contrant)
+  - [2. Flow Control](#2-flow-control)
+  - [3. Stack Operation](#3-stack-operation)
+  - [4. String Operation](#4-string-operation)
+  - [5. Logical Operation](#5-logical-operation)
+  - [6. Arithmetic Operation](#6-arithmetic-operation)
+  - [7. Advanced Data Structure](#7-Advanced-Data-Structure)
+  - [8. Exception Processing](#8-exception-processing)
+
+<!-- /TOC -->
+
+
+<hr/>
+
+&emsp;&emsp;NeoVM is a lightweighted, general-purpose virtual machine that executes NEO smart contract code. The concept of virtual machine described in this paadper is in narrow sense, it's not a simulation of physical machine by operating system. Unlike VMware or Hyper-V, it's mainly aimed at specific usage.
 
 &emsp;&emsp;For example, in JVM or CLR of .Net, source code will be compiled into relevant bytecodes, and be executed on the corresponding virtual machine. JVM or CLR will read instructions, decode, execute and write results back. Those steps are very similar to the concepts on real physical machines. The binary instructions are still running on the physical machine. It takes instructions from memory and transmits them to the CPU through the bus, then decodes, executes and stores the results.
 
-# Virtual Device
+# NeoVM Architecture
 ![nvm](../../images/nvm.jpg)
 
 The graph above is the system architecture of NeoVM, which includes execution engine, memory, interoperable services.
@@ -652,7 +674,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | XAB                                          |
 | Output:   | A\<=X&&X\<B                                  |
 
-##7. Advanced Data Structure
+## 7. Advanced Data Structure
 
 It has implemented common operations for array, map, struct, etc.
 
