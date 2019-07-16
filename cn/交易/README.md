@@ -37,13 +37,11 @@ version属性允许对交易结构进行更新，使其具有向后兼容性。 
 * sender
 由于NEO3弃用了UTXO模型，仅保留有账户余额模型。原生资产NEO和GAS的转账交易统一为NEP-5资产操作方式，因此交易结构中不再记录inputs和outputs字段，通过sender字段来跟踪交易的发送方。该字段是钱包中交易发起账户的脚本哈希值。
 * systemFee
-系统费用是根据NeoVM要执行的指令计算得出的固定费用。一般来说，交易对网络资源的需求越大，交易的成本就越高。NEO3取消了每笔交易10 GAS的免费额度，系统费用总额受合约脚本的指令数量和指令类型影响。计算公式如下所示：
-&emsp;&emsp;&emsp;&emsp;![system fee](../../images/system_fee.png)
+系统费用是根据NeoVM要执行的指令计算得出的固定费用。一般来说，交易对网络资源的需求越大，交易的成本就越高。NEO3取消了每笔交易10 GAS的免费额度，系统费用总额受合约脚本的指令数量和指令类型影响。计算公式如下所示：<br/>&emsp;&emsp;![system fee](../../images/system_fee.png)<br/>
 其中，OpcodeSet为指令集，为第i种指令的费用，为第i种指令在合约脚本中的个数。
 
 * networkFee
-网络费是用户向Neo网络提交交易时支付的费用，作为共识节点的出块奖励。每个交易的网络费存在一个最小值，计算公式如下所示：
-&emsp;&emsp;&emsp;&emsp;![network fee](../../images/network_fee.png)
+网络费是用户向Neo网络提交交易时支付的费用，作为共识节点的出块奖励。每个交易的网络费存在一个最小值，计算公式如下所示：<br/>&emsp;&emsp;![network fee](../../images/network_fee.png)<br/>
 其中，VerificationCost为虚拟机验证交易签名消耗的费用，tx.Length为交易数据的字节长度，FeePerByte为交易每字节的费用。用户支付的网络费需要大于或等于此最小值，否则交易无法通过验证。
 
 * attributes
@@ -62,7 +60,7 @@ version属性允许对交易结构进行更新，使其具有向后兼容性。 
   | `0x20`           | `Cosigner`    |  签名验证          | `byte`   |
   | `0x81`           | `Url`          | 外部介绍信息地址    | `byte`  |
 
-​	每个交易最多可以添加16个属性。
+  ​	每个交易最多可以添加16个属性。
 
 * script
   虚拟机所执行的合约脚本。
@@ -125,13 +123,15 @@ version属性允许对交易结构进行更新，使其具有向后兼容性。 
 | `script`   | 需先序列化数组长度`WriteVarInt(length)`，之后再分别序列化数组各个元素 |
 | `witnesses`   | 需先序列化数组长度`WriteVarInt(length)`，之后再分别序列化数组各个元素 |
 
-> 注意，WriteVarInt（value) 是根据value的值，存储非定长类型, 根据取值范围决定存储大小。
-> | Value 值范围 | 存储类型 |
-> |--------------------|--------------|
-> | value < 0xFD | byte(value) |
-> | value <= 0xFFFF | 0xFD + ushort(value) |
-> | value <= 0xFFFFFFFF | 0xFE + uint(value) |
-> | value > 0xFFFFFFFF | 0xFF + value |
+
+注意，WriteVarInt（value) 是根据value的值，存储非定长类型, 根据取值范围决定存储大小。
+
+| Value 值范围 | 存储类型 |
+|--------------------|--------------|
+| value < 0xFD | byte(value) |
+| value <= 0xFFFF | 0xFD + ushort(value) |
+| value <= 0xFFFFFFFF | 0xFE + uint(value) |
+| value > 0xFFFFFFFF | 0xFF + value |
 
 
 
