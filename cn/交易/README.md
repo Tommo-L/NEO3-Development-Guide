@@ -86,7 +86,7 @@ witnesses属性用于验证交易的有效性和完整性。 数组中的对象�
 3. `0xaa767474` 调用互操作服务 `Neo.Crypto.CheckSig` 用所提供的公钥对签名进行验证
 
 单签名脚本构造如下图所示：
-![](../../images/checksig_script.jpg)
+![](../../images/checksig_script.png)
 
 多方签名合约的验证脚本可以通过以下步骤进行构建：
 
