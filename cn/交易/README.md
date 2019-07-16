@@ -124,14 +124,14 @@ version属性允许对交易结构进行更新，使其具有向后兼容性。 
 | `witnesses`   | 需先序列化数组长度`WriteVarInt(length)`，之后再分别序列化数组各个元素 |
 
 
-注意，WriteVarInt（value) 是根据value的值，存储非定长类型, 根据取值范围决定存储大小。
-
-| Value 值范围 | 存储类型 |
-|--------------------|--------------|
-| value < 0xFD | byte(value) |
-| value <= 0xFFFF | 0xFD + ushort(value) |
-| value <= 0xFFFFFFFF | 0xFE + uint(value) |
-| value > 0xFFFFFFFF | 0xFF + value |
+> 注意，WriteVarInt（value) 是根据value的值，存储非定长类型, 根据取值范围决定存储大小。
+> 
+> | Value 值范围 | 存储类型 |
+> |--------------------|--------------|
+> | value < 0xFD | byte(value) |
+> | value <= 0xFFFF | 0xFD + ushort(value) |
+> | value <= 0xFFFFFFFF | 0xFE + uint(value) |
+> | value > 0xFFFFFFFF | 0xFF + value |
 
 
 
