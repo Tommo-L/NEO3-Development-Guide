@@ -20,7 +20,7 @@
 
 <!-- /TOC -->
 
-A Neo Transaction is a signed data package with an instruction for the network and the only way to operate the Neo network. Each block in the Neo blockchain ledge contains one or more transactions, making each block a transaction batch. After transaction attributes encapsulated and signed by the client wallet, the transaction is sent to the node to which the wallet belongs. Any node in the network can verify the received transaction and forward it to the consensus node. The consensus node selectively packages transactions into a proposal block and broadcast it to reach an agreement. Once the validators agree on the new block, they will broadcast the new block to the entire network. For the new block received, the node will process all individual transactions in the block and then update the ledger.
+A Neo transaction is a signed data package with an instruction for the network and the only way to operate the Neo network. Each block in the Neo blockchain ledge contains one or more transactions, making each block a transaction batch. After transaction attributes encapsulated and signed by the client wallet, the transaction is sent to the node to which the wallet belongs. Any node in the network can verify the received transaction and forward it to the consensus node. The consensus node selectively packages transactions into a proposal block and broadcast it to reach an agreement. Once the validators agree on the new block, they will broadcast the new block to the entire network. For the new block received, the node will process all individual transactions in the block and then update the ledger.
 
 ### Transaction Structure
 
