@@ -20,7 +20,9 @@
 
 <!-- /TOC -->
 
-A Neo Transaction is a signed data package with an instruction for the network and the only way to operate the Neo network. Each block in the Neo blockchain ledge contains one or more transactions, making each block a transaction batch. After transaction attributes encapsulated and signed by the client wallet, the transaction is sent to the node to which the wallet belongs. Any node in the network can verify the received transaction and forward it to the consensus node. The consensus node selectively packages transactions into a proposal block and broadcast it to reach an agreement. Once the validators agree on the new block, they will broadcast the new block to the entire network. For the new block received, the node will process all individual transactions in the block and then update the ledger.
+A Neo Transaction is a signed data package with an instruction for the network and the only way to operate the Neo network. Each block in the Neo blockchain ledger contains one or more transactions, making each block a transaction batch. After transaction attributes encapsulated and signed by the client wallet, the transaction is sent to the node to which the wallet belongs. Any node in the network can verify the received transaction and forward it to the consensus node. The consensus node selectively packages transactions into a proposal block and broadcast it to reach an agreement. Once the validators agree on the new block, they will broadcast the new block to the entire network. For the new block received, the node will process all individual transactions in the block and then update the ledger.
+
+![tx flow graph](../../images/tx_flow_graph.png)
 
 ### Transaction Structure
 
@@ -53,16 +55,16 @@ The network fee is the fee paid by users when they submit transactions to the Ne
 
 ![network fee](../../images/network_fee.png)
 
-where VerificationCost is the costs for transaction signature verification in NeoVM, tx.Length is the byte length of transaction data, FeePerByte is the fee per byte. The network fee paid by users must be greater than or equal to MinNetworkFee, otherwise, the verification of the transaction will fail.
+where VerificationCost is the costs for transaction signature verification in NeoVM, tx.Length is the byte length of transaction data, FeePerByte is the fee per byte. The network fee paid by users must be greater than or equal to NetworkFee, otherwise, the verification of the transaction will fail.
 #### attributes
 Depending on the transaction type, it is allowed to add attributes to the transaction. For each attribute, a usage type has to be specified, together with the external data and the size of the external data.
 
-  | Field | Type | Description |
-  |----------|-------|------------------------|
-  | `usage`  | uint8 | Attribute usage type                  |
-  | `data`   | byte[] |  Script of the transaction to be validated |
+| Field | Type | Description |
+|----------|-------|------------------------|
+| `usage`  | uint8 | Attribute usage type                  |
+| `data`   | byte[] | Script of the transaction to be validated. When usage is `0x20` , the data type must be UInt160. |
 
-##### usage types
+##### Attribute usage types
 The following usage types can be included in the transaction attributes.
 
 

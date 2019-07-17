@@ -11,3 +11,15 @@
 - [RPC](en/RPC)
 - [Smart contracts](en/smartContracts)
 - [NeoVM](en/NeoVM)
+
+
+
+
+
+补充一部分，关于NEO3 变动部分的汇总介绍
+
+
+
+1. 钱包部分： 地址合约发生变动，Opcode.CheckSig, Opcode.CheckMultiSig  换成互操作访问。
+2. 其他部分需要补充，并format组织下。
+
