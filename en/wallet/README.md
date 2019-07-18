@@ -1,4 +1,4 @@
-﻿## Wallets
+## Wallets
 
    - [1. Accounts](#accounts)
       - [1.1 Private Key](#private-key)
@@ -11,12 +11,12 @@
         - [Decryption Steps](#decryption-steps)
    - [3. Signature](#Signature)
 
+
 The wallet is a basic component of Neo and the bridge for users to access the Neo network. It's responsible for transaction operations such as transfer, contract deployment, asset registration, etc.
 
 Developers are allowed to redesign and modify the Neo wallet under the following rules and patterns.
 
 ### Accounts
-
 ​In Neo, the account is the smart contract and the address represents a contract script. The below flow diagram shows how to derive the public key from the private key and then to the address:
 
 
@@ -284,9 +284,10 @@ NEP6 proposal: <https://github.com/neo-project/proposals/blob/master/nep-6.media
 
 > The NEP2-JSON wallet is currently recommended for higher security and cross-platform features.
 
+
 ### Signature
 
-​    Neo employs the `ECDSA` algorithm to sign the transaction through the wallet module and take the `nistP256` or `Secp256r1` as the ECC curve and SHA256 as the hash algorithm.
+​    Neo employs the `ECDSA` algorithm to sign the transaction through the wallet component and take the `nistP256` or `Secp256r1` as the ECC curve and SHA256 as the hash algorithm.
 
 C# code：
 
