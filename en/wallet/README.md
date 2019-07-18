@@ -1,35 +1,32 @@
-﻿<center> <h2> Wallets </h2> </center>
+﻿## Wallets
 
-   - [1. Accounts](#1-accounts)
-      - [1.1 Private Key](#11-private-key)
-      - [1.2 Public Key](#12-public-key)
-      - [1.3 Address](#13-address)
-   - [2. Wallet File](#2-wallet-file)
-      - [2.1 DB3 File](#21-db3-file)
-      - [2.2 NEP6 File](#22-nep6-file)
+   - [1. Accounts](#accounts)
+      - [1.1 Private Key](#private-key)
+      - [1.2 Public Key](#public-key)
+      - [1.3 Address](#address)
+   - [2. Wallet File](#wallet-file)
+      - [2.1 DB3 File](#db3-file)
+      - [2.2 NEP6 File](#nep6-file)
         - [Encryption Steps](#encryption-steps)
         - [Decryption Steps](#decryption-steps)
-   - [3. Sign](#3-sign)
+   - [3. Signature](#Signature)
 
-<hr/>
+The wallet is a basic component of Neo and the bridge for users to access the Neo network. It's responsible for transaction operations such as transfer, contract deployment, asset registration, etc.
 
-&emsp;&emsp;Wallets is a basic component of NEO and the bridge for users to access NEO network. It's responsible for transaction operations such as transfer, contract deployment, asset registration, etc.
+Developers are allowed to redesign and modify the Neo wallet under the following rules and patterns.
 
-&emsp;&emsp;NEO wallets can be redesigned and modified on their own, but need to meet the following rules and patterns.
+### Accounts
 
-### 1. Accounts
-
-​	In Neo, the account is the smart contract, the address represents a contract script. The flow diagram from private key to the public key, to the address is as shown below:
-
+​In Neo, the account is the smart contract and the address represents a contract script. The below flow diagram shows how to derive the public key from the private key and then to the address:
 
 
 ![private key 2 address](../../images/privatekey-2-publickey-address.png)
 
-#### 1.1 Private Key
+#### Private Key
 
-&emsp;&emsp;A private key is a random value generated between 1 and N(N is a constant, less than 2^256 slightly), and is represented by a 256 bit (32 bytes) number generally.
+A private key is a random value generated between 1 and N (N is a constant, less than 2^256 slightly), and is represented by a 256 bit (32 bytes) number generally.
 
-​	There are two main encoding formats for private keys in NEO.
+​There are two main encoding formats for private keys in Neo.
 
 1. **Hexstring Format**：
 
@@ -37,7 +34,7 @@
 
 2. **WIF Format**：
 
-   The wif format is to add prefix `0x80` and suffix `0x01` in the original 32-bit data, and get string of Base58Check encoding.
+   The wif format is to add prefix `0x80` and suffix `0x01` in the original 32-bit data and get a string of Base58Check encoding.
 ![wif format](../../images/wif_format.png)
 
 Example:
@@ -49,9 +46,9 @@ Example:
 | WIF | L3tgppXLgdaeqSGSFw1Go3skBiy8vQAM7YMXvTHsKQtE16PBncSU |
 
 
-#### 1.2 Public Key
+#### Public Key
 
-&emsp;&emsp;The public key is a point (x, y) obtained through the ECC algorithm with the private key. The X, Y points can be represented by 32-byte data. Different from bitcoin, NEO chooses secp256r1 as the curve of the ECC algorithm. There are two public key formats as following.
+The public key is a point (x, y) obtained through the ECC algorithm with the private key. The X, Y points can be represented by 32-byte data. Different from Bitcoin, Neo chooses secp256r1 as the curve of the ECC algorithm. There are two public key formats as following.
 
 * **Uncompressed Public Key**
   0x04 + X (32 bytes) + Y (32 bytes)
@@ -67,10 +64,10 @@ Example:
 | Public Key (Compressed) | 035a928f201639204e06b4368b1a93365462a8ebbff0b8818151b74faab3a2b61a |
 | Public Key (Uncompressed) | 045a928f201639204e06b4368b1a93365462a8ebbff0b8818151b74faab3a2b61a35dfabcb79ac492a2a88588d2f2e73f045cd8af58059282e09d693dc340e113f |
 
-#### 1.3 Address
+#### Address
 
 * Normal Address
-  1. Build a `CheckSig` script with the public key, and format as following:
+  1. Build a `CheckSig` script with the public key, and the format is as follows:
 
   ```bash
   0x21 + Public Key(Compressed 33 bytes) + 0x68 + 0x747476aa
@@ -122,7 +119,7 @@ Example
 
 
 
-> The range of `emitPush(number)` ， and the number type is BigInteger.
+> Please pay attention to the interval of the number for the usage of `emitPush(number)`. Here is an example in the case of the number being BigInteger.
 >
 > | Number | Emit OpCode | Value |
 > |-----|----------|-----|
@@ -133,13 +130,13 @@ Example
 
 
 
-> Note: The address script in NEO3 has changed, no longer using the Opcode.CheckSig, OpCode.CheckMultiSig directive, and changed to the interoperable service call, ie `SysCall "Neo.Crypto.CheckSig".hash2uint`, `SysCall "Neo.Crypto .CheckMultiSig".hash2unit` mode.
+> Note: The address script in NEO3 has changed not using the Opcode.CheckSig and OpCode.CheckMultiSig but the interoperable service call `SysCall "Neo.Crypto.CheckSig".hash2uint`, `SysCall "Neo.Crypto .CheckMultiSig".hash2unit` instead.
 
-### 2. Wallet File	
+### Wallet File    
 
-#### 2.1 DB3 File
+#### DB3 File
 
-&emsp;&emsp;db3 wallet file uses SQLite to store data, and the file suffix is `.db3`. There are four tables created in db3 file：
+db3 wallet file uses SQLite to store data, and the file suffix is `.db3`. There are four tables created in db3 file：
 
 1. **Account**
 
@@ -171,113 +168,111 @@ Example
 
 
 
-In `Key` table，it mainly stored the AES256 attributes:
+In `Key` table，it mainly stores the AES256 attributes:
 
-* `PasswordHash`:  is the hash of the passowrd, by using SHA256 method.
-* `IV`: is an initial vector of AES, randomly generated.
-* `MasterKey`: is an encrypted ciphertext, obtained by encrypting the private key by AES256 method with `PasswordKey`, `IV` parameters.
-* `Version`:  of the wallet
+* `PasswordHash`:  the hash of the password by using SHA256 method.
+* `IV`: a randomly generated initial vector of AES.
+* `MasterKey`: an encrypted ciphertext, obtained by encrypting the private key by AES256 method with `PasswordKey`, `IV` as the parameters.
+* `Version`: the version of the wallet
 
 
 
 > The db3 wallet uses the AES (symmetrical encryption) as its encryption and decryption method.
 >
-> The db3 wallet is commonly used in exchange wallets, facilitating a large amount of account information storage and retrieval queries.
+> The db3 wallet is commonly used in wallets of the exchange to facilitate a large amount of account information storage and the retrieval queries.
 
 
 
-#### 2.2 NEP6 File
+#### NEP6 File
 
 NEP6 wallet file meets the NEP6 standard, and the file suffix is `.json`. The JSON format is as follows:
 
 ```json
 {
-	"name": null,
-	"version": "1.0",
-	"scrypt": {
-		"n": 16384,
-		"r": 8,
-		"p": 8
-	},
-	"accounts": [{
-		"address": "AdokvD62BsFiQYVhzvCgdUTRu6JCtLPdRG",
-		"label": null,
-		"isDefault": false,
-		"lock": false,
-		"key": "6PYS1WSk7XTjj85MruDPpta9cm2Ra9i2jPJKSz65XeHsyZAX46phtEdwbJ",
-		"contract": {
-			"script": "2103ef891df4c0b7eefb937d21ea0fb88cde8e0d82a7ff11872b5e7047969dafb4eb68747476aa",
-			"parameters": [{
-				"name": "signature",
-				"type": "Signature"
-			}],
-			"deployed": false
-		},
-		"extra": null
-	}],
-	"extra": null
+    "name": null,
+    "version": "1.0",
+    "scrypt": {
+        "n": 16384,
+        "r": 8,
+        "p": 8
+    },
+    "accounts": [{
+        "address": "AdokvD62BsFiQYVhzvCgdUTRu6JCtLPdRG",
+        "label": null,
+        "isDefault": false,
+        "lock": false,
+        "key": "6PYS1WSk7XTjj85MruDPpta9cm2Ra9i2jPJKSz65XeHsyZAX46phtEdwbJ",
+        "contract": {
+            "script": "2103ef891df4c0b7eefb937d21ea0fb88cde8e0d82a7ff11872b5e7047969dafb4eb68747476aa",
+            "parameters": [{
+                "name": "signature",
+                "type": "Signature"
+            }],
+            "deployed": false
+        },
+        "extra": null
+    }],
+    "extra": null
 }
 ```
 
-> The password of this demo is `123456`
+> The password of this example is `123456`
 
 | Field                           | Description                                                  |
 | ------------------------------- | ------------------------------------------------------------ |
-| name                            | is a label that the user has given to the wallet file.       |
-| version                         | is currently fixed at 1.0 and will be used for functional upgrades in the future. |
-| scrypt（n/r/p）                 | (n/r/p) are scrypt parameters for scrypt algorithm used for encrypting and decrypting the private keys in the wallet. |
-| accounts                        | is an array of Account objects which describe the details of each account in the wallet. |
+| name                            | a label that the user attaches to the wallet file       |
+| version                         | currently fixed at 1.0 and will be used for functional upgrades in the future |
+| scrypt（n/r/p）                 | (n/r/p) are parameters for scrypt algorithm used for encrypting and decrypting the private keys in the wallet |
+| accounts                        | an array of Account objects which describe the details of each account in the wallet |
 | account.address                 | account address                                              |
-| account.label                   | account label, default is null                               |
-| account.isDefault               | is the default account of wallet.                            |
-| account.lock                    | is the account opened                                        |
+| account.label                   | account label, null by default                           |
+| account.isDefault               | whether is the default account of wallet                           |
+| account.lock                    | whether the account is locked                                        |
 | account.key                     | export nep2key of the privatekey                             |
 | account.contract                | the contract of the script                                   |
 | account.contract.script         | address script                                               |
-| account.contract.parameters     |                                                              |
-| account.contract.parameter.name |                                                              |
-| account.contract.parameter.type |                                                              |
-| account.contract.deployed       | is deployed                                                  |
-| account.extra                   | extra data, default is null                                  |
-| extra                           | is an object that is defined by the implementer of the client to store extra data. This field can be `null`. |
+| account.contract.parameters     |   parameter list for the address script contract           |
+| account.contract.parameter.name |     parameter name for the address script contract       
+| account.contract.parameter.type |     parameter name for the address script contract     |
+| account.contract.deployed       | whether is deployed                          |
+| account.extra                   | additional attributes of the account, null by default          |
+| extra                           | additional attributes of the wallet, null by default |
 
-NEP6 wallet uses scrypt algorithm as the core method of wallet encryption and decryption.
+NEP6 wallet uses `scrypt` algorithm as the core method of wallet encryption and decryption.
 
 ##### Encryption Steps
 
 ![nep2key](../../images/nep2key.png)
 
-1. The address is derived from the public key, and the address hash is computed by `SHA256(SHA256(Address))`
+1. The address is derived from the public key, and the address hash is computed through `SHA256(SHA256(Address))`
 
-2. Calculate a `derivedkey` by the scrypt algorithm, and divide the 64-byte data into two halves as `derivedhalf1` and `derivedhalf2`. Scrypt uses the following parameters:
+2. Calculate a `derivedkey` using the `Scrypt` algorithm, and divide the 64-byte data into two halves as `derivedhalf1` and `derivedhalf2`. Scrypt uses the following parameters:
 
-   * ciphertext: The entered password (UTF-8 format)
+   * ciphertext: password entered (UTF-8 format)
    * salt: address hash
    * n：16384
    * r：8
    * p: 8 
    * length: 64
 
-3. Do private key xor `derivedhalf1`, and then get `encryptedkey` by using AES256 to encrypt it with `derivedhalf2`.
+3. Perform xor operation on the private key and `derivedhalf1`, and then use `derivedhalf2` to encrypt the result with the AES256 algorithm to get the `encryptedkey` .
 
-4. Stitch data according to the following format and obtain `NEP2Key` by Base58Check encoding.
+4. Concat the data in the following format and encode it with Base58Check to get `NEP2Key`.
 
    ```
    0x01 + 0x42 + 0xe0 + addressHash + encryptedKey
    ```
 
-   
-
 ##### Decryption Steps
 
-1. Decode NEP2Key with Base58Check.
-2. Check whether the length of decoded data is 39, and the first three bytes are `0x01`, `0x42` and `0xe0`.
+1. Decode `NEP2Key` with Base58Check.
+2. Verify whether the length of the result is 39 and the first three bytes are `0x01`, `0x42` and `0xe0`.
 3. Take data[3-6] as `addresshash`
-4. Put the password and addresshash into the Scrypt algorithm. Specify the result length to 64. Then get the Derivedkey.
+4. Pass the password and addresshash as the parameters in the Scrypt algorithm. Specify the length of the result to 64 bytes and then get the `Derivedkey`.
 5. Take Derivedkey[0-31] as `Derivedhalf1`, and Derivedkey[32-63] as `Derivedhalf2`.
-6. Take data[7-38] as `Encryptedkey` (32 bytes), and decrypt it by AES256 method with `Derivedhalf2` as the initial vector.
-7. Xor the decrypted data and `Derivedhalf1` to obtain the private key.
-8. Get the public key from the private key with ECC algorithm, and then get the address. Check whether the first four bytes of the result of SHA256(SHA256(Address)) is equal to the `addresshash`. If it's the same, then you get the correct private key.
+6. Take data[7-38] as `Encryptedkey` (32 bytes), and decrypt it by AES256 algorithm with `Derivedhalf2` as the initial vector.
+7. Perform xor operation on the decrypted data and `Derivedhalf1` to obtain the private key.
+8. Calculate the public key from the private key with ECC algorithm, and then generate the address. Perform Sha256 on the address twice and then take the first four bytes of the result to check whether it is identical with the `addresshash`. If so, the private key is correct.
 
 
 
@@ -287,11 +282,11 @@ NEP6 proposal: <https://github.com/neo-project/proposals/blob/master/nep-6.media
 
 
 
-> The NEP6 wallet is currently recommended for higher security and cross-platform features.
+> The NEP2-JSON wallet is currently recommended for higher security and cross-platform features.
 
-### 3. Sign
+### Signature
 
-​	When use wallet to sign the transaction, Neo uses the ECDSA algorithm with nistP256 ECC curve, and SHA256 hash method.
+​    Neo employs the `ECDSA` algorithm to sign the transaction through the wallet module and take the `nistP256` or `Secp256r1` as the ECC curve and SHA256 as the hash algorithm.
 
 C# code：
 
