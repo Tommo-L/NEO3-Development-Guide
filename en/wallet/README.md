@@ -67,7 +67,8 @@ Example:
 #### Address
 
 * Normal Address
-  1. Build a `CheckSig` script with the public key, and the format is as follows:
+  
+1. Build a `CheckSig` script with the public key, and the format is as follows:
 
   ```bash
   0x21 + Public Key(Compressed 33 bytes) + 0x68 + 0x747476aa
