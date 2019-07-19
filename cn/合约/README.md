@@ -145,7 +145,7 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     `参数列表` 
 
     |参数名称 | 参数类型 | 描述 |
-    |--|--|--|--|
+    |--|--|--|
     |account|Hash160|要查询账户的ScriptHash|
     | end | Integer | 要查询的截止高度 | 
 
@@ -177,6 +177,7 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
   	| pubKey	| PublicKey | 要注册验证人的账户的公钥 |
 
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     | Boolean | 注册结果，true：成功， false：失败 |
@@ -199,11 +200,13 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     *无参数*  
 
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     | Array | 所有验证人和备选节点信息 |
 
     `费用(GAS)`  
+
     *1.00*
     
     - getValidators: 获取当前区块所有验证人信息
@@ -214,14 +217,17 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     ```
 
     `参数列表`
+
     *无参数*
 
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     | Array | 所有验证人信息 |
 
-    `费用(GAS)`  
+    `费用(GAS)` 
+
     *1.00*
 
    - getNextBlockValidators: 获取下一个区块的验证人信息
@@ -232,13 +238,17 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     ```
 
     `参数列表`  
+
     *无参数*  
 
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     | Array | 所有验证人信息 |
+
     `费用(GAS)`  
+
     *1.00*
 
    - vote：投票选举验证人
@@ -254,15 +264,20 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     ```
 
     `参数列表`
+
     | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|--|
+    |--|--|--|
   	| account	| Hash60 | 投票人的ScriptHash |
     | pubkeys | Array | 投给验证人的公钥 |
+
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     | Boolean | 投票结果，true：成功， false：失败 |
+
     `费用(GAS)`  
+
     *5.00*
 
    - name*： TToken的名称
@@ -273,14 +288,17 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     ```
 
     `参数`  
+
     *无*  
 
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     | String | Token的名称 |
 
     `费用(GAS)`
+
     *0.00*
     
    - symbol*：Token的简称
@@ -288,15 +306,19 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     [ContractMethod(0, ContractParameterType.String, Name = "symbol", SafeMethod = true)]
     protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
     ```
+
     `参数`  
+
     *无*  
 
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     | String | Token的简称 |
 
     `费用(GAS)`  
+
     *0.00*
 
    - decimals*: Token的计算精度
@@ -306,28 +328,36 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     ```
 
     `参数`  
+
     *无*  
 
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     | String | Token的计算精度 |
 
     `费用(GAS)`  
+
     *0.00*
    - totalSupply*: 总发行量
     ```csharp
     [ContractMethod(0_01000000, ContractParameterType.Integer, SafeMethod = true)]
     protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
     ```
+
     `参数`  
+
     *无*  
+
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     | String | Token的总发行量 |
 
     `费用(GAS)`  
+
     *0.01*
 
    - balanceOf*: 指定地址的Token余额
@@ -342,16 +372,19 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     ```
 
     `参数列表`
+
     | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|--|
+    |--|--|--|
     |account|Hash160|要查询账户的ScriptHash|
     
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     |Integer| 余额数值 |
 
     `费用(GAS)`  
+
     *0.01*
 
    - transfer*: 转账
@@ -369,18 +402,21 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     ```
 
     `参数列表`
+
     | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|--|
+    |--|--|--|
     |from|Hash160|转出账户的ScriptHash|
     |from|Hash160|转入账户的ScriptHash|
     |amount|Integer|转账的Token数量|
 
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     |Boolean| 转账结果，true：成功，false：失败 |
 
     `费用(GAS)`  
+
     *0.08*
 
   > 标*的方法为[NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki)标准接口
@@ -405,16 +441,19 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     ```
 
     `参数列表`
+
     | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|--|
+    |--|--|--|
     |index|Integer| 要查询的高度 |
 
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     |Integer| 系统费总值 |
 
     `费用(GAS)`  
+
     *0.01*
    - name*: Token的名称
     ```csharp
@@ -423,14 +462,17 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     ```
 
     `参数`  
+
     *无*  
 
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     | String | Token的名称 |
 
     `费用(GAS)`  
+
     *0.00*
 
    - symbol: Token的简称
@@ -441,14 +483,17 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     ```
 
     `参数`  
+
     *无*  
     
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     | String | Token的简称 |
 
-    `费用(GAS)`  
+    `费用(GAS)` 
+
     *0.00*
 
    - decimals*: Token的计算精度
@@ -459,14 +504,17 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     ```
 
     `参数`  
+
     *无*  
 
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     | String | Token的计算精度 |
 
     `费用(GAS)`  
+
     *0.00*
 
    - totalSupply*: 总发行量
@@ -475,15 +523,19 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     [ContractMethod(0_01000000, ContractParameterType.Integer, SafeMethod = true)]
     protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
     ```
+
     `参数`  
+
     *无*  
 
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     | String | Token的总发行量 |
 
     `费用(GAS)`  
+
     *0.01*
 
    - balanceOf*: 指定地址的Token余额
@@ -498,16 +550,19 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     ```
 
     `参数`
+
     | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|--|
+    |--|--|--|
     |account|Hash160|要查询账户的ScriptHash|
 
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     |Integer| 余额数值 |
 
     `费用(GAS)` 
+
     *0.01*
 
    - transfer*  
@@ -526,18 +581,21 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     ```
 
     `参数`
+
     | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|--|
+    |--|--|--|
     |from|Hash160|转出账户的ScriptHash|
     |from|Hash160|转入账户的ScriptHash|
     |amount|Integer|转账的Token数量|
 
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     |Boolean| 转账结果，true：成功，false：失败 |
 
     `费用(GAS)`  
+
     *0.08*
 
   > 标*的方法为[NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki)标准接口
@@ -552,14 +610,17 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     ```
 
     `参数`  
+
     *无*  
 
     `返回值`
+    
     | 类型 | 描述 |
     |--|--|
     | Integer | 区块最大交易数 |
 
     `费用(GAS)`  
+
     *0.01*
 
     - GetFeePerByte
@@ -571,14 +632,17 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     ```
 
     `参数`  
+
     *无*  
 
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     | Integer | 每字节手续费 |
 
     `费用(GAS)`  
+
     *0.01*
 
    - getBlockedAccounts: 获取被加入黑名单的地址列表
@@ -589,14 +653,17 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     ```
 
     `参数`  
+
     *无*  
 
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     | Array | 黑名单列表 |
 
     `费用(GAS)`  
+
     *0.01*
     
    - setMaxTransactionsPerBlock: 设置每个区块的最大交易数
@@ -607,16 +674,19 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     ```
 
     `参数`  
+
     | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|--|
+    |--|--|--|
     | value | Integer | 要设置的数值 | 
 
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     | Boolean | 结果。true：设置成功，false：设置失败 |
 
     `费用(GAS)`  
+
     *0.03*
 
    - setFeePerByte  
@@ -631,16 +701,19 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     ```
 
     `参数`  
+
     | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|--|
+    |--|--|--|
     | value | Integer | 要设置的数值 | 
 
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     | Boolean | 结果。true：设置成功，false：设置失败 |
 
     `费用(GAS)`  
+
     *0.03*
 
    - blockAccount  
@@ -655,16 +728,21 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
     ```
 
     `参数`  
+
     | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|--|
+    |--|--|--|
     | account | Hash160 | 要列入黑名单的地址 | 
 
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     | Boolean | 结果。true：设置成功，false：设置失败 |
+
     `费用(GAS)`  
+
     *0.03*
+
    - unblockAccount  
     将某个地址从黑名单移除
     ```csharp
@@ -674,15 +752,21 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
       ParameterNames = new[] { "account" })]
     private StackItem UnblockAccount(ApplicationEngine engine, VMArray args)
     ```
+    
     `参数`  
+
     | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|--|
+    |--|--|--|
     | account | Hash160 | 要移出黑名单的地址 | 
+
     `返回值`
+
     | 类型 | 描述 |
     |--|--|
     | Boolean | 结果。true：设置成功，false：设置失败 |
+
     `费用(GAS)`  
+    
     *0.03*
 
 - 更多NativeContract，敬请期待
@@ -725,7 +809,8 @@ NativeContract的调用有两种方法, 第一种是跟普通合约一样，通�
   ```
 - 通用方法：通过ScriptHash调用
 
-  NativeContract的ScriptHash都是固定的，可以像调用其他普通合约一样用System.Contract.Call互操作接口和NativeContract的ScriptHash调用。现有NativeContract的ScriptHash如下。
+  NativeContract的ScriptHash都是固定的，可以像调用其他普通合约一样用System.Contract.Call互操作接口和NativeContract的ScriptHash调用。现有NativeContract的ScriptHash如下：
+
   |NativeContract|ScriptHash|
   |---|---|
   |NeoToken| 0x43cf98eddbe047e198a3e5d57006311442a0ca15 |
@@ -796,267 +881,267 @@ Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智�
 ### System空间
 - System.ExecutionEngine.GetScriptContainer  
   | 功能描述 | 获取该智能合约的脚本容器|
-  |--|--|--|--|
+  |--|--|
   | C#函数| byte[] GetScriptContainer() | 
 - System.ExecutionEngine.GetExecutingScriptHash
   | 功能描述 | 获取正在执行的智能合约的脚本哈希 |
-  |--|--|--|--|
+  |--|--|
   | C#函数| byte[] GetExecutingScriptHash() | 
 - System.ExecutionEngine.GetCallingScriptHash
   | 功能描述 | 获取智能合约调用者的脚本哈希 |
-  |--|--|--|--|
+  |--|--|
   | C#函数| byte[] GetExecutingScriptHash() | 
 - System.ExecutionEngine.GetEntryScriptHash
   | 功能描述 | 获得该智能合约的入口点（合约调用链的起点）的脚本散列 |
-  |--|--|--|--|
+  |--|--
   | C#函数| byte[] GetEntryScriptHash() |
 - System.Runtime.Platform
   | 功能描述 | 获取当前执行智能合约的平台信息 |
-  |--|--|--|--|
+  |--|--|
   | C#函数| string Platform() |
 - System.Runtime.GetTrigger
   | 功能描述 | 获取该智能合约的触发条件 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | TriggerType Trigger() |
 - System.Runtime.CheckWitness
   | 功能描述 | 验证调用该合约的容器是否被指定账户脚本哈希签名 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | bool CheckWitness(byte[] hashOrPubKey) |
 - System.Runtime.Notify
   | 功能描述 | 向执行智能合约的程序发送通知 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | bool Notify(params object[] state) |
 - System.Runtime.Log
   | 功能描述 | 向执行智能合约的程序发送通知 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | void Log(string message) |
 - System.Runtime.GetTime
   | 功能描述 | 获取当前区块的时间戳 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | uint Time |
 - System.Runtime.Serialize
   | 功能描述 | 序列化 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | object Deserialize(this byte[] source) |
 - System.Runtime.Deserialize
   | 功能描述 | 反系列化 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | byte[] Serialize(this object source) |
 - System.Runtime.GetInvocationCounter
   | 功能描述 | 获取当前合约的调用次数 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | int GetInvocationCounter() |
 - System.Crypto.Verify
   | 功能描述 | 使用公钥验证消息的签名 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | bool Verify(object message, byte[] signature, byte[] pubKey) |
 - System.Blockchain.GetHeight
   | 功能描述 | 获取当前区块的高度 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | uint GetHeight() |
 - System.Blockchain.GetHeader
   | 功能描述 | 获取当前区块的区块头 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | Header GetHeader(uint height) |
   || Header GetHeader(byte[] hash)  |
 - System.Blockchain.GetBlock
   | 功能描述 | 根据区块哈希或者区块高度获取区块 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | Block GetBlock(uint height) |
   || Block GetBlock(byte[] hash)  |
 - System.Blockchain.GetTransaction
   | 功能描述 | 根据交易ID获取交易 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | Transaction GetTransaction(byte[] hash) |
 - System.Blockchain.GetTransactionHeight
   | 功能描述 | 根据交易ID获取交易所在的区块高度 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | int GetTransactionHeight(byte[] hash) |
 - System.Blockchain.GetContract
   | 功能描述 | 根据合约哈希获取合约 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | Contract GetContract(byte[] scriptHash) |
 - System.Header.GetIndex
   | 功能描述 | 从区块头中获得区块高度 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | uint Index |
 - System.Header.GetHash
   | 功能描述 | 从区块头中获得区块哈希 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | byte[] Hash |
 - System.Header.GetPrevHash
   | 功能描述 | 从区块头中获得前一个区块的哈希 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | byte[] PreHash |
 - System.Header.GetTimestamp
   | 功能描述 | 从区块头中获得时间戳 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | byte[] Timestamp |
 - System.Block.GetTransactionCount
   | 功能描述 | 获取区块中的交易数 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | int GetTransactionCount |
 - System.Block.GetTransactions
   | 功能描述 | 获取区块中的所有交易 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | Transaction[] GetTransactions() |
 - System.Block.GetTransaction
   | 功能描述 | 根据索引获取区块中某个交易 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | Transaction[] GetTransaction(int index) |
 - System.Transaction.GetHash
   | 功能描述 | 获取交易的哈希 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | byte[] Hash |
 - System.Contract.Call <a id="contract-call" ></a>
   | 功能描述 | 调用合约 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | void Call(byte[] scriptHash, string method, object[] args) |
   |  | void Call(Contract contract, string method, object[] args) |
 - System.Contract.Destroy
   | 功能描述 | 销毁当前合约 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | void Destroy() |
 - System.Storage.GetContext
   | 功能描述 | 获取当前合约存储去的上下文 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | StorageContext GetContext() |
   | 说明 | StorageContext中的IsReadOnly为false |
 - System.Storage.GetReadOnlyContext
   | 功能描述 | 以只读方式获取当前合约存储去的上下文 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | StorageContext GetContext() |
   | 说明 | StorageContext中的IsReadOnly为true |
 - System.Storage.Get
   | 功能描述 | 根据Key值，从存储区获取对应的Value |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | byte[] Get(StorageContext context, byte[] key) |
 - System.Storage.Put
   | 功能描述 | 根据存储上下文，向存储区写入Key-Value |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | byte[] Get(StorageContext context, byte[] key, byte[] value) |
 - System.Storage.PutEx
   | 功能描述 | 根据存储上下文，依据flag，向存储区写入Key-Value |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | byte[] Get(StorageContext context, byte[] key, byte[] value, StorageFlags flags) |
   | 说明 | StorageFlags表明了写入数据的属性，默认None，数据可以被读写。如果是Constant，数据被写入存储区后不能被修改也不能被删除。|
 - System.Storage.Delete
   | 功能描述 | 根据Key值，从存储区删除存储的Key-Value数据 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | void Delete(StorageContext context, byte[] key) |
   | 说明 | 如果数据的StorageFlags包含Constant，不能被删除 |
 - System.StorageContext.AsReadOnly
   | 功能描述 | 将当前上下文修改为只读模式 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | void AsReadOnly(this StorageContext context) |
   | 说明 | 	将StorageContext中的IsReadOnly设置为true |
 ### Neo空间
 - Neo.Native.Deploy
   | 功能描述 | 部署并初始化所有原生合约 |
-  |--|--|--|--|
+  |--|--|
   | 说明 | 只能在创世区块调用 |
 - Neo.Crypto.CheckSig
   | 功能描述 | 根据公钥，验证当前脚本容器的签名 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | bool CheckSig(byte[] signature, byte[] pubKey) |
 - Neo.Crypto.CheckMultiSig
   | 功能描述 | 根据公钥，验证当前脚本容器的签名 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | bool CheckMultiSig(byte[][] signatures, byte[][] pubKeys) |
 - Neo.Header.GetVersion
   | 功能描述 | 从区块头中获取区块版本 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | uint Version |
 - Neo.Header.GetMerkleRoot
   | 功能描述 | 从区块头中获取MerkleTree的Root |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | byte[] MerkleRoot |
 - Neo.Header.GetNextConsensus
   | 功能描述 | 从区块头中获取下一个记账合约的散列 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | byte[] NextConsensus |
 - Neo.Transaction.GetScript
   | 功能描述 | 获取交易中的脚本 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | byte[] Script |
 - Neo.Transaction.GetWitnesses
   | 功能描述 | 获取交易中的 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | Witness[] GetWitnesses(this Transaction transaction) |
 - Neo.Witness.GetVerificationScript
   | 功能描述 | 获取交易中的 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | byte[] VerificationScript |
 - Neo.Account.IsStandard
   | 功能描述 | 获取交易中的 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | bool IsStandard(byte[] scriptHash) |
 - Neo.Contract.Create
   | 功能描述 | 部署合约 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | Contract Create(byte[] script, string manifest) |
   | 说明 | script合约内容不能超过1MB，manifest内容不能超过2KB |
 - Neo.Contract.Update<a id="contract-update"></a>
   | 功能描述 | 升级合约 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | Contract Create(byte[] script, string manifest) |
   | 说明 | script合约内容不能超过1MB，不能是已经部署的合约；manifest内容不能超过2KB；升级后旧合约会被摧毁 |
 - Neo.Contract.GetScript
   | 功能描述 | 获取合约的脚本 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | byte[] Script |
 - Neo.Contract.IsPayable
   | 功能描述 | 获取合约是否可以接收转账 |
-  |--|--|--|--|
+  |--|--
   | C#函数 | bool IsPayable(this Contract contract) |
 - Neo.Storage.Find
    功能描述 | 在当前存储上下文中存储区寻找指定前缀内容 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | Iterator < byte[], byte[] > Find(StorageContext context, byte[] prefix); |
 - Neo.Enumerator.Create
   | 功能描述 | 创建一个枚举器 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | Enumerator Create(object[] array) |
 - Neo.Enumerator.Next
   | 功能描述 | 获取枚举器的下一个元素 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | bool Next(this Enumerator enumerator) |
 - Neo.Enumerator.Value
   | 功能描述 | 获取枚举器当前值 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | object Next(this Enumerator enumerator) |
 - Neo.Enumerator.Concat
   | 功能描述 | 连接两个枚举器 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | Enumerator Concat(Enumerator enumerator1, Enumerator enumerator2) |
 - Neo.Iterator.Create
   | 功能描述 | 创建一个迭代器|
-  |--|--|--|--|
+  |--|--|
   | C#函数 | Iterator Create(object[] array) |
   | | Iterator Create(Dictionary<object, object> map) |
 - Neo.Iterator.Key
   | 功能描述 | 获取迭代器当前Key值 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | object Key(this Iterator it) |
 - Neo.Iterator.Keys
   | 功能描述 | 获取迭代器所有Key的迭代器 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | Iterator Keys(this Iterator it) |
 - Neo.Iterator.Values
   | 功能描述 | 获取迭代器所有Value的迭代器 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | Iterator Values(this Iterator it) |
 - Neo.Iterator.Concat
   | 功能描述 | 连接两个迭代器 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | Iterator Concat(Iterator iterator1, Iterator iterator2) |
 - Neo.Json.Serialize
   | 功能描述 | 序列化JSON字符串 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | JObject Serialize(string jsonStr) |
 - Neo.Json.Deserialize
   | 功能描述 | 反序列化为JSON字符串 |
-  |--|--|--|--|
+  |--|--|
   | C#函数 | string Deserialize(JObject jsonObj) |
 ## 系统费
   | OpCode | 系统费(GAS) |
