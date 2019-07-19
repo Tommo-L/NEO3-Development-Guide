@@ -5,6 +5,9 @@
     - [Trigger](#Trigger)
     - [Native Contract](#Native-Contract)
         - [介绍](#介绍)
+            - [NeoToken](#NeoToken)
+            - [GasToken](#GasToken)
+            - [PolicyToken](#PolicyToken)
         - [NativeContract 部署](#NativeContract-部署)
         - [NativeContract 调用](#NativeContract-调用)
     - [Interop Service](#Interop-Service)
@@ -51,24 +54,24 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   "safemethods": "*"
 }
 ```
-- `Groups`：声明本合约所归属的组，可以支持多个, 每一个组由一个公钥和签名表示。~~需要补充同一组中的特点~~
-- `Features`：声明智能合约的特性。其中属性值 storage 表明合约可以访问存储区，payable 表
+- **Groups**：声明本合约所归属的组，可以支持多个, 每一个组由一个公钥和签名表示。~~需要补充同一组中的特点~~
+- **Features**：声明智能合约的特性。其中属性值 storage 表明合约可以访问存储区，payable 表
  明合约可以接受资产的转入。
-- `ABI`：声明智能合约的接口信息，可以参考[NEP-3](https://github.com/neo-project/proposals/blob/master/nep-3.mediawiki)。接口的基础属性包括:
+- **ABI**：声明智能合约的接口信息，可以参考[NEP-3](https://github.com/neo-project/proposals/blob/master/nep-3.mediawiki)。接口的基础属性包括:
   - Hash: 16进制编码的合约脚本哈希;
   - EntryPoint: 提供了合约入口方法的详细信息，包括方法名、方法参数以及方法返回值;
   - Methods: 由合约方法的详细信息构成的数组;
   - Events: 由合约事件构成的数组。基于 ABI 信息，可实现合约间的相互调用。
-- `Permissions`：声明合约可调用的其他合约和方法。执行合约调用时，会检查 Permission 中配置
+- **Permissions**：声明合约可调用的其他合约和方法。执行合约调用时，会检查 Permission 中配置
 的权限，若没有相应权限，则调用操作会执行失败。
-- `Trusts`：声明合约可以被哪些合约或者哪些合约组安全地调用。
-- `SafeMethods`：声明哪些方法是SafeMethod，SafeMethod通常是不会修改存储区，只读取区块链数据的方法，被调用时不会给用户接口返回警告信息。
+- **Trusts**：声明合约可以被哪些合约或者哪些合约组安全地调用。
+- **SafeMethods**：声明哪些方法是SafeMethod，SafeMethod通常是不会修改存储区，只读取区块链数据的方法，被调用时不会给用户接口返回警告信息。
 
 ## Trigger
 触发器可以使合约根据不同的使用场景执行不同的逻辑。
 
-* `System` 此触发器为NEO3新增触发器类型。当节点收到新区块后触发，目前只会触发NativeContract的执行。当节点收到新区块，持久化之前会调用所有NativeContract的onPersist方法，触发方式为System。
-* `Application` 应用触发器的目的在于将该合约作为应用函数进行调用，应用函数可以接受多个参数，对区块链的状态进行更改，并返回任意类型的返回值。以下是一个简单的c#智能合约：
+* **System** 此触发器为NEO3新增触发器类型。当节点收到新区块后触发，目前只会触发NativeContract的执行。当节点收到新区块，持久化之前会调用所有NativeContract的onPersist方法，触发方式为System。
+* **Application** 应用触发器的目的在于将该合约作为应用函数进行调用，应用函数可以接受多个参数，对区块链的状态进行更改，并返回任意类型的返回值。以下是一个简单的c#智能合约：
 
   ```csharp
   public static Object Main(string operation, params object[] args)
@@ -86,7 +89,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
 
 NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后，智能合约由共识节点执行，普通节点在转发交易时不执行智能合约。智能合约执行成功不代表交易的成功，而交易的成功也不决定智能合约执行的成功。
 
-* `Verifycation` 验证触发器的目的在于将该合约作为验证函数进行调用，验证函数可以接受多个参数，并且应返回有效的布尔值，标志着交易或区块的有效性。
+* **Verifycation** 验证触发器的目的在于将该合约作为验证函数进行调用，验证函数可以接受多个参数，并且应返回有效的布尔值，标志着交易或区块的有效性。
 
 当你想从 A 账户向 B 账户进行转账时，会触发验证合约，所有收到这笔交易的节点（包括普通节点和共识节点）都会验证 A 账户的合约，如果返回值为 true，即转账成功。如果返回 false，即转账失败。
 
@@ -127,649 +130,660 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
 ### 介绍
 原生合约是直接在原生代码中执行，而不是在虚拟机中运行的合约。原生合约公开其服务名称，供其他合约调用。目前已有的NativeContract包括NeoToken，GasToken，PolicyToken。
 
-- `NeoToken` 简称 NEO，是Neo的治理代币，用于执行对 Neo 网络的管理权，符合 NEP-5 标准。NEO 的总量为 1 亿，最小单位为 1，且不可分割。Neo 在创世块中注册生成。具体接口细节如下：
+#### NeoToken
 
-    - unClaimGas：获取到指定高度，未claim的GAS数量
-    ```csharp
-    [ContractMethod(0_03000000, 
-      ContractParameterType.Integer, 
-      ParameterTypes = new[] { 
-        ContractParameterType.Hash160, 
-        ContractParameterType.Integer 
-      }, 
-      ParameterNames = new[] { "account", "end" }, 
-      SafeMethod = true)]
-    private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
-    ```
+简称 NEO，是Neo的治理代币，用于执行对 Neo 网络的管理权，符合 NEP-5 标准。NEO 的总量为 1 亿，最小单位为 1，且不可分割。Neo 在创世块中注册生成。具体接口细节如下：
 
-    `参数列表` 
+- **unClaimGas**：获取到指定高度，未claim的GAS数量
+   
+ ```csharp
+[ContractMethod(0_03000000, 
+ContractParameterType.Integer, 
+ParameterTypes = new[] { 
+ContractParameterType.Hash160, 
+ContractParameterType.Integer 
+}, 
+ParameterNames = new[] { "account", "end" }, 
+SafeMethod = true)]
+private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
+```
 
-    |参数名称 | 参数类型 | 描述 |
-    |--|--|--|
-    |account|Hash160|要查询账户的ScriptHash|
-    | end | Integer | 要查询的截止高度 | 
+参数列表
 
-    `返回值`
+|参数名称 | 参数类型 | 描述 |
+|--|--|--|
+|account|Hash160|要查询账户的ScriptHash|
+| end | Integer | 要查询的截止高度 | 
 
-    | 类型 | 描述 |  
-    |--|--|
-    |Integer| 未claimGAS数量|  
-    |registerValidator| 注册成为备选节点 |
+返回值
 
-    `费用(GAS)`
+| 类型 | 描述 |  
+|--|--|
+|Integer| 未claimGAS数量|  
+|registerValidator| 注册成为备选节点 |
+
+费用(GAS)
     
-    *0.03*
+*0.03*
 
-    - RegisterValidator：注册验证人
+- **RegisterValidator**：注册验证人
 
-    ```csharp
-    [ContractMethod(0_05000000, 
-      ContractParameterType.Boolean, 
-      ParameterTypes = new[] { 
-        ContractParameterType.PublicKey 
-      }, 
-      ParameterNames = new[] { "pubkey" })]
-    private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
-    ```
-    `参数列表`
+```csharp
+[ContractMethod(0_05000000, 
+ContractParameterType.Boolean, 
+ParameterTypes = new[] { 
+ContractParameterType.PublicKey 
+}, 
+ParameterNames = new[] { "pubkey" })]
+private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
+```
+参数列表
 
-    | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|
-  	| pubKey	| PublicKey | 要注册验证人的账户的公钥 |
+| 参数名称 | 参数类型 | 描述 |
+|--|--|--|
+| pubKey	| PublicKey | 要注册验证人的账户的公钥 |
 
-    `返回值`
+返回值
 
-    | 类型 | 描述 |
-    |--|--|
-    | Boolean | 注册结果，true：成功， false：失败 |
+| 类型 | 描述 |
+|--|--|
+| Boolean | 注册结果，true：成功， false：失败 |
 
-    `费用(GAS)`  
+费用(GAS)
 
-    *0.05*
+*0.05*
 
-   - getRegisteredValidators：获取当前注册的验证人和备选节点信息
+- **getRegisteredValidators**：获取当前注册的验证人和备选节点信息
 
-    ```csharp
-    [ContractMethod(1_00000000, 
-    ContractParameterType.Array,
+```csharp
+[ContractMethod(1_00000000, 
+ContractParameterType.Array,
+SafeMethod = true)]
+private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args)
+```
+
+参数列表 
+
+*无参数*  
+
+返回值
+
+| 类型 | 描述 |
+|--|--|
+| Array | 所有验证人和备选节点信息 |
+
+费用(GAS)  
+
+*1.00*
+
+- **getValidators**: 获取当前区块所有验证人信息
+
+```csharp
+[ContractMethod(1_00000000, ContractParameterType.Array, SafeMethod = true)]
+private StackItem GetValidators(ApplicationEngine engine, VMArray args)
+```
+
+参数列表
+
+*无参数*
+
+返回值
+
+| 类型 | 描述 |
+|--|--|
+| Array | 所有验证人信息 |
+
+费用(GAS) 
+
+*1.00*
+
+- **getNextBlockValidators**: 获取下一个区块的验证人信息
+
+```csharp
+[ContractMethod(1_00000000, ContractParameterType.Array, SafeMethod = true)]
+private StackItem GetNextBlockValidators(ApplicationEngine engine, VMArray args)
+```
+
+参数列表 
+
+*无参数*  
+
+返回值
+
+| 类型 | 描述 |
+|--|--|
+| Array | 所有验证人信息 |
+
+费用(GAS)  
+
+*1.00*
+
+- **vote**：投票选举验证人
+
+```csharp
+[ContractMethod(5_00000000, 
+ContractParameterType.Boolean, 
+ParameterTypes = new[] {         
+ContractParameterType.Hash160, 
+ContractParameterType.Array }, 
+ParameterNames = new[] { "account", "pubkeys" })]
+private StackItem Vote(ApplicationEngine engine, VMArray args)
+```
+
+参数列表
+
+| 参数名称 | 参数类型 | 描述 |
+|--|--|--|
+| account	| Hash60 | 投票人的ScriptHash |
+| pubkeys | Array | 投给验证人的公钥 |
+
+返回值
+
+| 类型 | 描述 |
+|--|--|
+| Boolean | 投票结果，true：成功， false：失败 |
+
+费用(GAS)  
+
+*5.00*
+
+- **name***： Token的名称
+
+```csharp
+[ContractMethod(0, ContractParameterType.String, Name = "name", SafeMethod = true)]
+protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
+```
+
+参数  
+
+*无*  
+
+返回值
+
+| 类型 | 描述 |
+|--|--|
+| String | Token的名称 |
+
+费用(GAS)
+
+*0.00*
+
+- **symbol***：Token的简称
+```csharp
+[ContractMethod(0, ContractParameterType.String, Name = "symbol", SafeMethod = true)]
+protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
+```
+
+参数  
+
+*无*  
+
+返回值
+
+| 类型 | 描述 |
+|--|--|
+| String | Token的简称 |
+
+费用(GAS) 
+
+*0.00*
+
+- **decimals***: Token的计算精度
+
+```csharp
+[ContractMethod(0, ContractParameterType.Integer, Name = "decimals", SafeMethod = true)]
+protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
+```
+
+参数 
+
+*无*  
+
+返回值
+
+| 类型 | 描述 |
+|--|--|
+| String | Token的计算精度 |
+
+费用(GAS)  
+
+*0.00*
+
+- **totalSupply***: 总发行量
+
+```csharp
+[ContractMethod(0_01000000, ContractParameterType.Integer, SafeMethod = true)]
+protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
+```
+
+参数  
+
+*无*  
+
+返回值
+
+| 类型 | 描述 |
+|--|--|
+| String | Token的总发行量 |
+
+费用(GAS)  
+
+*0.01*
+
+- **balanceOf***: 指定地址的Token余额
+
+```csharp
+[ContractMethod(0_01000000, 
+    ContractParameterType.Integer, 
+    ParameterTypes = new[] { ContractParameterType.Hash160 }, 
+    ParameterNames = new[] { "account" }, 
     SafeMethod = true)]
-    private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args)
-    ```
+protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
+```
 
-    `参数列表` 
+参数列表
 
-    *无参数*  
+| 参数名称 | 参数类型 | 描述 |
+|--|--|--|
+|account|Hash160|要查询账户的ScriptHash|
 
-    `返回值`
+返回值
 
-    | 类型 | 描述 |
-    |--|--|
-    | Array | 所有验证人和备选节点信息 |
+| 类型 | 描述 |
+|--|--|
+|Integer| 余额数值 |
 
-    `费用(GAS)`  
+费用(GAS)  
 
-    *1.00*
-    
-    - getValidators: 获取当前区块所有验证人信息
+*0.01*
 
-    ```csharp
-    [ContractMethod(1_00000000, ContractParameterType.Array, SafeMethod = true)]
-    private StackItem GetValidators(ApplicationEngine engine, VMArray args)
-    ```
+- **transfer***: 转账
 
-    `参数列表`
+```csharp
+[ContractMethod(0_08000000, 
+ContractParameterType.Boolean, 
+ParameterTypes = new[] { 
+ContractParameterType.Hash160, 
+ContractParameterType.Hash160, 
+ContractParameterType.Integer 
+}, 
+ParameterNames = new[] { "from", "to", "amount" })]
+protected StackItem Transfer(ApplicationEngine engine, VMArray args)
+```
 
-    *无参数*
+参数列表
 
-    `返回值`
+| 参数名称 | 参数类型 | 描述 |
+|--|--|--|
+|from|Hash160|转出账户的ScriptHash|
+|from|Hash160|转入账户的ScriptHash|
+|amount|Integer|转账的Token数量|
 
-    | 类型 | 描述 |
-    |--|--|
-    | Array | 所有验证人信息 |
+返回值
 
-    `费用(GAS)` 
+| 类型 | 描述 |
+|--|--|
+|Boolean| 转账结果，true：成功，false：失败 |
 
-    *1.00*
+费用(GAS)  
 
-   - getNextBlockValidators: 获取下一个区块的验证人信息
+*0.08*
 
-    ```csharp
-    [ContractMethod(1_00000000, ContractParameterType.Array, SafeMethod = true)]
-    private StackItem GetNextBlockValidators(ApplicationEngine engine, VMArray args)
-    ```
+> 标*的方法为[NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki)标准接口
 
-    `参数列表`  
+#### GasToken
 
-    *无参数*  
+简称 GAS，Neo 的燃料代币，用于支付手续费，符合 NEP-5 标准。Neo 网络上的 交易费用和共识节点激励均以 GAS 来支付。GAS 总量 1 亿，最小单位 0.00000001。 GAS 在创始块中被注册，但未分发。  
+GAS 的分发机制: 生成一个新区块时会伴随产生新的 GAS，所生成的 GAS 和系统 费会分发给 NEO 的持有者。用户地址中的 NEO 余额发生变化时会自动进行 GAS 的计 算和分发，计算方法如下图所示:  
 
-    `返回值`
+![GAS distribution](../../images/GAS_distribution.png) 
 
-    | 类型 | 描述 |
-    |--|--|
-    | Array | 所有验证人信息 |
+其中，m 表示用户上一次提取 GAS 时所处的区块高度，n 为当前的区块高度，NEO 表示 m 至 n 期间用户持有的 NEO 的数量。BlockBonus 代表每个区块可以提取的 GAS 量，具体细节可参看经济模型部分。SystemFee 代表该区块中所有交易的系统费之和。
 
-    `费用(GAS)`  
+GasToken的详细接口介绍如下：
 
-    *1.00*
+- **getSysFeeAmount**: 获取截止到某一高度的系统费总和
 
-   - vote：投票选举验证人
+```csharp
+[ContractMethod(0_01000000, 
+    ContractParameterType.Integer, 
+    ParameterTypes = new[] { ContractParameterType.Integer }, 
+    ParameterNames = new[] { "index" }, 
+    SafeMethod = true)]
+private StackItem GetSysFeeAmount(ApplicationEngine engine, VMArray args)
+```
 
-    ```csharp
-    [ContractMethod(5_00000000, 
-      ContractParameterType.Boolean, 
-      ParameterTypes = new[] {         
-      ContractParameterType.Hash160, 
-      ContractParameterType.Array }, 
-      ParameterNames = new[] { "account", "pubkeys" })]
-    private StackItem Vote(ApplicationEngine engine, VMArray args)
-    ```
+参数列表
 
-    `参数列表`
+| 参数名称 | 参数类型 | 描述 |
+|--|--|--|
+|index|Integer| 要查询的高度 |
 
-    | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|
-  	| account	| Hash60 | 投票人的ScriptHash |
-    | pubkeys | Array | 投给验证人的公钥 |
+返回值
 
-    `返回值`
+| 类型 | 描述 |
+|--|--|
+|Integer| 系统费总值 |
 
-    | 类型 | 描述 |
-    |--|--|
-    | Boolean | 投票结果，true：成功， false：失败 |
+费用(GAS)  
 
-    `费用(GAS)`  
+*0.01*
 
-    *5.00*
+- **name***: Token的名称
+```csharp
+[ContractMethod(0, ContractParameterType.String, Name = "name", SafeMethod = true)]
+protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
+```
 
-   - name*： Token的名称
+参数  
 
-    ```csharp
-    [ContractMethod(0, ContractParameterType.String, Name = "name", SafeMethod = true)]
-    protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
-    ```
+*无*  
 
-    `参数`  
+返回值
 
-    *无*  
+| 类型 | 描述 |
+|--|--|
+| String | Token的名称 |
 
-    `返回值`
+费用(GAS)  
 
-    | 类型 | 描述 |
-    |--|--|
-    | String | Token的名称 |
+*0.00*
 
-    `费用(GAS)`
+- **symbol**: Token的简称
 
-    *0.00*
-    
-   - symbol*：Token的简称
-    ```csharp
-    [ContractMethod(0, ContractParameterType.String, Name = "symbol", SafeMethod = true)]
-    protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
-    ```
+```csharp
+[ContractMethod(0, ContractParameterType.String, Name = "symbol", SafeMethod = true)]
+protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
+```
 
-    `参数`  
+参数  
 
-    *无*  
+*无*  
 
-    `返回值`
+返回值
 
-    | 类型 | 描述 |
-    |--|--|
-    | String | Token的简称 |
+| 类型 | 描述 |
+|--|--|
+| String | Token的简称 |
 
-    `费用(GAS)`  
+费用(GAS) 
 
-    *0.00*
+*0.00*
 
-   - decimals*: Token的计算精度
+- **decimals***: Token的计算精度
 
-    ```csharp
-    [ContractMethod(0, ContractParameterType.Integer, Name = "decimals", SafeMethod = true)]
-    protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
-    ```
+```csharp
+[ContractMethod(0, ContractParameterType.Integer, Name = "decimals", SafeMethod = true)]
+protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
+```
 
-    `参数`  
+参数  
 
-    *无*  
+*无*  
 
-    `返回值`
+返回值
 
-    | 类型 | 描述 |
-    |--|--|
-    | String | Token的计算精度 |
+| 类型 | 描述 |
+|--|--|
+| String | Token的计算精度 |
 
-    `费用(GAS)`  
+费用(GAS)  
 
-    *0.00*
+*0.00*
 
-   - totalSupply*: 总发行量
+- **totalSupply***: 总发行量
 
-    ```csharp
-    [ContractMethod(0_01000000, ContractParameterType.Integer, SafeMethod = true)]
-    protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
-    ```
+```csharp
+[ContractMethod(0_01000000, ContractParameterType.Integer, SafeMethod = true)]
+protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
+```
 
-    `参数`  
+参数  
 
-    *无*  
+*无*  
 
-    `返回值`
+返回值
 
-    | 类型 | 描述 |
-    |--|--|
-    | String | Token的总发行量 |
+| 类型 | 描述 |
+|--|--|
+| String | Token的总发行量 |
 
-    `费用(GAS)`  
+费用(GAS)  
 
-    *0.01*
+*0.01*
 
-   - balanceOf*: 指定地址的Token余额
+- **balanceOf***: 指定地址的Token余额
 
-    ```csharp
-    [ContractMethod(0_01000000, 
-      ContractParameterType.Integer, 
-      ParameterTypes = new[] { ContractParameterType.Hash160 }, 
-      ParameterNames = new[] { "account" }, 
-      SafeMethod = true)]
-    protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
-    ```
+```csharp
+[ContractMethod(0_01000000, 
+ContractParameterType.Integer, 
+ParameterTypes = new[] { ContractParameterType.Hash160 }, 
+ParameterNames = new[] { "account" }, 
+SafeMethod = true)]
+protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
+```
 
-    `参数列表`
+参数
 
-    | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|
-    |account|Hash160|要查询账户的ScriptHash|
-    
-    `返回值`
+| 参数名称 | 参数类型 | 描述 |
+|--|--|--|
+|account|Hash160|要查询账户的ScriptHash|
 
-    | 类型 | 描述 |
-    |--|--|
-    |Integer| 余额数值 |
+返回值
 
-    `费用(GAS)`  
+| 类型 | 描述 |
+|--|--|
+|Integer| 余额数值 |
 
-    *0.01*
+费用(GAS) 
 
-   - transfer*: 转账
+*0.01*
 
-    ```csharp
-    [ContractMethod(0_08000000, 
-      ContractParameterType.Boolean, 
-      ParameterTypes = new[] { 
-        ContractParameterType.Hash160, 
-        ContractParameterType.Hash160, 
-        ContractParameterType.Integer 
-      }, 
-      ParameterNames = new[] { "from", "to", "amount" })]
-    protected StackItem Transfer(ApplicationEngine engine, VMArray args)
-    ```
+- **transfer***: 转账
 
-    `参数列表`
+```csharp
+[ContractMethod(0_08000000, 
+ContractParameterType.Boolean, 
+ParameterTypes = new[] { 
+ContractParameterType.Hash160, 
+ContractParameterType.Hash160, 
+ContractParameterType.Integer 
+}, 
+ParameterNames = new[] { "from", "to", "amount" })]
+protected StackItem Transfer(ApplicationEngine engine, VMArray args)
+```
 
-    | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|
-    |from|Hash160|转出账户的ScriptHash|
-    |from|Hash160|转入账户的ScriptHash|
-    |amount|Integer|转账的Token数量|
+参数
 
-    `返回值`
+| 参数名称 | 参数类型 | 描述 |
+|--|--|--|
+|from|Hash160|转出账户的ScriptHash|
+|from|Hash160|转入账户的ScriptHash|
+|amount|Integer|转账的Token数量|
 
-    | 类型 | 描述 |
-    |--|--|
-    |Boolean| 转账结果，true：成功，false：失败 |
+返回值
 
-    `费用(GAS)`  
+| 类型 | 描述 |
+|--|--|
+|Boolean| 转账结果，true：成功，false：失败 |
 
-    *0.08*
+费用(GAS) 
 
-  > 标*的方法为[NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki)标准接口
+*0.08*
 
-- `GasToken`: 简称 GAS，Neo 的燃料代币，用于支付手续费，符合 NEP-5 标准。Neo 网络上的 交易费用和共识节点激励均以 GAS 来支付。GAS 总量 1 亿，最小单位 0.00000001。 GAS 在创始块中被注册，但未分发。  
-  GAS 的分发机制: 生成一个新区块时会伴随产生新的 GAS，所生成的 GAS 和系统 费会分发给 NEO 的持有者。用户地址中的 NEO 余额发生变化时会自动进行 GAS 的计 算和分发，计算方法如下图所示:  
+> 标*的方法为[NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki)标准接口
 
-  ![GAS distribution](../../images/GAS_distribution.png) 
+#### PolicyToken
 
-  其中，m 表示用户上一次提取 GAS 时所处的区块高度，n 为当前的区块高度，NEO 表示 m 至 n 期间用户持有的 NEO 的数量。BlockBonus 代表每个区块可以提取的 GAS 量，具体细节可参看经济模型部分。SystemFee 代表该区块中所有交易的系统费之和。
-  GasToken的详细接口介绍如下：
+配置公式策略的合约，保存了共识过程中相关参数，例如区块最大交易数，每字节手续费等。接口详细介绍如下：
+  
+- getMaxTransactionPerBlock  
+获取每个区块最大交易数
 
-   - getSysFeeAmount: 获取截止到某一高度的系统费总和
+```csharp
+[ContractMethod(0_01000000, ContractParameterType.Integer, SafeMethod = true)]
+private StackItem GetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray args)
+```
 
-    ```csharp
-    [ContractMethod(0_01000000, 
-      ContractParameterType.Integer, 
-      ParameterTypes = new[] { ContractParameterType.Integer }, 
-      ParameterNames = new[] { "index" }, 
-      SafeMethod = true)]
-    private StackItem GetSysFeeAmount(ApplicationEngine engine, VMArray args)
-    ```
+参数  
 
-    `参数列表`
+*无*  
 
-    | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|
-    |index|Integer| 要查询的高度 |
+返回值
 
-    `返回值`
+| 类型 | 描述 |
+|--|--|
+| Integer | 区块最大交易数 |
 
-    | 类型 | 描述 |
-    |--|--|
-    |Integer| 系统费总值 |
+费用(GAS)  
 
-    `费用(GAS)`  
+*0.01*
 
-    *0.01*
+- **GetFeePerByte**： 获取每个区块最大交易数
 
-   - name*: Token的名称
-    ```csharp
-    [ContractMethod(0, ContractParameterType.String, Name = "name", SafeMethod = true)]
-    protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
-    ```
+```csharp
+[ContractMethod(0_01000000, ContractParameterType.Integer, SafeMethod = true)]
+private StackItem GetFeePerByte(ApplicationEngine engine, VMArray args)
+```
 
-    `参数`  
+参数  
 
-    *无*  
+*无*  
 
-    `返回值`
+返回值
 
-    | 类型 | 描述 |
-    |--|--|
-    | String | Token的名称 |
+| 类型 | 描述 |
+|--|--|
+| Integer | 每字节手续费 |
 
-    `费用(GAS)`  
+费用(GAS)  
 
-    *0.00*
+*0.01*
 
-   - symbol: Token的简称
+- **getBlockedAccounts**: 获取被加入黑名单的地址列表
 
-    ```csharp
-    [ContractMethod(0, ContractParameterType.String, Name = "symbol", SafeMethod = true)]
-    protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
-    ```
+```csharp
+[ContractMethod(0_01000000, ContractParameterType.Array, SafeMethod = true)]
+private StackItem GetBlockedAccounts(ApplicationEngine engine, VMArray args)
+```
 
-    `参数`  
+参数  
 
-    *无*  
-    
-    `返回值`
+*无*  
 
-    | 类型 | 描述 |
-    |--|--|
-    | String | Token的简称 |
+返回值
 
-    `费用(GAS)` 
+| 类型 | 描述 |
+|--|--|
+| Array | 黑名单列表 |
 
-    *0.00*
+费用(GAS)  
 
-   - decimals*: Token的计算精度
+*0.01*
 
-    ```csharp
-    [ContractMethod(0, ContractParameterType.Integer, Name = "decimals", SafeMethod = true)]
-    protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
-    ```
+- **setMaxTransactionsPerBlock**: 设置每个区块的最大交易数
 
-    `参数`  
+```csharp
+[ContractMethod(0_03000000, ContractParameterType.Boolean, ParameterTypes = new[] { ContractParameterType.Integer }, ParameterNames = new[] { "value" })]
+private StackItem SetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray args)
+```
 
-    *无*  
+参数  
 
-    `返回值`
+| 参数名称 | 参数类型 | 描述 |
+|--|--|--|
+| value | Integer | 要设置的数值 | 
 
-    | 类型 | 描述 |
-    |--|--|
-    | String | Token的计算精度 |
+返回值
 
-    `费用(GAS)`  
+| 类型 | 描述 |
+|--|--|
+| Boolean | 结果。true：设置成功，false：设置失败 |
 
-    *0.00*
+费用(GAS)  
 
-   - totalSupply*: 总发行量
+*0.03*
 
-    ```csharp
-    [ContractMethod(0_01000000, ContractParameterType.Integer, SafeMethod = true)]
-    protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
-    ```
+- **setFeePerByte**：设置每比特手续费
 
-    `参数`  
+```csharp
+[ContractMethod(0_03000000, 
+ContractParameterType.Boolean, 
+ParameterTypes = new[] { ContractParameterType.Integer }, 
+ParameterNames = new[] { "value" })]
+private StackItem SetFeePerByte(ApplicationEngine engine, VMArray args)
+```
 
-    *无*  
+参数  
 
-    `返回值`
+| 参数名称 | 参数类型 | 描述 |
+|--|--|--|
+| value | Integer | 要设置的数值 | 
 
-    | 类型 | 描述 |
-    |--|--|
-    | String | Token的总发行量 |
+返回值
 
-    `费用(GAS)`  
+| 类型 | 描述 |
+|--|--|
+| Boolean | 结果。true：设置成功，false：设置失败 |
 
-    *0.01*
+费用(GAS)  
 
-   - balanceOf*: 指定地址的Token余额
+*0.03*
 
-    ```csharp
-    [ContractMethod(0_01000000, 
-      ContractParameterType.Integer, 
-      ParameterTypes = new[] { ContractParameterType.Hash160 }, 
-      ParameterNames = new[] { "account" }, 
-      SafeMethod = true)]
-    protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
-    ```
+- **blockAccount**：将某个地址加入黑名单
 
-    `参数`
+```csharp
+[ContractMethod(0_03000000, 
+ContractParameterType.Boolean, 
+ParameterTypes = new[] { ContractParameterType.Hash160 }, 
+ParameterNames = new[] { "account" })]
+private StackItem BlockAccount(ApplicationEngine engine, VMArray args)
+```
 
-    | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|
-    |account|Hash160|要查询账户的ScriptHash|
+参数  
 
-    `返回值`
+| 参数名称 | 参数类型 | 描述 |
+|--|--|--|
+| account | Hash160 | 要列入黑名单的地址 | 
 
-    | 类型 | 描述 |
-    |--|--|
-    |Integer| 余额数值 |
+返回值
 
-    `费用(GAS)` 
+| 类型 | 描述 |
+|--|--|
+| Boolean | true：设置成功，false：设置失败 |
 
-    *0.01*
+费用(GAS)  
 
-   - transfer*: 转账
+*0.03*
 
-    ```csharp
-    [ContractMethod(0_08000000, 
-      ContractParameterType.Boolean, 
-      ParameterTypes = new[] { 
-        ContractParameterType.Hash160, 
-        ContractParameterType.Hash160, 
-        ContractParameterType.Integer 
-      }, 
-      ParameterNames = new[] { "from", "to", "amount" })]
-    protected StackItem Transfer(ApplicationEngine engine, VMArray args)
-    ```
+- **unblockAccount**：将某个地址从黑名单移除
 
-    `参数`
+```csharp
+[ContractMethod(0_03000000, 
+ContractParameterType.Boolean, 
+ParameterTypes = new[] { ContractParameterType.Hash160 }, 
+ParameterNames = new[] { "account" })]
+private StackItem UnblockAccount(ApplicationEngine engine, VMArray args)
+```
 
-    | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|
-    |from|Hash160|转出账户的ScriptHash|
-    |from|Hash160|转入账户的ScriptHash|
-    |amount|Integer|转账的Token数量|
+参数  
 
-    `返回值`
+| 参数名称 | 参数类型 | 描述 |
+|--|--|--|
+| account | Hash160 | 要移出黑名单的地址 | 
 
-    | 类型 | 描述 |
-    |--|--|
-    |Boolean| 转账结果，true：成功，false：失败 |
+返回值
 
-    `费用(GAS)`  
+| 类型 | 描述 |
+|--|--|
+| Boolean | true：设置成功，false：设置失败 |
 
-    *0.08*
+费用(GAS)  
 
-  > 标*的方法为[NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki)标准接口
+*0.03*
 
-- `PolicyToken`: 配置公式策略的合约，保存了共识过程中相关参数，例如区块最大交易数，每字节手续费等。接口详细介绍如下：
-   - getMaxTransactionPerBlock  
-    获取每个区块最大交易数
 
-    ```csharp
-    [ContractMethod(0_01000000, ContractParameterType.Integer, SafeMethod = true)]
-    private StackItem GetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray args)
-    ```
-
-    `参数`  
-
-    *无*  
-
-    `返回值`
-    
-    | 类型 | 描述 |
-    |--|--|
-    | Integer | 区块最大交易数 |
-
-    `费用(GAS)`  
-
-    *0.01*
-
-    - GetFeePerByte： 获取每个区块最大交易数
-
-    ```csharp
-    [ContractMethod(0_01000000, ContractParameterType.Integer, SafeMethod = true)]
-    private StackItem GetFeePerByte(ApplicationEngine engine, VMArray args)
-    ```
-
-    `参数`  
-
-    *无*  
-
-    `返回值`
-
-    | 类型 | 描述 |
-    |--|--|
-    | Integer | 每字节手续费 |
-
-    `费用(GAS)`  
-
-    *0.01*
-
-   - getBlockedAccounts: 获取被加入黑名单的地址列表
-
-    ```csharp
-    [ContractMethod(0_01000000, ContractParameterType.Array, SafeMethod = true)]
-    private StackItem GetBlockedAccounts(ApplicationEngine engine, VMArray args)
-    ```
-
-    `参数`  
-
-    *无*  
-
-    `返回值`
-
-    | 类型 | 描述 |
-    |--|--|
-    | Array | 黑名单列表 |
-
-    `费用(GAS)`  
-
-    *0.01*
-    
-   - setMaxTransactionsPerBlock: 设置每个区块的最大交易数
-
-    ```csharp
-    [ContractMethod(0_03000000, ContractParameterType.Boolean, ParameterTypes = new[] { ContractParameterType.Integer }, ParameterNames = new[] { "value" })]
-    private StackItem SetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray args)
-    ```
-
-    `参数`  
-
-    | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|
-    | value | Integer | 要设置的数值 | 
-
-    `返回值`
-
-    | 类型 | 描述 |
-    |--|--|
-    | Boolean | 结果。true：设置成功，false：设置失败 |
-
-    `费用(GAS)`  
-
-    *0.03*
-
-   - setFeePerByte：设置每比特手续费
-
-    ```csharp
-    [ContractMethod(0_03000000, 
-      ContractParameterType.Boolean, 
-      ParameterTypes = new[] { ContractParameterType.Integer }, 
-      ParameterNames = new[] { "value" })]
-    private StackItem SetFeePerByte(ApplicationEngine engine, VMArray args)
-    ```
-
-    `参数`  
-
-    | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|
-    | value | Integer | 要设置的数值 | 
-
-    `返回值`
-
-    | 类型 | 描述 |
-    |--|--|
-    | Boolean | 结果。true：设置成功，false：设置失败 |
-
-    `费用(GAS)`  
-
-    *0.03*
-
-   - blockAccount：将某个地址加入黑名单
-
-    ```csharp
-    [ContractMethod(0_03000000, 
-      ContractParameterType.Boolean, 
-      ParameterTypes = new[] { ContractParameterType.Hash160 }, 
-      ParameterNames = new[] { "account" })]
-    private StackItem BlockAccount(ApplicationEngine engine, VMArray args)
-    ```
-
-    `参数`  
-
-    | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|
-    | account | Hash160 | 要列入黑名单的地址 | 
-
-    `返回值`
-
-    | 类型 | 描述 |
-    |--|--|
-    | Boolean | true：设置成功，false：设置失败 |
-
-    `费用(GAS)`  
-
-    *0.03*
-
-   - unblockAccount：将某个地址从黑名单移除
-    ```csharp
-    [ContractMethod(0_03000000, 
-      ContractParameterType.Boolean, 
-      ParameterTypes = new[] { ContractParameterType.Hash160 }, 
-      ParameterNames = new[] { "account" })]
-    private StackItem UnblockAccount(ApplicationEngine engine, VMArray args)
-    ```
-    
-    `参数`  
-
-    | 参数名称 | 参数类型 | 描述 |
-    |--|--|--|
-    | account | Hash160 | 要移出黑名单的地址 | 
-
-    `返回值`
-
-    | 类型 | 描述 |
-    |--|--|
-    | Boolean | 结果。true：设置成功，false：设置失败 |
-
-    `费用(GAS)`  
-
-    *0.03*
-
-- 更多NativeContract，敬请期待
+**更多NativeContract，敬请期待**
 
 ### NativeContract 部署
 NativeContract在创世区块中通过调用Neo.Native.Deploy互操作接口部署其只能在创世区块执行。
@@ -777,7 +791,8 @@ NativeContract在创世区块中通过调用Neo.Native.Deploy互操作接口部�
 
 ### NativeContract 调用
 NativeContract的调用有两种方法, 第一种是跟普通合约一样，通过合约的脚本哈希来调用，另一种是NativeContract特有的，直接通过互操作服务调用。[查看互操作服务使用](#互操作服务使用)
-- 特有方法：通过互操作接口直接调用
+
+- **特有方法**：通过互操作接口直接调用
 
   每个NativeContract都会注册一个互操作接口，互操作接口名称为其ServiceName，都属于Neo.Native命名空间。
   每个NativeContract对应的ServiceName如下：
@@ -807,7 +822,7 @@ NativeContract的调用有两种方法, 第一种是跟普通合约一样，通�
     }
   }
   ```
-- 通用方法：通过ScriptHash调用
+- **通用方法**：通过ScriptHash调用
 
   NativeContract的ScriptHash都是固定的，可以像调用其他普通合约一样用System.Contract.Call互操作接口和NativeContract的ScriptHash调用。现有NativeContract的ScriptHash如下：
 
@@ -824,18 +839,20 @@ NativeContract的调用有两种方法, 第一种是跟普通合约一样，通�
 
 ### 互操作服务原理
 Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智能合约调用。
-* `服务名称` 每个互操作都有一个名称，例如 `System.Contract.Call`。
-* `映射方法` 每个互操作服务都有对应的原生方法，例如`private static bool Contract_Call(ApplicationEngine engine)`，其为在客户端中实际调用的方法
-* `系统费` 每个互操作服务都有其系统费计算方法或者固定系统费。
-* `触发方式` 每个互操作接口都有支持的触发方式，比如`TriggerType.All`支持所有触发器
+* **服务名称** 每个互操作都有一个名称，例如 `System.Contract.Call`。
+* **映射方法** 每个互操作服务都有对应的原生方法，例如`private static bool Contract_Call(ApplicationEngine engine)`，其为在客户端中实际调用的方法
+* **系统费** 每个互操作服务都有其系统费计算方法或者固定系统费。
+* **触发方式** 每个互操作接口都有支持的触发方式，比如`TriggerType.All`支持所有触发器
 
 注册时就是Neo客户端将互操作接口的服务名称，映射的具体方法，系统费计算方法，支持的触发方式封装为一个InteropDescriptor存储在Dictionary中，索引为互操作接口名称的哈希值，其计算方法为：
 `BitConverter.ToUInt32(Encoding.ASCII.GetBytes(ServiceName).Sha256(), 0)`
 
 例如，`System.Contract.Call`的哈希值为`0x627d5b52`
+
 ### 互操作服务使用 
-* `智能合约` 智能合约中使用互操作接口由对应的智能合约开发框架提供，直接调用即可，当编译时会由编译器编译成可在NEO-VM中执行的操作符指令
-* `交易Script` 很多时候需要手动拼接执行脚本，这时候使用互操作服务的接口名称的哈希值与SYSCALL操作符来实现。
+
+* **智能合约** 智能合约中使用互操作接口由对应的智能合约开发框架提供，直接调用即可，当编译时会由编译器编译成可在NEO-VM中执行的操作符指令
+* **交易Script** 很多时候需要手动拼接执行脚本，这时候使用互操作服务的接口名称的哈希值与SYSCALL操作符来实现。
 
 例如，如果要通过`System.Contract.Call`来调用合约`0x43cf98eddbe047e198a3e5d57006311442a0ca15`的`name`方法：
   ```
@@ -879,6 +896,7 @@ Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智�
 互操作服务分为System部分和Neo部分，具体接口介绍如下：
 
 ### System空间
+
 - System.ExecutionEngine.GetScriptContainer  
 
   | 功能描述 | 获取该智能合约的脚本容器|
