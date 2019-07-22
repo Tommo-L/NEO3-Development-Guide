@@ -889,3 +889,8 @@ Neo.VM虚拟机一共实现了173个指令，类别如下：
 | 功能：   | 从计算栈栈顶读取一个布尔值，如果为False，则将虚拟机状态置为FAULT |
 
 注：带\*操作码表示该操作码的操作结果并未使用PUSH()放回计算栈。
+
+## NEO3 变动部分
+
+1. NEO3取消了APPCALL，TAILCALL，SHA1，SHA256，HASH160，HASH256，CHECKSIG，VERIFY，CHECKMULTISIG，CALL_I，CALL_E，CALL_ED，CALL_ET，CALL_EDT等Opcode。
+2. NEO3新增了DUPFROMALTSTACKBOTTOM等Opcode。

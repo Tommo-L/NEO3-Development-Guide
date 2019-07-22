@@ -900,5 +900,9 @@ It has implemented common operations for array, map, struct, etc.
 | Fee: | 3e-7 GAS                                                        |
 | Function:   | Read a boolean value from the top of the stack, and if it's False, then set the virtual machine state to `FAULT`. |
 
-
 Note: The operation code with \* indicates that the result of the operation is not pushed back to the `EvaluationStack`.
+
+## Changes in NEO3
+
+1. NEO3 abandons the following opcodes: APPCALL, TAILCALL, SHA1, SHA256, HASH160, HASH256, CHECKSIG, VERIFY, CHECKMULTISIG, CALL_I, CALL_E, CALL_ED, CALL_ET, CALL_EDT, etc.
+2. NEO3 adds the following opcode: DUPFROMALTSTACKBOTTOM.

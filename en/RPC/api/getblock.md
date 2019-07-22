@@ -33,7 +33,7 @@ Response body:
 
 Request body:
 
-verbose = 1，返回 JSON 格式的结果。
+verbose = 1，result returned in JSON format
 
 ```json
 {

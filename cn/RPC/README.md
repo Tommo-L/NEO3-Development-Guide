@@ -134,13 +134,19 @@ http://somewebsite.com:10332
 }
 ```
 
-注：当使用离线同步包同步区块时，程序可能无法响应 API 请求，建议将区块同步到最新高度后再使用 API，否则返回的结果可能不是最新的。
+> 注：当使用离线同步包同步区块时，程序可能无法响应 API 请求，建议将区块同步到最新高度后再使用 API，否则返回的结果可能不是最新的。
 
 ## 测试工具
 
 你可以用 Chrome 扩展程序中的 Postman 来方便地进行测试（安装 Chrome 扩展程序需要科学上网），下面是测试截图：
 
 ![](../../images/api_3.jpg)
+
+## NEO3 变动部分
+
+1. NEO3取消了claimgas，dumpprivkey，getaccountstate，getapplicationlog，getassetstate，getbalance，getclaimable，getmetricblocktimestamp，getnep5balances，getnep5transfers，getnewaddress，gettxout，getunclaimed，getunclaimedgas，getunspents，getwalletheight，importprivkey，invoke，listaddress，sendfrom，sendtoaddress，sendmany等API指令。
+2. NEO3重新定义了getblockheader，getrawmempool等API指令的调用方式。
+3. NEO3更新了getblock，getblockheader，getrawtransaction，getversion，getcontractstate等API指令的返回内容。
 
 ## 其它
 

@@ -1,4 +1,4 @@
-<div align="center">  
+﻿<div align="center">  
 <h1>NEO3 Development Guide</h1>
 <img src="images/neo-rebranding.png" alt="NEO3 Development Guide" height="150">
 
@@ -14,17 +14,17 @@
 
 
 
+## NEO3 变动部分总结
 
 
-补充一部分，关于NEO3 变动部分的汇总介绍
-
-
-
-1. 钱包部分： 地址合约发生变动，Opcode.CheckSig, Opcode.CheckMultiSig  换成互操作访问。
-2. 其他部分需要补充，并format组织下。
 
 ### NEO3 Changed
 
 | Items          | Neo2.x                                         | Neo3                                                      |
 | -------------- | ---------------------------------------------- | --------------------------------------------------------- |
 | Address script | 0x21 + publicKey(compressed, 33 bytess) + 0xac | 0x21 + publicKey(compressed, 33 bytes)+ 0x68 + 0x747476aa |
+1. NEO3中的地址脚本发生了变动，不再使用 Opcode.CheckSig, OpCode.CheckMultiSig 指令， 换成使用互操作服务调用，即SysCall "Neo.Crypto.CheckSig".hash2uint, SysCall "Neo.Crypto.CheckMultiSig".hash2unit 方式；
+2. NEO3弃用了UTXO模型，仅保留有账户余额模型；
+3. NEO3取消了每笔交易10 GAS的免费额度，系统费用总额受合约脚本的指令数量和指令类型影响
+4. NEO3取消了APPCALL，TAILCALL，SHA1，SHA256，HASH160，HASH256，CHECKSIG，VERIFY，CHECKMULTISIG，CALL_I，CALL_E，CALL_ED，CALL_ET，CALL_EDT等Opcode，新增了DUPFROMALTSTACKBOTTOM等Opcode。
+5. NEO3取消了claimgas，dumpprivkey，getaccountstate，getapplicationlog，getassetstate，getbalance，getclaimable，getmetricblocktimestamp，getnep5balances，getnep5transfers，getnewaddress，gettxout，getunclaimed，getunclaimedgas，getunspents，getwalletheight，importprivkey，invoke，listaddress，sendfrom，sendtoaddress，sendmany等API接口，重新定义了getblockheader，getrawmempool等API接口的调用，并更新了getblock，getblockheader，getrawtransaction，getversion，getcontractstate等API接口的返回内容。
