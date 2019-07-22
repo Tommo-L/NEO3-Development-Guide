@@ -16,10 +16,10 @@
 
 ## Changes in NEO3
 
+- The address script in NEO3 has changed not using the Opcode.CheckSig and OpCode.CheckMultiSig but the interoperable service call `SysCall "Neo.Crypto.CheckSig".hash2uint`, `SysCall "Neo.Crypto .CheckMultiSig".hash2unit` instead
 - Address script changes from the format of `0x21 + publicKey(compressed, 33 bytess) + 0xac` (Neo2.x) to `0x21 + publicKey(compressed, 33 bytes)+ 0x68 + 0x747476aa` (NEO3)
 - NEO3 abandoned UTXO model with only account balance model retained
--  NEO3 cancels the free discount of 10 GAS for each transaction. The total fee is subject to the quantity and type of instructions in the contract script
-- The address script in NEO3 has changed not using the Opcode.CheckSig and OpCode.CheckMultiSig but the interoperable service call `SysCall "Neo.Crypto.CheckSig".hash2uint`, `SysCall "Neo.Crypto .CheckMultiSig".hash2unit` instead
+- NEO3 cancels the free discount of 10 GAS for each transaction. The total fee is subject to the quantity and type of instructions in the contract script
 - NEO3 abandons the following commands: claimgas, dumpprivkey, getaccountstate, getapplicationlog, getassetstate, getbalance, getclaimable, getmetricblocktimestamp, getnep5balances, getnep5transfers, getnewaddress, gettxout, getunclaimed, getunclaimedgas, getunspents, getwalletheight, importprivkey, invoke, listaddress, sendfrom, sendtoaddress, sendmany, etc.
 - NEO3 redefines the following commands' references: getblockheader, getrawmempool.
 - NEO3 renews the following commands' returned content: getblock, getblockheader, getrawtransaction, getversion, getcontractstate.
