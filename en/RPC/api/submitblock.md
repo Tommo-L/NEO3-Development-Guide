@@ -1,6 +1,6 @@
 ﻿# submitblock Method
 
-Broadcasts a raw block over the NEO network. 
+Broadcast a raw block in the NEO network. 
 
 ## Parameter Description
 
@@ -46,9 +46,9 @@ Response body in unsuccessful cases:
 s
 Response Description:
 
-When result is false, the block has failed to broadcast and an exception is raised. The following error codes can be expected
+When result is false, the block has failed to broadcast and an exception occurs. The following error codes can be expected
 
-Error code | Message |
+| Error code | Message |
 | --------------- | ---- |
 | -501 | Block or transaction already exists and cannot be sent repeatedly. |
 | -502 | The memory pool is full and no more transactions can be sent. |

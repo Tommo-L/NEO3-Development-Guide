@@ -1,6 +1,6 @@
 ﻿# getcontractstate Method
 
-Queries contract information, according to the contract script hash. 
+Query contract information with the contract script hash. 
 
 ## Parameter Description
 
