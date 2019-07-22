@@ -1,6 +1,6 @@
 ﻿# getversion Method
 
-Returns the version information about the queried node.
+Return the version information about the queried node.
 
 ## Example
 

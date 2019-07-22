@@ -1,6 +1,6 @@
 ﻿# getrawmempool Method
 
-Obtains the list of confirmed / unconfirmed transactions in memory.
+Obtain the list of confirmed / unconfirmed transactions in memory.
 
 ## Parameter Description
 

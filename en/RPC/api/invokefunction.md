@@ -1,6 +1,6 @@
 ﻿# invokefunction Method
 
-Returns the result after calling a smart contract at scripthash with the given operation and parameters.
+Return the result after calling a smart contract at scripthash with the given operation and parameters.
 
 > [!Note]
 >

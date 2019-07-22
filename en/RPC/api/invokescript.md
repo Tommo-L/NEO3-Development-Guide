@@ -1,6 +1,6 @@
 ﻿# invokescript Method
 
-Returns the result after passing a script through the VM.
+Return the result after passing a script through the VM.
 
 > [!Note]
 >
@@ -9,7 +9,7 @@ Returns the result after passing a script through the VM.
 
 ## Parameter Description
 
-script: A script runnable by the VM. This is the same script that is carried in InvocationTransaction
+script: A script runnable in the VM. This is the same script that is carried in InvocationTransaction
 
 ## Example
 

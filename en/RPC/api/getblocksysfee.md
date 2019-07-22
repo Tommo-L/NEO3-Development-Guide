@@ -1,6 +1,6 @@
 ﻿# getblocksysfee Method
 
-Returns the system fees of the block, based on the specified index.
+Return the system fees of the block, based on the specified index.
 
 ## Parameter Description
 
@@ -31,4 +31,4 @@ Response body:
 
 Response description:
 
-result: The system fees of the block, in NeoGas units.
+result: The system fees of the block in NeoGas units.
