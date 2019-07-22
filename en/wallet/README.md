@@ -16,7 +16,7 @@ The wallet is a basic component of Neo and the bridge for users to access the Ne
 
 Developers are allowed to redesign and modify the Neo wallet under the following rules and patterns.
 
-### NEO3 Changed
+### Changes in NEO3
 
 | Items | Neo2.x        | Neo3         |
 | -------- | ------------- | ---------------- |
