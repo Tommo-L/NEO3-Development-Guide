@@ -33,11 +33,7 @@ Response body:
 
 Request body:
 
-<<<<<<< Updated upstream
-verbose = 1，result returned in JSON format
-=======
 verbose = 1， return the result in JSON format
->>>>>>> Stashed changes
 
 ```json
 {
