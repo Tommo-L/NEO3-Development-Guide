@@ -5,7 +5,7 @@
 <p>A development guide for basic tool developers of NEO3 to facilitate the underlying construction</p>
 </div>
 
-## 目录 
+## Table 
 - [Wallet](en/wallet)
 - [Transactions](en/transactions)
 - [RPC](en/RPC)
@@ -14,11 +14,14 @@
 
 
 
-## NEO3 变更总结
+## Changes in NEO3
 
-- 脚本地址由Neo2.x中的 `0x21 + publicKey(compressed, 33 bytess) + 0xac` 变成NEO3中的 `0x21 + publicKey(compressed, 33 bytes)+ 0x68 + 0x747476aa` 
-- NEO3中的地址脚本发生了变动，不再使用 Opcode.CheckSig, OpCode.CheckMultiSig 指令， 换成使用互操作服务调用，即SysCall "Neo.Crypto.CheckSig".hash2uint, SysCall "Neo.Crypto.CheckMultiSig".hash2unit 方式。
-- NEO3弃用了UTXO模型，仅保留有账户余额模型；
-- NEO3取消了每笔交易10 GAS的免费额度，系统费用总额受合约脚本的指令数量和指令类型影响
-- NEO3取消了APPCALL，TAILCALL，SHA1，SHA256，HASH160，HASH256，CHECKSIG，VERIFY，CHECKMULTISIG，CALL_I，CALL_E，CALL_ED，CALL_ET，CALL_EDT等Opcode，新增了DUPFROMALTSTACKBOTTOM等Opcode。
-- NEO3取消了claimgas，dumpprivkey，getaccountstate，getapplicationlog，getassetstate，getbalance，getclaimable，getmetricblocktimestamp，getnep5balances，getnep5transfers，getnewaddress，gettxout，getunclaimed，getunclaimedgas，getunspents，getwalletheight，importprivkey，invoke，listaddress，sendfrom，sendtoaddress，sendmany等API接口，重新定义了getblockheader，getrawmempool等API接口的调用，并更新了getblock，getblockheader，getrawtransaction，getversion，getcontractstate等API接口的返回内容。
+- Address script changes from the format of `0x21 + publicKey(compressed, 33 bytess) + 0xac` (Neo2.x) to `0x21 + publicKey(compressed, 33 bytes)+ 0x68 + 0x747476aa` (NEO3)
+- NEO3 abandoned UTXO model with only account balance model retained
+-  NEO3 cancels the free discount of 10 GAS for each transaction. The total fee is subject to the quantity and type of instructions in the contract script
+- The address script in NEO3 has changed not using the Opcode.CheckSig and OpCode.CheckMultiSig but the interoperable service call `SysCall "Neo.Crypto.CheckSig".hash2uint`, `SysCall "Neo.Crypto .CheckMultiSig".hash2unit` instead
+- NEO3 abandons the following commands: claimgas, dumpprivkey, getaccountstate, getapplicationlog, getassetstate, getbalance, getclaimable, getmetricblocktimestamp, getnep5balances, getnep5transfers, getnewaddress, gettxout, getunclaimed, getunclaimedgas, getunspents, getwalletheight, importprivkey, invoke, listaddress, sendfrom, sendtoaddress, sendmany, etc.
+- NEO3 redefines the following commands' references: getblockheader, getrawmempool.
+- NEO3 renews the following commands' returned content: getblock, getblockheader, getrawtransaction, getversion, getcontractstate.
+- NEO3 abandons the following opcodes: APPCALL, TAILCALL, SHA1, SHA256, HASH160, HASH256, CHECKSIG, VERIFY, CHECKMULTISIG, CALL_I, CALL_E, CALL_ED, CALL_ET, CALL_EDT, etc.
+- NEO3 adds the following opcode: DUPFROMALTSTACKBOTTOM.
