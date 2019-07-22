@@ -1,10 +1,29 @@
-﻿# API Reference
+﻿
+# RPC
+<!-- TOC -->
+- [API Reference](#API-Reference)
+  - [Configuration](#Configuration)
+  - [Listening ports](#Listening-ports)
+  - [Command List](#Command-List)
+  - [GET request](#An-example-of-GET-request)
+  - [POST request](#An-example-of-POST-request)
+- [Test tools](#Test-tools)
+- [Others](#Others)
+<!-- TOC -->
+
+## Changes in NEO3
+
+- NEO3 abandons the following commands: claimgas, dumpprivkey, getaccountstate, getapplicationlog, getassetstate, getbalance, getclaimable, getmetricblocktimestamp, getnep5balances, getnep5transfers, getnewaddress, gettxout, getunclaimed, getunclaimedgas, getunspents, getwalletheight, importprivkey, invoke, listaddress, sendfrom, sendtoaddress, sendmany, etc.
+- NEO3 redefines the following commands' references: getblockheader, getrawmempool.
+- NEO3 renews the following commands' returned content: getblock, getblockheader, getrawtransaction, getversion, getcontractstate.
+
+## API Reference
 
 Neo-CLI provides a set of API interfaces for obtaining blockchain data from a node to facilitate the development of blockchain applications. The interface is provided via [JSON-RPC](http://wiki.geekdream.com/Specification/json-rpc_2.0.html) and employs HTTP/HTTPS as the underlying protocol for communication. You can run the following command to start a node that provides the RPC service:
 
 `dotnet neo-cli.dll /rpc`
 
-## Configuring the config.json file
+### Configuring the config.json file
 
 To access the RPC server via HTTPS, you need to set the domain name, certificate and password in the configuration file `config.json` before starting a node :
 
@@ -45,7 +64,7 @@ To invoke APIs related to the wallet component, you also need to make the follow
 
 At this point, on the condition of the NEO-CLI launched, the client will automatically open the specified wallet and download the wallet index after the full block synchronization. 
 
-## Listening ports 
+### Listening ports 
 
 After the JSON-RPC server starts, it will monitor the following ports corresponding to the MainNet and TestNet:
 
@@ -56,7 +75,7 @@ For P2P and WebSocket port information, please refer to [Node Introduction](../.
 | JSON-RPC HTTPS | 10331    | 20331    |
 | JSON-RPC HTTP  | 10332    | 20332    |
 
-## Command List
+### Command List
 
 | Command                                         | Parameter                                   | Description                                                  | Remark                     |
 | ----------------------------------------------- | ------------------------------------------- | ------------------------------------------------------------ | ---------------------------- |
@@ -84,7 +103,7 @@ For P2P and WebSocket port information, please refer to [Node Introduction](../.
 | [submitblock](api/submitblock.md)               | \<hex>                                      | Submit a new block to the network                             | Need to be a validator |
 | [validateaddress](api/validateaddress.md)       | \<address>                                  | Verify whether the address is a valid NEO address             |                              |
 
-## An example of GET request 
+### An example of GET request 
 
 A typical format of JSON-RPC GET request is as follows:
 
@@ -106,7 +125,7 @@ After sending the request, you will get the following response:
 }
 ```
 
-## An example of POST request 
+### An example of POST request 
 
 A typical format of JSON-RPC Post request is as follows:
 
@@ -146,12 +165,6 @@ After sending the request, you will get the following response：
 You can use the Chrome extension `Postman` to facilitate the test (VPN required for installing the Chrome extension). The following is a test screenshot:
 
 ![](../../images/api_3.jpg)
-
-## Changes in NEO3
-
-1. NEO3 abandons the following commands: claimgas, dumpprivkey, getaccountstate, getapplicationlog, getassetstate, getbalance, getclaimable, getmetricblocktimestamp, getnep5balances, getnep5transfers, getnewaddress, gettxout, getunclaimed, getunclaimedgas, getunspents, getwalletheight, importprivkey, invoke, listaddress, sendfrom, sendtoaddress, sendmany, etc.
-2. NEO3 redefines the following commands' references: getblockheader, getrawmempool.
-3. NEO3 renews the following commands' returned content: getblock, getblockheader, getrawtransaction, getversion, getcontractstate.
 
 ## Others
 

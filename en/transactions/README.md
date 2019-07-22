@@ -1,4 +1,4 @@
-## Transactions  
+# Transactions  
 
 <!-- TOC -->
 
@@ -24,7 +24,13 @@ A Neo Transaction is a signed data package with an instruction for the network a
 
 ![tx flow graph](../../images/tx_flow_graph.png)
 
-### Transaction Structure
+## Changes in NEO3
+
+- NEO3 abandoned UTXO model with only account balance model retained
+-  NEO3 cancels the free discount of 10 GAS for each transaction. The total fee is subject to the quantity and type of instructions in the contract script
+- The address script in NEO3 has changed not using the Opcode.CheckSig and OpCode.CheckMultiSig but the interoperable service call `SysCall "Neo.Crypto.CheckSig".hash2uint`, `SysCall "Neo.Crypto .CheckMultiSig".hash2unit` instead.
+
+## Transaction Structure
 
 A normal transaction has the following attributes:
 
@@ -40,23 +46,23 @@ A normal transaction has the following attributes:
 | `script`     | byte[]   | contract script of the transaction |
 | `witnesses`  | Witness[]   | scripts used to validate the transaction   |
 
-#### version 
+### version 
 The version attribute allows updates to the transaction structure with backward compatibility, currently 0. 
-#### sender
+### sender
 Since NEO3 abandoned UTXO model with only account balance model retained. The transfer transaction of the native assets NEO and GAS are unified as the way of NEP-5 assets, so the input and output fields are removed from the transaction structure, instead, the sender field is used to track the source of the transaction. This field is the script hash of the transaction initiation account in the wallet.
-#### systemFee
+### systemFee
 The system fee is a fixed cost calculated by instructions to be executed by the Neo virtual machine. NEO3 cancels the free discount of 10 GAS for each transaction. The total fee is subject to the quantity and type of instructions in the contract script. The calculation formula is as follows:
 
 ![system fee](../../images/system_fee.png)
 
 where OpcodeSet is opcode set,  is the cost of instruction i,  is the number of instruction i in the contract script.
-#### networkFee
+### networkFee
 The network fee is the fee paid by users when they submit transactions to the Neo network and is used to pay the validator for producing new blocks. For each transaction, there is a minimum network fee, which is calculated as follows,
 
 ![network fee](../../images/network_fee.png)
 
 where VerificationCost is the costs for transaction signature verification in NeoVM, tx.Length is the byte length of transaction data, FeePerByte is the fee per byte. The network fee paid by users must be greater than or equal to NetworkFee, otherwise, the verification of the transaction will fail.
-#### attributes
+### attributes
 Depending on the transaction type, it is allowed to add attributes to the transaction. For each attribute, a usage type has to be specified, together with the external data and the size of the external data.
 
 | Field | Type | Description |
@@ -64,7 +70,7 @@ Depending on the transaction type, it is allowed to add attributes to the transa
 | `usage`  | uint8 | Attribute usage type                  |
 | `data`   | byte[] | Script of the transaction to be validated. When usage is `0x20` , the data type must be UInt160. |
 
-##### Attribute usage types
+#### Attribute usage types
 The following usage types can be included in the transaction attributes.
 
 
@@ -75,9 +81,9 @@ The following usage types can be included in the transaction attributes.
 
 A maximum of 16 attributes can be added to each transaction.
 
-### script
+## script
 Contract script executed by the virtual machine.
-### witnesses 
+## witnesses 
 A witness is used to verify the validity and integrity of the transaction. There are two attributes for each witness in the witnesses array.
 
 | Field | Description|
@@ -87,7 +93,7 @@ A witness is used to verify the validity and integrity of the transaction. There
 
 You can add multiple witnesses to each transaction or use a multi-signature witness as well.
 
-#### Invocation Script
+### Invocation Script
 
 The invocation script is constructed with the following steps:
 
@@ -95,7 +101,7 @@ The invocation script is constructed with the following steps:
 
 The invocation script can push multiple signatures for a multi-signature contract by repeating these steps.
 
-#### Verification Script
+### Verification Script
 
 The verification script with a single signature is constructed with the following steps:
 
@@ -119,7 +125,7 @@ To maintain performance it is required to have the same order for public keys an
 
 ![](../../images/checkmultisig_script.jpg)
 
-###  Transaction Serialization
+##  Transaction Serialization
 
 Except for IP addresses and ports, all variable-length integer types in Neo are stored in the small-endian mode. The serialization operation takes the following order to serialize a transaction:
 
@@ -145,9 +151,7 @@ Except for IP addresses and ports, all variable-length integer types in Neo are 
 > | value <= 0xFFFFFFFF | 0xFE + uint(value) |
 > | value > 0xFFFFFFFF | 0xFF + value |
 
-
-
-### Transaction Signature
+## Transaction Signature
 A transaction is initiated by the client, encapsulated by the wallet module and attached with a digital signature to ensure that the transaction can be verified at any time in the later transmission and processing. Neo employs the ECDSA digital signature method. The script hash of the transaction output is a public key used for ECDSA signature. Neo does not use SegWit in Bitcoin. Each transaction contains its own Script.Witness, while the Script.Witness is a smart contract.
 
 The witness is an executable verification script. The InvocationScript provides the parameters for the VerificationScript to execute. Verification succeeds only when the script execution returns true. Invocation script performs stack operation instructions, provides parameters for verification script (eg, signatures). The script interpreter executes the invocation script code first, and then the verification script code.

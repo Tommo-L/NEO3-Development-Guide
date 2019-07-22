@@ -1,10 +1,29 @@
-﻿# API 参考
+﻿# RPC
 
-每个 NEO 节点 Neo-CLI 都可选的提供了一套 API 接口，用于从节点获取区块链数据，使得开发区块链应用变得十分方便。接口通过 [JSON-RPC](http://wiki.geekdream.com/Specification/json-rpc_2.0.html) 的方式提供，底层使用 HTTP/HTTPS 协议进行通讯。要启动一个提供 RPC 服务的节点，可运行以下命令：
+<!-- TOC -->
+- [API 参考](#API-参考)
+  - [修改配置文件](#修改配置文件)
+  - [监听端口](#监听端口)
+  - [命令列表](#命令列表)
+  - [GET 请求示例](#GET-请求示例)
+  - [POST 请求示例](#POST-请求示例)
+- [测试工具](#测试工具)
+- [其它](#其它)
+<!-- TOC -->
+
+## NEO3 变更部分
+
+- NEO3取消了claimgas，dumpprivkey，getaccountstate，getapplicationlog，getassetstate，getbalance，getclaimable，getmetricblocktimestamp，getnep5balances，getnep5transfers，getnewaddress，gettxout，getunclaimed，getunclaimedgas，getunspents，getwalletheight，importprivkey，invoke，listaddress，sendfrom，sendtoaddress，sendmany等API指令。
+- NEO3重新定义了getblockheader，getrawmempool等API指令的调用方式。
+- NEO3更新了getblock，getblockheader，getrawtransaction，getversion，getcontractstate等API指令的返回内容。
+
+## API 参考
+
+每个 Neo 节点 Neo-CLI 都可选的提供了一套 API 接口，用于从节点获取区块链数据，使得开发区块链应用变得十分方便。接口通过 [JSON-RPC](http://wiki.geekdream.com/Specification/json-rpc_2.0.html) 的方式提供，底层使用 HTTP/HTTPS 协议进行通讯。要启动一个提供 RPC 服务的节点，可运行以下命令：
 
 `dotnet neo-cli.dll /rpc`
 
-## 修改配置文件
+### 修改配置文件
 
 若要通过 HTTPS 的方式访问 RPC 服务器，需要在启动节点前修改配置文件 `config.json`，并设置域名、证书和密码：
 
@@ -41,16 +60,16 @@
 
 完成配置后打开 NEO-CLI，客户端会在同步到最新区块后自动打开已配置的钱包并进行钱包索引同步。
 
-## 监听端口
+### 监听端口
 
-JSON-RPC 服务器启动后，会监听 TCP 端口，默认端口如下。P2P 和 WebSocket 的端口详见 [NEO 节点介绍](https://docs.neo.org/zh-cn/node/introduction.html)。
+JSON-RPC 服务器启动后，会监听 TCP 端口，默认端口如下。P2P 和 WebSocket 的端口详见 [Neo 节点介绍](https://docs.neo.org/zh-cn/node/introduction.html)。
 
 |                | 主网（Main Net） | 测试网（Test Net） |
 | -------------- | ------------ | ------------- |
 | JSON-RPC HTTPS | 10331        | 20331         |
 | JSON-RPC HTTP  | 10332        | 20332         |
 
-## 命令列表
+### 命令列表
 
 | 方法                                       | 参数                                       | 说明                           | 备注       |
 | ---------------------------------------- | ---------------------------------------- | ---------------------------- | -------- |
@@ -76,10 +95,10 @@ JSON-RPC 服务器启动后，会监听 TCP 端口，默认端口如下。P2P �
 | [listplugins](api/listplugins.md) | | 列出节点已加载的所有插件。                           |  |
 | [sendrawtransaction](api/sendrawtransaction.md) | \<hex>                                   | 广播交易                         |          |
 | [submitblock](api/submitblock.md) | \<hex>                                   | 提交新的区块                       | 需要成为共识节点 |
-| [validateaddress](api/validateaddress.md) | \<address>                               | 验证地址是否是正确的 NEO 地址            |          |
+| [validateaddress](api/validateaddress.md) | \<address>                               | 验证地址是否是正确的 Neo 地址            |          |
 
 
-## GET 请求示例
+### GET 请求示例
 
 一次典型的 JSON-RPC GET 请求格式如下：
 
@@ -101,7 +120,7 @@ http://somewebsite.com:10332?jsonrpc=2.0&method=getblockcount&params=[]&id=1
 }
 ```
 
-## POST 请求示例
+### POST 请求示例
 
 一次典型的 JSON-RPC Post 请求的格式如下：
 
@@ -142,11 +161,6 @@ http://somewebsite.com:10332
 
 ![](../../images/api_3.jpg)
 
-## NEO3 变动部分
-
-1. NEO3取消了claimgas，dumpprivkey，getaccountstate，getapplicationlog，getassetstate，getbalance，getclaimable，getmetricblocktimestamp，getnep5balances，getnep5transfers，getnewaddress，gettxout，getunclaimed，getunclaimedgas，getunspents，getwalletheight，importprivkey，invoke，listaddress，sendfrom，sendtoaddress，sendmany等API指令。
-2. NEO3重新定义了getblockheader，getrawmempool等API指令的调用方式。
-3. NEO3更新了getblock，getblockheader，getrawtransaction，getversion，getcontractstate等API指令的返回内容。
 
 ## 其它
 

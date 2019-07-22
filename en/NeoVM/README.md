@@ -1,4 +1,4 @@
-﻿<center> <h2> Neo Virtual Machine</h2> </center>
+﻿# Neo Virtual Machine
 
 <!-- TOC -->
 
@@ -8,25 +8,28 @@
 - [Interoperable service layer](#interoperable-service-layer)
 - [Built-in data types](#built-in-data-types)
 - [Instructions](#instructions)
-  - [1. Contrant](#1-contrant)
-  - [2. Flow Control](#2-flow-control)
-  - [3. Stack Operation](#3-stack-operation)
-  - [4. String Operation](#4-string-operation)
-  - [5. Logical Operation](#5-logical-operation)
-  - [6. Arithmetic Operation](#6-arithmetic-operation)
-  - [7. Advanced Data Structure](#7-Advanced-Data-Structure)
-  - [8. Exception Processing](#8-exception-processing)
+  - [Contrant](#contrant)
+  - [Flow Control](#flow-control)
+  - [Stack Operation](#stack-operation)
+  - [String Operation](#string-operation)
+  - [Logical Operation](#logical-operation)
+  - [Arithmetic Operation](#arithmetic-operation)
+  - [Advanced Data Structure](#Advanced-Data-Structure)
+  - [Exception Processing](#exception-processing)
 
 <!-- /TOC -->
 
 
-<hr/>
+NeoVM is a lightweighted, general-purpose virtual machine that executes Neo smart contract code. The concept of virtual machine described in this paadper is in narrow sense, it's not a simulation of physical machine by operating system. Unlike VMware or Hyper-V, it's mainly aimed at specific usage.
 
-&emsp;&emsp;NeoVM is a lightweighted, general-purpose virtual machine that executes NEO smart contract code. The concept of virtual machine described in this paadper is in narrow sense, it's not a simulation of physical machine by operating system. Unlike VMware or Hyper-V, it's mainly aimed at specific usage.
+For example, in JVM or CLR of .Net, source code will be compiled into relevant bytecodes, and be executed on the corresponding virtual machine. JVM or CLR will read instructions, decode, execute and write results back. Those steps are very similar to the concepts on real physical machines. The binary instructions are still running on the physical machine. It takes instructions from memory and transmits them to the CPU through the bus, then decodes, executes and stores the results.
 
-&emsp;&emsp;For example, in JVM or CLR of .Net, source code will be compiled into relevant bytecodes, and be executed on the corresponding virtual machine. JVM or CLR will read instructions, decode, execute and write results back. Those steps are very similar to the concepts on real physical machines. The binary instructions are still running on the physical machine. It takes instructions from memory and transmits them to the CPU through the bus, then decodes, executes and stores the results.
+## Changes in NEO3
 
-# NeoVM Architecture
+- NEO3 abandons the following opcodes: APPCALL, TAILCALL, SHA1, SHA256, HASH160, HASH256, CHECKSIG, VERIFY, CHECKMULTISIG, CALL_I, CALL_E, CALL_ED, CALL_ET, CALL_EDT, etc.
+- NEO3 adds the following opcode: DUPFROMALTSTACKBOTTOM.
+
+## NeoVM Architecture
 ![nvm](../../images/nvm.jpg)
 
 The graph above is the system architecture of NeoVM, which includes execution engine, memory, interoperable services.
@@ -43,41 +46,41 @@ A complete operation process is as follows:
 
 5. After all scripts are executed, the results will be saved in the `ResultStack`.
 
-## Execution Engine
+### Execution Engine
 
 The left part of the graph above is the virtual machine's execution engine(equivalent to CPU). It can execute common instructions such as flow control, stack operation, bit operation, arithmetic operation, logical operation, cryptography, etc. It can also interact with the interoperable services through system call. NeoVM has four states: `NONE`, `HALT`, `FAULT`, `BREAK`.
 
-* `NONE` is a normal state.
+- `NONE` is a normal state.
 
-* `HALT` is a stopped state. When the `InvocationStack` is empty, it means all scripts are executed, the virtual machine's state will be set to `HALT`.
+- `HALT` is a stopped state. When the `InvocationStack` is empty, it means all scripts are executed, the virtual machine's state will be set to `HALT`.
 
-* `FAULT` is an error state. When something goes wrong with an operation, the virtual machine's state will be set to `FAULT`.
+- `FAULT` is an error state. When something goes wrong with an operation, the virtual machine's state will be set to `FAULT`.
 
-* `BREAK` is an interrupted state and is used in the debugging process of smart contract generally.
+- `BREAK` is an interrupted state and is used in the debugging process of smart contract generally.
 
 Each time before the virtual machine starts, the execution engine will detect the virtual machine's state, and only when the state is `NONE`, can it start running.
 
 
-## Temporary Storage
+### Temporary Storage
 
 NeoVM uses stacks as its temporary storage. NeoVM has four types of stacks: `InvocationStack`, `EvaluationStack`, `AltStack` and `ResultStack`.
 
-* `InvocationStack` is mainly used to store the running context data. Each running context has its own scripts, `EvaluationStack` and `AltStack`. Stacks are isolated from each other between different running contexts. Context switching is completed by relying on the `CurrentContext`, `CallingContext` and `EntryContext`. The `CurrentContext` points to the top element of the `InvocationStack`, which is `ExecutionContext_1` in the system architecture diagram. The `CallingContext` points to the second element of the `InvocationStack`, which is `ExecutionContext_2`. And the `EntryContext` points to the tail element of the `InvocationStack`, which is `ExecutionContext_3`.
+- `InvocationStack` is mainly used to store the running context data. Each running context has its own scripts, `EvaluationStack` and `AltStack`. Stacks are isolated from each other between different running contexts. Context switching is completed by relying on the `CurrentContext`, `CallingContext` and `EntryContext`. The `CurrentContext` points to the top element of the `InvocationStack`, which is `ExecutionContext_1` in the system architecture diagram. The `CallingContext` points to the second element of the `InvocationStack`, which is `ExecutionContext_2`. And the `EntryContext` points to the tail element of the `InvocationStack`, which is `ExecutionContext_3`.
 
-* Each running context has its own `EvaluationStack` and `AltStack`. `EvaluationStack` is mainly used to execute corresponding operations according to instructions, and `AltStack` is used to save temporary data in computing process.
+- Each running context has its own `EvaluationStack` and `AltStack`. `EvaluationStack` is mainly used to execute corresponding operations according to instructions, and `AltStack` is used to save temporary data in computing process.
 
-* After all scripts executed, the results will be saved in the `ResultStack`.
+- After all scripts executed, the results will be saved in the `ResultStack`.
 
 
-# Interoperable service layer
+## Interoperable service layer
 
 The right part of the graph above is the virtual machine's interoperable service layer, which provides API for smart contract to access data on the blockchain. By using these API, smart contract can access information in a block , information in a transaction, and information of an asset.
 
-In addition, the interoperable service layer provides a persistent storage for each contract. Each NEO contract can declare to have a private storage to save information in form of key-value pair optionally when the contract is created. When a smart contract invocate another smart contract, the storage are separated. The smart contract being invoked has it's own persistent storage. If the caller contract needs the contract being invoked to access data of the caller contract, it needs to pass its own storage context to the callee (authorization) before the callee can perform the read-write operation.
+In addition, the interoperable service layer provides a persistent storage for each contract. Each Neo contract can declare to have a private storage to save information in form of key-value pair optionally when the contract is created. When a smart contract invocate another smart contract, the storage are separated. The smart contract being invoked has it's own persistent storage. If the caller contract needs the contract being invoked to access data of the caller contract, it needs to pass its own storage context to the callee (authorization) before the callee can perform the read-write operation.
 
 The detail of interoperable services are describled in the "Smart Contract" section.
 
-# Built-in data types
+## Built-in data types
 
 NeoVM has seven built-in data types:
 
@@ -101,7 +104,7 @@ private bool value;
 ```
 
 
-# Instructions
+## Instructions
 
 NeoVM has implemented 173 instructions. The categories are as follows:
 
@@ -110,11 +113,11 @@ NeoVM has implemented 173 instructions. The categories are as follows:
 | 98 | 7 | 17 | 5 | 5 | 25 | 14 | 2 |
 
 
-## 1. Contrant
+### Contrant
 
 The constant instructions mainly complete the function of pushing constants or arrays into the `EvaluationStack`.
 
-### PUSH0
+#### PUSH0
 
 | Instruction   | PUSH0                                 |
 |--------|----------|
@@ -123,7 +126,7 @@ The constant instructions mainly complete the function of pushing constants or a
 | Fee: | 3e-7 GAS                           |
 | Function: | Push an empty array into the `EvaluationStack`  |
 
-### PUSHBYTES
+#### PUSHBYTES
 
 | Instruction   | PUSHBYTES1\~PUSHBYTES75                                    |
 |----------|-----------------------------|
@@ -131,7 +134,7 @@ The constant instructions mainly complete the function of pushing constants or a
 | Fee: | 1.2e-6 GAS                           |
 | Function:   | Push a byte array into the `EvaluationStack`, the length of which is equal to the value of this instruction's bytecode. |
 
-### PUSHDATA
+#### PUSHDATA
 
 | Instruction   | PUSHDATA1, PUSHDATA2, PUSHDATA4                                   |
 |----------|---------------------------------------|
@@ -139,7 +142,7 @@ The constant instructions mainly complete the function of pushing constants or a
 | Fee: | 1.8e-6 GAS, 1.3e-4 GAS, 1.1e-3 GAS                    |
 | Function:   | Push a byte array into the `EvaluationStack`, the length of which is specified by 1\|2\|4 bytes after this instruction.  |
 
-### PUSHM1
+#### PUSHM1
 ------
 
 | Instruction   | PUSHM1                                   |
@@ -148,7 +151,7 @@ The constant instructions mainly complete the function of pushing constants or a
 | Fee: | 3e-7 GAS                             |
 | Function:   | Push a BigInteger of `-1`  into the `EvaluationStack`. |
 
-### PUSHN
+#### PUSHN
 -----
 
 | Instruction   | PUSH1\~PUSH16                               |
@@ -158,11 +161,11 @@ The constant instructions mainly complete the function of pushing constants or a
 | Fee: | 3e-7 GAS                                      |
 | Function:   | Push a BigInteger into the `EvaluationStack`, the value of which is equal to 1\~16. |
 
-## 2. Flow Control
+### Flow Control
 
 It's used to control the running process of NeoVM, including jump, call and other instructions.
 
-### NOP
+#### NOP
 
 | Instruction   | NOP                                         |
 |----------|---------------------------------------------|
@@ -170,7 +173,7 @@ It's used to control the running process of NeoVM, including jump, call and othe
 | Fee: | 3e-7 GAS                                |
 | Function:   | Empty operation, but will add 1 to the instruction counter. |
 
-### JMP
+#### JMP
 
 | Instruction   | JMP                                                     |
 |----------|---------------------------------------------------------|
@@ -178,7 +181,7 @@ It's used to control the running process of NeoVM, including jump, call and othe
 | Fee: | 7e-7 GAS                                            |
 | Function:   | Jump to the specified offset unconditionally, which is specified by 2 bytes after this instruction. |
 
-### JMPIF
+#### JMPIF
 
 | Instruction   | JMPIF                                                                                                                |
 |----------|-------------------------------------------------------------|
@@ -186,7 +189,7 @@ It's used to control the running process of NeoVM, including jump, call and othe
 | Fee: | 7e-7 GAS                                                                                                         |
 | Function:   | When the top element of the `EvaluationStack` isn't 0, then jump to the specified offset, which is specified by 2 bytes after this instruction. </br> Whether the condition determines true or not, the top element of the stack will be removed.  |
 
-### JMPIFNOT
+#### JMPIFNOT
 
 | Instruction   | JMPIFNOT                                                           |
 |----------|--------------------------------------------------------------------|
@@ -194,7 +197,7 @@ It's used to control the running process of NeoVM, including jump, call and othe
 | Fee: | 7e-7 GAS                                                        |
 | Function:   | When the top element of the `EvaluationStack` is 0, then jump to the specified offset, which is specified by 2 bytes after this instruction. |
 
-### CALL
+#### CALL
 
 | Instruction   | CALL                                                  |
 |----------|-------------------------------------------------------|
@@ -202,7 +205,7 @@ It's used to control the running process of NeoVM, including jump, call and othe
 | Fee: | 2.2e-4 GAS                           |
 | Function:   | Call the function at the specified offset, which is specified by 2 bytes after this instruction.  |
 
-### RET
+#### RET
 
 | Instruction   | RET                                                                                              |
 |----------|--------------------------------------------------------------------------------------------------|
@@ -210,7 +213,7 @@ It's used to control the running process of NeoVM, including jump, call and othe
 | Fee: | 4e-7 GAS                                                        |
 | Function:   | Remove the top element of the `InvocationStack` and set the instruction counter point to the next frame of the stack. </br> If the `InvocationStack` is empty, the virtual machine enters `HALT` state.  |
 
-### SYSCALL
+#### SYSCALL
 
 | Instruction   | SYSCALL                                                |
 |----------|--------------------------------------------------------|
@@ -218,11 +221,11 @@ It's used to control the running process of NeoVM, including jump, call and othe
 | Fee: | 0 GAS                                                        |
 | Function:   | Call the specified interoperable function whose name is specified by the string after this instruction. |
 
-## 3. Stack Operation
+### Stack Operation
 
 Copy, remove and swap the elements of the stack.
 
-### DUPFROMALTSTACKBOTTOM 
+#### DUPFROMALTSTACKBOTTOM 
 
 | Instruction   | DUPFROMALTSTACKBOTTOM            |
 |--------|------------------------------------------|
@@ -230,7 +233,7 @@ Copy, remove and swap the elements of the stack.
 | Fee: | 6e-7 GAS                                                        |
 | Function:   | Copy the bottom element of the `AltStack`, and push it into the `EvaluationStack `. |
 
-### DUPFROMALTSTACK
+#### DUPFROMALTSTACK
 
 | Instruction   | DUPFROMALTSTACK                          |
 |--------|------------------------------------------|
@@ -238,7 +241,7 @@ Copy, remove and swap the elements of the stack.
 | Fee: | 6e-7 GAS                                                        |
 | Function:   | Copy the top element of the `AltStack`, and push it into the `EvaluationStack `. |
 
-### TOALTSTACK
+#### TOALTSTACK
 
 | Instruction   | TOALTSTACK                               |
 |----------|------------------------------------------|
@@ -246,7 +249,7 @@ Copy, remove and swap the elements of the stack.
 | Fee: | 6e-7 GAS                                                        |
 | Function:   | Remove the top element of the `EvaluationStack`, and push it into the `AltStack`. |
 
-### FROMALTSTACK
+#### FROMALTSTACK
 
 | Instruction   | FROMALTSTACK                             |
 |----------|------------------------------------------|
@@ -254,7 +257,7 @@ Copy, remove and swap the elements of the stack.
 | Fee: | 6e-7 GAS                                                        |
 | Function:   | Remove the top element of the `AltStack`, and push it into the `EvaluationStack`. |
 
-### XDROP
+#### XDROP
 
 | Instruction   | XDROP                                              |
 |----------|----------------------------------------------------|
@@ -264,7 +267,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | Xn Xn-1 ... X2 X1 X0 n                             |
 | Output:   | Xn-1 ... X2 X1 X0                                  |
 
-### XSWAP
+#### XSWAP
 
 | Instruction   | XSWAP                                                                   |
 |----------|-------------------------------------------------------------------------|
@@ -274,7 +277,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | Xn Xn-1 ... X2 X1 X0 n                                                  |
 | Output:   | X0 Xn-1 ... X2 X1 Xn                                                    |
 
-### XTUCK
+#### XTUCK
 
 | Instruction   | XTUCK                                                                     |
 |----------|---------------------------------------------------------------------------|
@@ -284,7 +287,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | Xn Xn-1 ... X2 X1 X0 n                                                    |
 | Output:   | Xn X0 Xn-1 ... X2 X1 X0                                                   |
 
-### DEPTH
+#### DEPTH
 
 | Instruction   | DEPTH                                  |
 |----------|----------------------------------------|
@@ -292,7 +295,7 @@ Copy, remove and swap the elements of the stack.
 | Fee: | 6e-7 GAS                                                        |
 | Function:   | Push the numbe of elements in the `EvaluationStack` into the top of the `EvaluationStack`. |
 
-### DROP
+#### DROP
 
 | Instruction   | DROP                   |
 |----------|------------------------|
@@ -300,7 +303,7 @@ Copy, remove and swap the elements of the stack.
 | Fee: | 6e-7 GAS                                                        |
 | Function:   | Remove the top element of the `EvaluationStack` |
 
-### DUP
+#### DUP
 
 | Instruction   | DUP                    |
 |----------|------------------------|
@@ -310,7 +313,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | X                      |
 | Output:   | X X                    |
 
-### NIP
+#### NIP
 
 | Instruction   | NIP                         |
 |----------|-----------------------------|
@@ -320,7 +323,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | X1 X0                       |
 | Output:   | X0                          |
 
-### OVER 
+#### OVER 
 
 | Instruction   | OVER                                     |
 |----------|------------------------------------------|
@@ -330,7 +333,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | X1 X0                                    |
 | Output:   | X1 X0 X1                                 |
 
-### PICK 
+#### PICK 
 
 | Instruction   | PICK                                                       |
 |----------|------------------------------------------------------------|
@@ -340,7 +343,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | Xn Xn-1 ... X2 X1 X0 n                                     |
 | Output:   | Xn Xn-1 ... X2 X1 X0 Xn                                    |
 
-### ROLL 
+#### ROLL 
 
 | Instruction   | ROLL                                                       |
 |----------|------------------------------------------------------------|
@@ -350,7 +353,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | Xn Xn-1 ... X2 X1 X0 n                                     |
 | Output:   | Xn-1 ... X2 X1 X0 Xn                                       |
 
-### ROT 
+#### ROT 
 
 | Instruction   | ROT                                         |
 |----------|---------------------------------------------|
@@ -360,7 +363,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | X2 X1 X0                                    |
 | Output:   | X1 X0 X2                                    |
 
-### SWAP 
+#### SWAP 
 
 | Instruction   | SWAP                           |
 |----------|--------------------------------|
@@ -370,7 +373,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | X1 X0                          |
 | Output:   | X0 X1                          |
 
-### TUCK 
+#### TUCK 
 
 | Instruction   | TUCK                                  |
 |----------|---------------------------------------|
@@ -381,9 +384,9 @@ Copy, remove and swap the elements of the stack.
 | Output:   | X0 X1 X0                              |
 
 
-## 4. String Operation
+### String Operation
 
-### CAT
+#### CAT
 
 | Instruction   | CAT                                              |
 |----------|--------------------------------------------------|
@@ -393,7 +396,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | X1 X0                                            |
 | Output:   | Concat(X1,X0)                                    |
 
-### SUBSTR
+#### SUBSTR
 
 | Instruction   | SUBSTR                                       |
 |----------|----------------------------------------------|
@@ -403,7 +406,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | X index len                                  |
 | Output:   | SubString(X,index,len)                       |
 
-### LEFT
+#### LEFT
 
 | Instruction   | LEFT                                         |
 |----------|----------------------------------------------|
@@ -413,7 +416,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | X len                                        |
 | Output:   | Left(X,len)                                  |
 
-### RIGHT
+#### RIGHT
 
 | Instruction   | RIGHT                                        |
 |----------|----------------------------------------------|
@@ -423,7 +426,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | X len                                        |
 | Output:   | Right(X,len)                                 |
 
-### SIZE
+#### SIZE
 
 | Instruction   | SIZE                             |
 |----------|----------------------------------|
@@ -434,9 +437,9 @@ Copy, remove and swap the elements of the stack.
 | Output:   | X len(X)                         |
 
 
-## 5. Logical Operation
+### Logical Operation
 
-### INVERT
+#### INVERT
 
 | Instruction   | INVERT                       |
 |----------|------------------------------|
@@ -446,7 +449,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | X                            |
 | Output:   | \~X                          |
 
-### AND
+#### AND
 
 | Instruction   | AND                                    |
 |----------|----------------------------------------|
@@ -456,7 +459,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | AB                                     |
 | Output:   | A&B                                    |
 
-### OR
+#### OR
 
 | Instruction   | OR                                     |
 |----------|----------------------------------------|
@@ -466,7 +469,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | AB                                     |
 | Output:   | A\|B                                   |
 
-### XOR
+#### XOR
 
 | Instruction   | XOR                                      |
 |----------|------------------------------------------|
@@ -476,7 +479,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | AB                                       |
 | Output:   | A\^B                                     |
 
-### EQUAL
+#### EQUAL
 
 | Instruction   | EQUAL                                        |
 |----------|----------------------------------------------|
@@ -486,9 +489,9 @@ Copy, remove and swap the elements of the stack.
 | Input:   | AB                                           |
 | Output:   | Equals(A,B)                                  |
 
-## 6. Arithmetic Operation
+### Arithmetic Operation
 
-### INC
+#### INC
 
 | Instruction   | INC                                |
 |----------|------------------------------------|
@@ -498,7 +501,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | X                                  |
 | Output:   | X+1                                |
 
-### DEC
+#### DEC
 
 | Instruction   | DEC                                |
 |----------|------------------------------------|
@@ -508,7 +511,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | X                                  |
 | Output:   | X-1                                |
 
-### SIGN
+#### SIGN
 
 | Instruction   | SIGN                                         |
 |----------|----------------------------------------------|
@@ -518,7 +521,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | X                                            |
 | Output:   | X.Sign()                                     |
 
-### NEGATE
+#### NEGATE
 
 | Instruction   | NEGATE                         |
 |----------|--------------------------------|
@@ -528,7 +531,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | X                              |
 | Output:   | \-X                            |
 
-### ABS
+#### ABS
 
 | Instruction   | ABS                            |
 |----------|--------------------------------|
@@ -538,7 +541,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | X                              |
 | Output:   | Abs(X)                         |
 
-### NOT
+#### NOT
 
 | Instruction   | NOT                                |
 |----------|------------------------------------|
@@ -548,7 +551,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | X                                  |
 | Output:   | !X                                 |
 
-### NZ
+#### NZ
 
 | Instruction   | NZ                                  |
 |----------|-------------------------------------|
@@ -558,7 +561,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | X                                   |
 | Output:   | X!=0                                |
 
-### ADD
+#### ADD
 
 | Instruction   | ADD                                    |
 |----------|----------------------------------------|
@@ -568,7 +571,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | AB                                     |
 | Output:   | A+B                                    |
 
-### SUB
+#### SUB
 
 | Instruction   | SUB                                    |
 |----------|----------------------------------------|
@@ -578,7 +581,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | AB                                     |
 | Output:   | A-B                                    |
 
-### MUL
+#### MUL
 
 | Instruction   | MUL                                    |
 |----------|----------------------------------------|
@@ -588,7 +591,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | AB                                     |
 | Output:   | A\*B                                   |
 
-### DIV
+#### DIV
 
 | Instruction   | DIV                                    |
 |----------|----------------------------------------|
@@ -598,7 +601,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | AB                                     |
 | Output:   | A/B                                    |
 
-### MOD
+#### MOD
 
 | Instruction   | MOD                                    |
 |----------|----------------------------------------|
@@ -608,7 +611,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | AB                                     |
 | Output:   | A%B                                    |
 
-### SHL
+#### SHL
 
 | Instruction   | SHL                              |
 |----------|----------------------------------|
@@ -618,7 +621,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | Xn                               |
 | Bytecode: | X\<\<n                           |
 
-### SHR
+#### SHR
 
 | Instruction   | SHR                              |
 |----------|----------------------------------|
@@ -628,7 +631,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | Xn                               |
 | Output:   | X\>\>n                           |
 
-### BOOLAND
+#### BOOLAND
 
 | Instruction   | BOOLAND                                |
 |----------|----------------------------------------|
@@ -638,7 +641,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | AB                                     |
 | Output:   | A&&B                                   |
 
-### BOOLOR
+#### BOOLOR
 
 | Instruction   | BOOLOR                                 |
 |----------|----------------------------------------|
@@ -648,7 +651,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | AB                                     |
 | Output:   | A\|\|B                                 |
 
-### NUMEQUAL
+#### NUMEQUAL
 
 | Instruction   | NUMEQUAL                               |
 |----------|----------------------------------------|
@@ -658,7 +661,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | AB                                     |
 | Output:   | A==B                                   |
 
-### NUMNOTEQUAL
+#### NUMNOTEQUAL
 
 | Instruction   | NUMNOTEQUAL                              |
 |----------|------------------------------------------|
@@ -668,7 +671,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | AB                                       |
 | Output:   | A!=B                                     |
 
-### LT 
+#### LT 
 
 | Instruction   | LT                                     |
 |----------|----------------------------------------|
@@ -678,7 +681,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | AB                                     |
 | Output:   | A\<B                                   |
 
-### GT
+#### GT
 
 | Instruction   | GT                                     |
 |----------|----------------------------------------|
@@ -688,7 +691,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | AB                                     |
 | Output:   | A\>B                                   |
 
-### LTE
+#### LTE
 
 | Instruction   | LTE                                        |
 |----------|--------------------------------------------|
@@ -698,7 +701,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | AB                                         |
 | Output:   | A\<=B                                      |
 
-### GTE
+#### GTE
 
 | Instruction   | GTE                                        |
 |----------|--------------------------------------------|
@@ -708,7 +711,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | AB                                         |
 | Output:   | A\>=B                                      |
 
-### MIN
+#### MIN
 
 | Instruction   | MIN                                    |
 |----------|----------------------------------------|
@@ -718,7 +721,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | AB                                     |
 | Output:   | Min(A,B)                               |
 
-### MAX
+#### MAX
 
 | Instruction   | MAX                                    |
 |----------|----------------------------------------|
@@ -728,7 +731,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | AB                                     |
 | Output:   | Max(A,B)                               |
 
-### WITHIN
+#### WITHIN
 
 | Instruction   | WITHIN                                       |
 |----------|----------------------------------------------|
@@ -738,7 +741,7 @@ Copy, remove and swap the elements of the stack.
 | Input:   | XAB                                          |
 | Output:   | A\<=X&&X\<B                                  |
 
-## 7. Advanced Data Structure
+### Advanced Data Structure
 
 It has implemented common operations for array, map, struct, etc.
 
@@ -752,7 +755,7 @@ It has implemented common operations for array, map, struct, etc.
 | Input:   | [X0 X1 X2 ... Xn-1]              |
 | Output:   | n                                |
 
-### PACK
+#### PACK
 
 | Instruction   | PACK                              |
 |----------|-----------------------------------|
@@ -762,7 +765,7 @@ It has implemented common operations for array, map, struct, etc.
 | Input:   | Xn-1 ... X2 X1 X0 n               |
 | Output:   | [X0 X1 X2 ... Xn-1]               |
 
-### UNPACK
+#### UNPACK
 
 | Instruction   | UNPACK                             |
 |----------|------------------------------------|
@@ -772,7 +775,7 @@ It has implemented common operations for array, map, struct, etc.
 | Input:   | [X0 X1 X2 ... Xn-1]                |
 | Output:   | Xn-1 ... X2 X1 X0 n                |
 
-### PICKITEM
+#### PICKITEM
 
 | Instruction   | PICKITEM                           |
 |----------|------------------------------------|
@@ -782,7 +785,7 @@ It has implemented common operations for array, map, struct, etc.
 | Input:   | [X0 X1 X2 ... Xn-1] i              |
 | Output:   | Xi                                 |
 
-### SETITEM\*
+#### SETITEM\*
 
 | Instruction   | SETITEM                                  |
 |----------|------------------------------------------|
@@ -792,7 +795,7 @@ It has implemented common operations for array, map, struct, etc.
 | Input:   | [X0 X1 X2 ... Xn-1] I V                  |
 | Output:   | [X0 X1 X2 Xi-1 V X i+1 ... Xn-1]         |
 
-### NEWARRAY
+#### NEWARRAY
 
 | Instruction   | NEWARRAY                           |
 |----------|------------------------------------|
@@ -802,7 +805,7 @@ It has implemented common operations for array, map, struct, etc.
 | Input:   | n                                  |
 | Output:   | Array(n) with all `false` elements.         |
 
-### NEWSTRUCT
+#### NEWSTRUCT
 
 | Instruction   | NEWSTRUCT                           |
 |----------|-------------------------------------|
@@ -812,7 +815,7 @@ It has implemented common operations for array, map, struct, etc.
 | Input:   | n                                   |
 | Output:   | Struct(n) with all `false` elements.        |
 
-### NEWMAP
+#### NEWMAP
 
 | Instruction   | NEWMAP                  |
 |----------|-------------------------|
@@ -822,7 +825,7 @@ It has implemented common operations for array, map, struct, etc.
 | Input:   |                       |
 | Output:   | Map()                   |
 
-### APPEND\*
+#### APPEND*
 
 | Instruction   | APPEND                |
 |----------|-----------------------|
@@ -832,7 +835,7 @@ It has implemented common operations for array, map, struct, etc.
 | Input:   | Array item            |
 | Output:   | Array.add(item)       |
 
-### REVERSE\*
+#### REVERSE*
 
 | Instruction   | REVERSE             |
 |----------|---------------------|
@@ -842,7 +845,7 @@ It has implemented common operations for array, map, struct, etc.
 | Input:   | [X0 X1 X2 ... Xn-1] |
 | Output:   | [Xn-1 ... X2 X1 X0] |
 
-### REMOVE\*
+#### REMOVE*
 
 | Instruction   | REMOVE                            |
 |----------|-----------------------------------|
@@ -852,7 +855,7 @@ It has implemented common operations for array, map, struct, etc.
 | Input:   | [X0 X1 X2 ... Xn-1] m             |
 | Output:   | [X0 X1 X2 ... Xm-1 Xm+1 ... Xn-1] |
 
-### HASKEY
+#### HASKEY
 
 | Instruction   | HASKEY                              |
 |----------|-------------------------------------|
@@ -862,7 +865,7 @@ It has implemented common operations for array, map, struct, etc.
 | Input:   | [X0 X1 X2 ... Xn-1] key             |
 | Output:   | true or false                       |
 
-### KEYS
+#### KEYS
 
 | Instruction   | KEYS                                |
 |----------|-------------------------------------|
@@ -872,7 +875,7 @@ It has implemented common operations for array, map, struct, etc.
 | Input:   | Map                                 |
 | Output:   | [key1 key2 ... key n]               |
 
-### VALUES
+#### VALUES
 
 | Instruction   | VALUES                                  |
 |----------|-----------------------------------------|
@@ -882,9 +885,9 @@ It has implemented common operations for array, map, struct, etc.
 | Input:   | Map or Array                              |
 | Output:   | [Value1 Value2... Value n]              |
 
-## 8. Exception Processing
+### Exception Processing
 
-### THROW
+#### THROW
 
 | Instruction   | THROW                 |
 |----------|-----------------------|
@@ -892,7 +895,7 @@ It has implemented common operations for array, map, struct, etc.
 | Fee: | 3e-7 GAS                                                        |
 | Function:   | Set the virtual machine state to `FAULT` |
 
-### THROWIFNOT
+#### THROWIFNOT
 
 | Instruction   | THROWIFNOT                                                       |
 |----------|------------------------------------------------------------------|
@@ -902,7 +905,3 @@ It has implemented common operations for array, map, struct, etc.
 
 Note: The operation code with \* indicates that the result of the operation is not pushed back to the `EvaluationStack`.
 
-## Changes in NEO3
-
-1. NEO3 abandons the following opcodes: APPCALL, TAILCALL, SHA1, SHA256, HASH160, HASH256, CHECKSIG, VERIFY, CHECKMULTISIG, CALL_I, CALL_E, CALL_ED, CALL_ET, CALL_EDT, etc.
-2. NEO3 adds the following opcode: DUPFROMALTSTACKBOTTOM.
