@@ -147,6 +147,12 @@ You can use the Chrome extension `Postman` to facilitate the test (VPN required 
 
 ![](../../images/api_3.jpg)
 
+## Changes in NEO3
+
+1. NEO3 abandons the following commands: claimgas, dumpprivkey, getaccountstate, getapplicationlog, getassetstate, getbalance, getclaimable, getmetricblocktimestamp, getnep5balances, getnep5transfers, getnewaddress, gettxout, getunclaimed, getunclaimedgas, getunspents, getwalletheight, importprivkey, invoke, listaddress, sendfrom, sendtoaddress, sendmany, etc.
+2. NEO3 redefines the following commands' references: getblockheader, getrawmempool.
+3. NEO3 renews the following commands' returned content: getblock, getblockheader, getrawtransaction, getversion, getcontractstate.
+
 ## Others
 
 [C# JSON-RPC Command List](https://github.com/chenzhitong/CSharp-JSON-RPC/blob/master/json_rpc/Program.cs)

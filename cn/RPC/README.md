@@ -142,6 +142,12 @@ http://somewebsite.com:10332
 
 ![](../../images/api_3.jpg)
 
+## NEO3 变动部分
+
+1. NEO3取消了claimgas，dumpprivkey，getaccountstate，getapplicationlog，getassetstate，getbalance，getclaimable，getmetricblocktimestamp，getnep5balances，getnep5transfers，getnewaddress，gettxout，getunclaimed，getunclaimedgas，getunspents，getwalletheight，importprivkey，invoke，listaddress，sendfrom，sendtoaddress，sendmany等API指令。
+2. NEO3重新定义了getblockheader，getrawmempool等API指令的调用方式。
+3. NEO3更新了getblock，getblockheader，getrawtransaction，getversion，getcontractstate等API指令的返回内容。
+
 ## 其它
 
 [C# JSON-RPC 使用方法](https://github.com/chenzhitong/CSharp-JSON-RPC/blob/master/json_rpc/Program.cs)
