@@ -14,12 +14,9 @@
 
 
 
+## NEO3 变动部分总结
 
-
-补充一部分，关于NEO3 变动部分的汇总介绍
-
-
-
-1. 钱包部分： 地址合约发生变动，Opcode.CheckSig, Opcode.CheckMultiSig  换成互操作访问。
-2. 其他部分需要补充，并format组织下。
+1. NEO3中的地址脚本发生了变动，不再使用 Opcode.CheckSig, OpCode.CheckMultiSig 指令， 换成使用互操作服务调用，即SysCall "Neo.Crypto.CheckSig".hash2uint, SysCall "Neo.Crypto.CheckMultiSig".hash2unit 方式；
+2. NEO3弃用了UTXO模型，仅保留有账户余额模型；
+3. NEO3取消了每笔交易10 GAS的免费额度，系统费用总额受合约脚本的指令数量和指令类型影响
 
