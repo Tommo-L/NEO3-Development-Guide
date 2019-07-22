@@ -5,7 +5,7 @@
 <p>A development guide for basic tool developers of NEO3 to facilitate the underlying construction</p>
 </div>
 
-## Table 
+## 目录 
 - [Wallet](en/wallet)
 - [Transactions](en/transactions)
 - [RPC](en/RPC)
@@ -14,11 +14,7 @@
 
 
 
-## NEO3 变动部分总结
-
-
-
-### Changes in NEO3
+## NEO3 变更总结
 
 - 脚本地址由Neo2.x中的 `0x21 + publicKey(compressed, 33 bytess) + 0xac` 变成NEO3中的 `0x21 + publicKey(compressed, 33 bytes)+ 0x68 + 0x747476aa` 
 - NEO3中的地址脚本发生了变动，不再使用 Opcode.CheckSig, OpCode.CheckMultiSig 指令， 换成使用互操作服务调用，即SysCall "Neo.Crypto.CheckSig".hash2uint, SysCall "Neo.Crypto.CheckMultiSig".hash2unit 方式。
