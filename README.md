@@ -16,6 +16,13 @@
 
 ## NEO3 变动部分总结
 
+
+
+### Changes in NEO3
+
+| Items          | Neo2.x                                         | Neo3                                                      |
+| -------------- | ---------------------------------------------- | --------------------------------------------------------- |
+| Address script | 0x21 + publicKey(compressed, 33 bytess) + 0xac | 0x21 + publicKey(compressed, 33 bytes)+ 0x68 + 0x747476aa |
 1. NEO3中的地址脚本发生了变动，不再使用 Opcode.CheckSig, OpCode.CheckMultiSig 指令， 换成使用互操作服务调用，即SysCall "Neo.Crypto.CheckSig".hash2uint, SysCall "Neo.Crypto.CheckMultiSig".hash2unit 方式；
 2. NEO3弃用了UTXO模型，仅保留有账户余额模型；
 3. NEO3取消了每笔交易10 GAS的免费额度，系统费用总额受合约脚本的指令数量和指令类型影响
