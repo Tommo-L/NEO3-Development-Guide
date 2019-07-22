@@ -16,6 +16,13 @@ The wallet is a basic component of Neo and the bridge for users to access the Ne
 
 Developers are allowed to redesign and modify the Neo wallet under the following rules and patterns.
 
+### NEO3 Changed
+
+| Items | Neo2.x        | Neo3         |
+| -------- | ------------- | ---------------- |
+| Address script | 0x21 + publicKey(compressed, 33 bytess) + 0xac | 0x21 + publicKey(compressed, 33 bytes)+ 0x68 + 0x747476aa |
+
+
 ### Accounts
 ​In Neo, the account is the smart contract and the address represents a contract script. The below flow diagram shows how to derive the public key from the private key and then to the address:
 

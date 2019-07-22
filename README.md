@@ -23,3 +23,8 @@
 1. 钱包部分： 地址合约发生变动，Opcode.CheckSig, Opcode.CheckMultiSig  换成互操作访问。
 2. 其他部分需要补充，并format组织下。
 
+### NEO3 Changed
+
+| Items          | Neo2.x                                         | Neo3                                                      |
+| -------------- | ---------------------------------------------- | --------------------------------------------------------- |
+| Address script | 0x21 + publicKey(compressed, 33 bytess) + 0xac | 0x21 + publicKey(compressed, 33 bytes)+ 0x68 + 0x747476aa |
