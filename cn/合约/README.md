@@ -261,7 +261,7 @@ private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args
 private StackItem GetValidators(ApplicationEngine engine, VMArray args)
 ```
 
-<table width="65%">
+<table style="width:65%">
  <tr >
     <th >参数列表</th>
     <th colspan="2">无参数</th>
