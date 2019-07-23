@@ -149,7 +149,7 @@ SafeMethod = true)]
 private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
 ```
 
-<table style="width:65%">
+<table width="65%">
    <tr >
     <th rowspan="3">参数列表</th>
     <th >参数名称</th>
@@ -192,7 +192,7 @@ ContractParameterType.PublicKey
 ParameterNames = new[] { "pubkey" })]
 private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
 ```
-<table border="1" style="width:65%" >
+<table width="65%">
    <tr >
     <th rowspan="3">参数列表</th>
     <th >参数名称</th>
@@ -210,13 +210,13 @@ private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
     <td >要查询的截止高度</td>
    </tr>
   <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >Boolean</td>
-    <td colspan="2"class="xl66"  >注册结果，true：成功， false：失败 </td>
+    <td >Boolean</td>
+    <td colspan="2" >注册结果，true：成功， false：失败 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -233,19 +233,19 @@ SafeMethod = true)]
 private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args)
 ```
 
-<table border="1" style="width:65%">
+<table width="65%">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
    </tr>
   <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >Array</td>
-    <td colspan="2"class="xl66"  >所有验证人和备选节点信息 </td>
+    <td  >Array</td>
+    <td colspan="2" >所有验证人和备选节点信息 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -261,19 +261,19 @@ private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args
 private StackItem GetValidators(ApplicationEngine engine, VMArray args)
 ```
 
-<table border="1" style="width:65%">
+<table width="65%">
  <tr >
     <th >参数列表</th>
     <th colspan="2">无参数</th>
    </tr>
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th  colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >Array</td>
-    <td colspan="2"class="xl66"  >所有验证人信息 </td>
+    <td >Array</td>
+    <td colspan="2"  >所有验证人信息 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -287,19 +287,19 @@ private StackItem GetValidators(ApplicationEngine engine, VMArray args)
 [ContractMethod(1_00000000, ContractParameterType.Array, SafeMethod = true)]
 private StackItem GetNextBlockValidators(ApplicationEngine engine, VMArray args)
 ```
-<table border="1" style="width:65%">
+<table width="65%">
  <tr >
     <th >参数列表</th>
     <th colspan="2">无参数</th>
    </tr>
   <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th >返回值类型</th>
+    <th  colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >Array</td>
-    <td colspan="2"class="xl66"  >所有验证人信息 </td>
+    <td  >Array</td>
+    <td colspan="2"  >所有验证人信息 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -319,7 +319,7 @@ ParameterNames = new[] { "account", "pubkeys" })]
 private StackItem Vote(ApplicationEngine engine, VMArray args)
 ```
 
-<table border="1" style="width:65%">
+<table width="65%">
    <tr >
     <th rowspan="3">参数列表</th>
     <th >参数名称</th>
@@ -337,13 +337,13 @@ private StackItem Vote(ApplicationEngine engine, VMArray args)
     <td >投给验证人的公钥</td>
    </tr>
   <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >Boolean</td>
-    <td colspan="2"class="xl66"  >投票结果，true：成功， false：失败 </td>
+    <td  >Boolean</td>
+    <td colspan="2"  >投票结果，true：成功， false：失败 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -359,19 +359,19 @@ private StackItem Vote(ApplicationEngine engine, VMArray args)
 protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
 ```
 
-  <table border="1" style="width:65%">
+  <table width="65%">
  <tr >
     <th >参数列表</th>
     <th colspan="2">无参数</th>
    </tr>
  <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >String</td>
-    <td colspan="2"class="xl66"  >Token的名称 </td>
+    <td  >String</td>
+    <td colspan="2"  >Token的名称 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -385,19 +385,19 @@ protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
 [ContractMethod(0, ContractParameterType.String, Name = "symbol", SafeMethod = true)]
 protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
 ```
-  <table border="1" style="width:65%">
+  <table width="65%">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
    </tr>
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >String</td>
-    <td colspan="2"class="xl66"  >Token的简称 </td>
+    <td  >String</td>
+    <td colspan="2"  >Token的简称 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -411,19 +411,19 @@ protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
 [ContractMethod(0, ContractParameterType.Integer, Name = "decimals", SafeMethod = true)]
 protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
 ```
-  <table border="1" style="width:65%">
+  <table width="65%">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
    </tr>
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >Unit</td>
-    <td colspan="2"class="xl66"  >Token的计算精度 </td>
+    <td  >Unit</td>
+    <td colspan="2"  >Token的计算精度 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -437,19 +437,19 @@ protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
 [ContractMethod(0_01000000, ContractParameterType.Integer, SafeMethod = true)]
 protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
 ```
-  <table border="1" style="width:65%">
+  <table width="65%">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
    </tr>
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >BigInteger</td>
-    <td colspan="2"class="xl66"  >Token的总发行量 </td>
+    <td  >BigInteger</td>
+    <td colspan="2"  >Token的总发行量 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -468,7 +468,7 @@ protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
 protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
 ```
 
-<table border="1" style="width:65%">
+<table width="65%">
   <tr >
     <th rowspan="2">参数列表</th>
     <th >参数名称</th>
@@ -482,13 +482,13 @@ protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
    </tr>
    
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >BigInteger</td>
-    <td colspan="2"class="xl66" >余额数值</td>
+    <td  >BigInteger</td>
+    <td colspan="2" >余额数值</td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -510,7 +510,7 @@ ParameterNames = new[] { "from", "to", "amount" })]
 protected StackItem Transfer(ApplicationEngine engine, VMArray args)
 ```
 
-<table border="1" style="width:65%">
+<table width="65%">
    <tr >
     <th rowspan="4">参数列表</th>
     <th >参数名称</th>
@@ -533,13 +533,13 @@ protected StackItem Transfer(ApplicationEngine engine, VMArray args)
     <td>转账的Token数量</td>
    </tr>
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >Boolean</td>
-    <td colspan="2"class="xl66" >转账结果，true：成功，false：失败</td>
+    <td  >Boolean</td>
+    <td colspan="2" >转账结果，true：成功，false：失败</td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -571,7 +571,7 @@ GasToken的详细接口介绍如下：
 private StackItem GetSysFeeAmount(ApplicationEngine engine, VMArray args)
 ```
 
-<table border="1" style="width:65%">
+<table width="65%">
    <tr >
     <th rowspan="2">参数列表</th>
     <th >参数名称</th>
@@ -584,13 +584,13 @@ private StackItem GetSysFeeAmount(ApplicationEngine engine, VMArray args)
     <td>要查询的高度</td>
    </tr>
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >Integer</td>
-    <td colspan="2"class="xl66"  >系统费总值 </td>
+    <td  >Integer</td>
+    <td colspan="2"  >系统费总值 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -604,19 +604,19 @@ private StackItem GetSysFeeAmount(ApplicationEngine engine, VMArray args)
 [ContractMethod(0, ContractParameterType.String, Name = "name", SafeMethod = true)]
 protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
 ```
-  <table border="1" style="width:65%">
+  <table width="65%">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
    </tr>
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >String</td>
-    <td colspan="2" class="xl66"  >Token的名称 </td>
+    <td  >String</td>
+    <td colspan="2"   >Token的名称 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -631,19 +631,19 @@ protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
 protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
 ```
 
-  <table border="1" style="width:65%">
+  <table width="65%">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
    </tr>
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >String</td>
-    <td colspan="2"class="xl66"  >Token的简称 </td>
+    <td  >String</td>
+    <td colspan="2"  >Token的简称 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -657,19 +657,19 @@ protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
 [ContractMethod(0, ContractParameterType.Integer, Name = "decimals", SafeMethod = true)]
 protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
 ```
-  <table border="1" style="width:65%">
+  <table width="65%">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
    </tr>
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >Unit</td>
-    <td colspan="2"class="xl66"  >Token的计算精度 </td>
+    <td  >Unit</td>
+    <td colspan="2"  >Token的计算精度 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -683,19 +683,19 @@ protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
 [ContractMethod(0_01000000, ContractParameterType.Integer, SafeMethod = true)]
 protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
 ```
-  <table border="1" style="width:65%">
+  <table width="65%">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
    </tr>
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >BigInteger</td>
-    <td colspan="2"class="xl66"  >Token的总发行量 </td>
+    <td  >BigInteger</td>
+    <td colspan="2"  >Token的总发行量 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -714,7 +714,7 @@ SafeMethod = true)]
 protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
 ```
 
-<table border="1" style="width:65%">
+<table width="65%">
   <tr >
     <th rowspan="2">参数列表</th>
     <th >参数名称</th>
@@ -727,13 +727,13 @@ protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
     <td>要查询账户的ScriptHash</td>
    </tr>
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >Integer</td>
-    <td colspan="2"class="xl66"  >余额数值</td>
+    <td  >Integer</td>
+    <td colspan="2"  >余额数值</td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -754,7 +754,7 @@ ContractParameterType.Integer
 ParameterNames = new[] { "from", "to", "amount" })]
 protected StackItem Transfer(ApplicationEngine engine, VMArray args)
 ```
-<table border="1" style="width:65%">
+<table width="65%">
    <tr >
     <th rowspan="4">参数列表</th>
     <th >参数名称</th>
@@ -777,13 +777,13 @@ protected StackItem Transfer(ApplicationEngine engine, VMArray args)
     <td>转账的Token数量</td>
    </tr>
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >Boolean</td>
-    <td colspan="2"class="xl66" >转账结果，true：成功，false：失败</td>
+    <td  >Boolean</td>
+    <td colspan="2" >转账结果，true：成功，false：失败</td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -805,19 +805,19 @@ protected StackItem Transfer(ApplicationEngine engine, VMArray args)
 private StackItem GetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray args)
 ```
 
-  <table border="1" style="width:65%">
+  <table width="65%">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
    </tr>
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >Integer</td>
-    <td colspan="2"class="xl66"  >区块最大交易数 </td>
+    <td  >Integer</td>
+    <td colspan="2"  >区块最大交易数 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -832,19 +832,19 @@ private StackItem GetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray a
 private StackItem GetFeePerByte(ApplicationEngine engine, VMArray args)
 ```
 
-  <table border="1" style="width:65%">
+  <table width="65%">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
    </tr>
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >Integer</td>
-    <td colspan="2"class="xl66"  >每字节手续费 </td>
+    <td  >Integer</td>
+    <td colspan="2"  >每字节手续费 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -858,19 +858,19 @@ private StackItem GetFeePerByte(ApplicationEngine engine, VMArray args)
 [ContractMethod(0_01000000, ContractParameterType.Array, SafeMethod = true)]
 private StackItem GetBlockedAccounts(ApplicationEngine engine, VMArray args)
 ```
-  <table border="1" style="width:65%">
+  <table width="65%">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
    </tr>
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >Array</td>
-    <td colspan="2"class="xl66"  >黑名单列表 </td>
+    <td  >Array</td>
+    <td colspan="2"  >黑名单列表 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -885,7 +885,7 @@ private StackItem GetBlockedAccounts(ApplicationEngine engine, VMArray args)
 private StackItem SetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray args)
 ```
 
-<table border="1" style="width:65%">
+<table width="65%">
    <tr >
     <th rowspan="2">参数列表</th>
     <th >参数名称</th>
@@ -899,13 +899,13 @@ private StackItem SetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray a
    </tr>
 
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >Boolean</td>
-    <td colspan="2"class="xl66"  >结果，true：设置成功， false：设置失败 </td>
+    <td  >Boolean</td>
+    <td colspan="2"  >结果，true：设置成功， false：设置失败 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -922,7 +922,7 @@ ParameterTypes = new[] { ContractParameterType.Integer },
 ParameterNames = new[] { "value" })]
 private StackItem SetFeePerByte(ApplicationEngine engine, VMArray args)
 ```
-<table border="1" style="width:65%">
+<table width="65%">
    <tr >
     <th rowspan="2">参数列表</th>
     <th >参数名称</th>
@@ -936,13 +936,13 @@ private StackItem SetFeePerByte(ApplicationEngine engine, VMArray args)
    </tr>
 
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >Boolean</td>
-    <td colspan="2"class="xl66"  >结果，true：设置成功，false：设置失败 </td>
+    <td  >Boolean</td>
+    <td colspan="2"  >结果，true：设置成功，false：设置失败 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -959,7 +959,7 @@ ParameterTypes = new[] { ContractParameterType.Hash160 },
 ParameterNames = new[] { "account" })]
 private StackItem BlockAccount(ApplicationEngine engine, VMArray args)
 ```
-<table border="1" style="width:65%">
+<table width="65%">
    <tr >
     <th rowspan="2">参数列表</th>
     <th >参数名称</th>
@@ -973,13 +973,13 @@ private StackItem BlockAccount(ApplicationEngine engine, VMArray args)
    </tr>
 
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >Boolean</td>
-    <td colspan="2"class="xl66"  > 结果，true：设置成功，false：设置失败 </td>
+    <td  >Boolean</td>
+    <td colspan="2"  > 结果，true：设置成功，false：设置失败 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
@@ -996,7 +996,7 @@ ParameterTypes = new[] { ContractParameterType.Hash160 },
 ParameterNames = new[] { "account" })]
 private StackItem UnblockAccount(ApplicationEngine engine, VMArray args)
 ```
-<table border="1" style="width:65%">
+<table width="65%">
    <tr >
     <th rowspan="2">参数列表</th>
     <th >参数名称</th>
@@ -1010,13 +1010,13 @@ private StackItem UnblockAccount(ApplicationEngine engine, VMArray args)
    </tr>
 
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >Boolean</td>
-    <td colspan="2"class="xl66"  > true：设置成功，false：设置失败 </td>
+    <td  >Boolean</td>
+    <td colspan="2"  > true：设置成功，false：设置失败 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
