@@ -1,20 +1,20 @@
 <!-- TOC -->
 
-- [Smart Contracts](#Smart-Contracts)
+- [智能合约](#智能合约)
     - [Manifest](#Manifest)
-    - [Trigger](#Trigger)
-    - [Native Contract](#Native-Contract)
-        - [介绍](#介绍)
+    - [触发器](#触发器)
+    - [原生合约](#原生合约)
+        - [NEO3改动](#NEO3改动)
             - [NeoToken](#NeoToken)
             - [GasToken](#GasToken)
             - [PolicyToken](#PolicyToken)
         - [原生合约 部署](#原生合约-部署)
         - [原生合约 调用](#原生合约-调用)
-    - [Interop Service](#Interop-Service)
+    - [互操作服务](#互操作服务)
         - [互操作服务原理](#互操作服务原理)
         - [互操作服务使用](#互操作服务使用)
-        - [System空间](#System空间)
-        - [Neo空间](#Neo空间)
+        - [System部分](#System部分)
+        - [Neo部分](#Neo部分)
     - [系统费](#系统费)
     - [网路资源访问(待补充)](#网路资源访问(待补充))
     - [合约调用](#合约调用)
@@ -23,15 +23,15 @@
 
 <!-- /TOC -->
 
-# Smart Contracts
+# 智能合约
 
 ## NEO改动
 
 NEO3中所有交易都是智能合约的调用，除了一些互操作指令和OpCode的调整，NEO3中比较大的特性包括：
-* 增加[Manifest](#manifest)文件来描述合约的特性
-* 增加[原生合约](#nativecontract)
-* 减少了OpCode和互操作接口的[手续费](#systemfee)
-* 增加合约对[网络资源访问](#networkresourcesaccess)的支持。
+* 增加[Manifest](#Manifest)文件来描述合约的特性
+* 增加[原生合约](#原生合约)
+* 减少了OpCode和互操作接口的[系统费](#系统费)
+* 增加合约对[网络资源访问](#网络资源访问)的支持。
 
 ## Manifest {#manifest}
 现在每个合约都需要对应的manifest文件描述其属性，其内容包括：Groups， Features， ABI，Permissions， Trusts， SafeMethods。
@@ -73,7 +73,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
 - **Trusts**：声明合约可以被哪些合约或者哪些合约组安全地调用。
 - **SafeMethods**：声明哪些方法是SafeMethod，SafeMethod通常是不会修改存储区，只读取区块链数据的方法，被调用时不会给用户接口返回警告信息。
 
-## Trigger
+## 触发器
 触发器可以使合约根据不同的使用场景执行不同的逻辑。
 
 * **System** 此触发器为NEO3新增触发器类型。当节点收到新区块后触发，目前只会触发原生合约的执行。当节点收到新区块，持久化之前会调用所有原生合约的onPersist方法，触发方式为System。
@@ -899,7 +899,7 @@ Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智�
 
 互操作服务分为System部分和Neo部分，具体接口介绍如下：
 
-### System空间
+### System部分
 
 - System.ExecutionEngine.GetScriptContainer  
 
@@ -1131,7 +1131,7 @@ Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智�
   | C#函数 | void AsReadOnly(this StorageContext context) |
   | 说明 | 	将StorageContext中的IsReadOnly设置为true |
 
-### Neo空间
+### Neo部分
 
 - Neo.Native.Deploy
 
@@ -1447,7 +1447,7 @@ Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智�
 | Neo.Json.Serialize| 0.001  |
 | Neo.Json.Deserialize| 0.005  |
 
-## 网路资源访问(待补充) {#networkresourcesaccess}
+## 网路资源访问
 ## 合约调用 
   合约中通过开发框架提供的互操作接口[System.Contract.Call](#contract-call)来调用其他合约
   例如在C#中可以如下方式调用：
