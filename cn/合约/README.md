@@ -8,8 +8,8 @@
             - [NeoToken](#NeoToken)
             - [GasToken](#GasToken)
             - [PolicyToken](#PolicyToken)
-        - [NativeContract 部署](#NativeContract-部署)
-        - [NativeContract 调用](#NativeContract-调用)
+        - [原生合约 部署](#原生合约-部署)
+        - [原生合约 调用](#原生合约-调用)
     - [Interop Service](#Interop-Service)
         - [互操作服务原理](#互操作服务原理)
         - [互操作服务使用](#互操作服务使用)
@@ -24,10 +24,16 @@
 <!-- /TOC -->
 
 # Smart Contracts
-NEO3中所有交易都是智能合约的调用，除了一些互操作指令和OpCode的调整，NEO3中比较大的特性包括：
-增加Manifest文件来描述合约的特性，减少了OpCode和互操作接口的手续费，增加合约对网络资源访问的支持。
 
-## Manifest
+## NEO改动
+
+NEO3中所有交易都是智能合约的调用，除了一些互操作指令和OpCode的调整，NEO3中比较大的特性包括：
+* 增加[Manifest](#manifest)文件来描述合约的特性
+* 增加[原生合约](#nativecontract)
+* 减少了OpCode和互操作接口的[手续费](#systemfee)
+* 增加合约对[网络资源访问](#networkresourcesaccess)的支持。
+
+## Manifest {#manifest}
 现在每个合约都需要对应的manifest文件描述其属性，其内容包括：Groups， Features， ABI，Permissions， Trusts， SafeMethods。
 
 一个manifest内容示例如下：
@@ -54,7 +60,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   "safemethods": "*"
 }
 ```
-- **Groups**：声明本合约所归属的组，可以支持多个, 每一个组由一个公钥和签名表示。~~需要补充同一组中的特点~~
+- **Groups**：声明本合约所归属的组，可以支持多个, 每一个组由一个公钥和签名表示。同一个组中的合约可以互相调用。
 - **Features**：声明智能合约的特性。其中属性值 storage 表明合约可以访问存储区，payable 表
  明合约可以接受资产的转入。
 - **ABI**：声明智能合约的接口信息，可以参考[NEP-3](https://github.com/neo-project/proposals/blob/master/nep-3.mediawiki)。接口的基础属性包括:
@@ -70,7 +76,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
 ## Trigger
 触发器可以使合约根据不同的使用场景执行不同的逻辑。
 
-* **System** 此触发器为NEO3新增触发器类型。当节点收到新区块后触发，目前只会触发NativeContract的执行。当节点收到新区块，持久化之前会调用所有NativeContract的onPersist方法，触发方式为System。
+* **System** 此触发器为NEO3新增触发器类型。当节点收到新区块后触发，目前只会触发原生合约的执行。当节点收到新区块，持久化之前会调用所有原生合约的onPersist方法，触发方式为System。
 * **Application** 应用触发器的目的在于将该合约作为应用函数进行调用，应用函数可以接受多个参数，对区块链的状态进行更改，并返回任意类型的返回值。以下是一个简单的c#智能合约：
 
   ```csharp
@@ -87,48 +93,48 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   }
   ```
 
-NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后，智能合约由共识节点执行，普通节点在转发交易时不执行智能合约。智能合约执行成功不代表交易的成功，而交易的成功也不决定智能合约执行的成功。
+  NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后，智能合约由共识节点执行，普通节点在转发交易时不执行智能合约。智能合约执行成功不代表交易的成功，而交易的成功也不决定智能合约执行的成功。
 
-* **Verifycation** 验证触发器的目的在于将该合约作为验证函数进行调用，验证函数可以接受多个参数，并且应返回有效的布尔值，标志着交易或区块的有效性。
+* **Verification** 验证触发器的目的在于将该合约作为验证函数进行调用，验证函数可以接受多个参数，并且应返回有效的布尔值，标志着交易或区块的有效性。
 
-当你想从 A 账户向 B 账户进行转账时，会触发验证合约，所有收到这笔交易的节点（包括普通节点和共识节点）都会验证 A 账户的合约，如果返回值为 true，即转账成功。如果返回 false，即转账失败。
+  当你想从 A 账户向 B 账户进行转账时，会触发验证合约，所有收到这笔交易的节点（包括普通节点和共识节点）都会验证 A 账户的合约，如果返回值为 true，即转账成功。如果返回 false，即转账失败。
 
-如果鉴权合约执行失败，这笔交易将不会被写入区块链中。
+  如果鉴权合约执行失败，这笔交易将不会被写入区块链中。
 
-下面的代码就是一个验证合约的简单示例，当条件 A 满足时，返回 true，即转账成功。否则返回 false，转账失败。
-  ```csharp
-  using Neo.SmartContract.Framework;
-  using Neo.SmartContract.Framework.Neo;
+  下面的代码就是一个验证合约的简单示例，当条件 A 满足时，返回 true，即转账成功。否则返回 false，转账失败。
+    ```csharp
+    using Neo.SmartContract.Framework;
+    using Neo.SmartContract.Framework.Neo;
 
-  public static bool Main(byte[] signature)
-  {
-      if (/*条件A*/)
-          return true;
-      else
-          return false;
-  }
+    public static bool Main(byte[] signature)
+    {
+        if (/*条件A*/)
+            return true;
+        else
+            return false;
+    }
+    ```
+
+  下面的这段代码的作用与上面的基本相同，但对运行时的触发器进行了判断，仅当触发器为验证触发器时执行验证部分的代码，这在复杂的智能合约中很有用，如果一个智能合约实现了多种触发器，应该在`Main`方法中对触发器进行判断。
+    ```csharp
+    using Neo.SmartContract.Framework;
+    using Neo.SmartContract.Framework.Neo;
+
+    public static bool Main(byte[] signature)
+    {
+        if (Runtime.Trigger == TriggerType.Verification)
+        {
+            if (/*条件A*/)
+                    return true;
+                else
+                    return false;
+        }  
+    }
   ```
 
-下面的这段代码的作用与上面的基本相同，但对运行时的触发器进行了判断，仅当触发器为验证触发器时执行验证部分的代码，这在复杂的智能合约中很有用，如果一个智能合约实现了多种触发器，应该在 Main 方法中对触发器进行判断。
-  ```csharp
-  using Neo.SmartContract.Framework;
-  using Neo.SmartContract.Framework.Neo;
-
-  public static bool Main(byte[] signature)
-  {
-      if (Runtime.Trigger == TriggerType.Verification)
-      {
-          if (/*条件A*/)
-                  return true;
-              else
-                  return false;
-      }  
-  }
-  ```
-
-## Native Contract
+## 原生合约 {#nativecontract}
 ### 介绍
-原生合约是直接在原生代码中执行，而不是在虚拟机中运行的合约。原生合约公开其服务名称，供其他合约调用。目前已有的NativeContract包括NeoToken，GasToken，PolicyToken。
+原生合约是直接在原生代码中执行，而不是在虚拟机中运行的合约。原生合约公开其服务名称，供其他合约调用。目前已有的原生合约包括NeoToken，GasToken，PolicyToken。
 
 #### NeoToken
 
@@ -160,26 +166,12 @@ private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
 | 类型 | 描述 |
 |--|--|
 |Integer| 未claimGAS数量|
-|registerValidator| 注册成为备选节点 |
 
 费用(GAS)
     
 *0.03*
 
-<table>
-    <tr>
-        <td>列一</td> 
-        <td>列一</td> 
-   </tr>
-    <tr>
-        <td colspan="2">合并行</td>    
-    </tr>
-    <tr>
-        <td colspan="2">合并行</td>    
-    </tr>
-</table>
-
-- **RegisterValidator**：注册验证人
+- **registerValidator**：注册验证人
 
 ```csharp
 [ContractMethod(0_05000000, 
@@ -356,7 +348,7 @@ protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
 
 | 类型 | 描述 |
 |--|--|
-| String | Token的计算精度 |
+| Uint | Token的计算精度 |
 
 费用(GAS)  
 
@@ -377,7 +369,7 @@ protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
 
 | 类型 | 描述 |
 |--|--|
-| String | Token的总发行量 |
+| BigInteger | Token的总发行量 |
 
 费用(GAS)  
 
@@ -404,7 +396,7 @@ protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
 
 | 类型 | 描述 |
 |--|--|
-|Integer| 余额数值 |
+|BigInteger| 余额数值 |
 
 费用(GAS)  
 
@@ -538,7 +530,7 @@ protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
 
 | 类型 | 描述 |
 |--|--|
-| String | Token的计算精度 |
+| Uint | Token的计算精度 |
 
 费用(GAS)  
 
@@ -559,7 +551,7 @@ protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
 
 | 类型 | 描述 |
 |--|--|
-| String | Token的总发行量 |
+| BigInteger | Token的总发行量 |
 
 费用(GAS)  
 
@@ -763,7 +755,7 @@ private StackItem BlockAccount(ApplicationEngine engine, VMArray args)
 
 | 类型 | 描述 |
 |--|--|
-| Boolean | true：设置成功，false：设置失败 |
+| Boolean | 结果。true：设置成功，false：设置失败 |
 
 费用(GAS)  
 
@@ -789,33 +781,33 @@ private StackItem UnblockAccount(ApplicationEngine engine, VMArray args)
 
 | 类型 | 描述 |
 |--|--|
-| Boolean | true：设置成功，false：设置失败 |
+| Boolean | 结果。true：设置成功，false：设置失败 |
 
 费用(GAS)  
 
 *0.03*
 
-**更多NativeContract，敬请期待**
+**更多原生合约，敬请期待**
 
-### NativeContract 部署
-NativeContract在创世区块中通过调用Neo.Native.Deploy互操作接口部署其只能在创世区块执行。
+### 原生合约 部署
+原生合约在创世区块中通过调用Neo.Native.Deploy互操作接口部署其只能在创世区块执行。
 
 
-### NativeContract 调用
-NativeContract的调用有两种方法, 第一种是跟普通合约一样，通过合约的脚本哈希来调用，另一种是NativeContract特有的，直接通过互操作服务调用。[查看互操作服务使用](#互操作服务使用)
+### 原生合约 调用
+原生合约的调用有两种方法, 第一种是跟普通合约一样，通过合约的脚本哈希来调用，另一种是原生合约特有的，直接通过互操作服务调用。[查看互操作服务使用](#互操作服务使用)
 
 - **特有方法**：通过互操作接口直接调用
 
-  每个NativeContract都会注册一个互操作接口，互操作接口名称为其ServiceName，都属于Neo.Native命名空间。
-  每个NativeContract对应的ServiceName如下：
+  每个原生合约都会注册一个互操作接口，互操作接口名称为其ServiceName，都属于Neo.Native命名空间。
+  每个原生合约对应的ServiceName如下：
 
-  |NativeContract|ServiceName|
+  |原生合约|ServiceName|
   |---|---|
   |NeoToken|Neo.Native.Tokens.NEO|
   |GasToken|Neo.Native.Tokens.GAS|
   |PolicyToken|NeoNeo.Native.Policy|
 
-  例如在c#编写智能合约中，如果需要调用GAS转账就可以如下编写：
+  例如在C#编写智能合约中，如果需要调用GAS转账就可以如下编写：
   ```csharp
   using Neo.SmartContract.Framework;
   using Neo.SmartContract.Framework.Neo;
@@ -836,9 +828,9 @@ NativeContract的调用有两种方法, 第一种是跟普通合约一样，通�
   ```
 - **通用方法**：通过ScriptHash调用
 
-  NativeContract的ScriptHash都是固定的，可以像调用其他普通合约一样用System.Contract.Call互操作接口和NativeContract的ScriptHash调用。现有NativeContract的ScriptHash如下：
+  原生合约的ScriptHash都是固定的，可以像调用其他普通合约一样用System.Contract.Call互操作接口和原生合约的ScriptHash调用。现有原生合约的ScriptHash如下：
 
-  |NativeContract|ScriptHash|
+  |原生合约|ScriptHash|
   |---|---|
   |NeoToken| 0x43cf98eddbe047e198a3e5d57006311442a0ca15 |
   |GasToken|0xa1760976db5fcdfab2a9930e8f6ce875b2d18225|
@@ -846,7 +838,7 @@ NativeContract的调用有两种方法, 第一种是跟普通合约一样，通�
 
   具体调用细节参考[合约调用](#合约调用)
   
-## Interop Service
+## 互操作服务
 互操作服务层提供了智能合约所能访问区块链数据的一些 API，利用这些 API，可以访问区块信息、交易信息、合约信息、资产信息等。除此之外互操作服务层还为每个合约提供了一个持久化存储区的功能。Neo 的每个智能合约在创建的时候都可选地启用一个私有存储区，存储区是 key-value 形式的，Neo 智能合约由合约的被调用者决定持久化存储区的上下文，而非调用者来决定。当然，调用者需要将自己的存储上下文传给被调用者（即完成授权）后，被调用者才可以执行读写操作。互操作服务分为System部分和Neo部分。
 
 ### 互操作服务原理
@@ -884,7 +876,7 @@ Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智�
   sb.EmitSysCall(InteropService.System_Contract_Call); //根据互操作索引调用
   byte[] script = sb.ToArray();
   ```
-  例如在c#中可以如下方式调用：
+  例如在C#中可以如下方式调用：
   ```csharp
   using Neo.SmartContract.Framework;
   using Neo.SmartContract.Framework.Neo;
@@ -929,7 +921,7 @@ Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智�
 
 - System.ExecutionEngine.GetEntryScriptHash
 
-  | 功能描述 | 获得该智能合约的入口点（合约调用链的起点）的脚本散列 |
+  | 功能描述 | 获得该智能合约的入口点（合约调用链的起点）的脚本哈希 |
   |--|-- |
   | C#函数| byte[] GetEntryScriptHash() |
 
@@ -1120,7 +1112,7 @@ Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智�
 
 - System.Storage.PutEx
 
-  | 功能描述 | 根据存储上下文，依据flag，向存储区写入Key-Value |
+  | 功能描述 | 根据存储上下文和flag，向存储区写入Key-Value |
   |--|--|
   | C#函数 | byte[] Get(StorageContext context, byte[] key, byte[] value, StorageFlags flags) |
   | 说明 | StorageFlags表明了写入数据的属性，默认None，数据可以被读写。如果是Constant，数据被写入存储区后不能被修改也不能被删除|
@@ -1167,7 +1159,7 @@ Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智�
 
 - Neo.Header.GetMerkleRoot
 
-  | 功能描述 | 从区块头中获取MerkleTree的Root |
+  | 功能描述 | 从区块头中获取所有交易MerkleTree的Root |
   |--|--|
   | C#函数 | byte[] MerkleRoot |
 
@@ -1185,19 +1177,19 @@ Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智�
 
 - Neo.Transaction.GetWitnesses
 
-  | 功能描述 | 获取交易中的 |
+  | 功能描述 | 获取交易中的所有验证脚本哈希 |
   |--|--|
   | C#函数 | Witness[] GetWitnesses(this Transaction transaction) |
 
 - Neo.Witness.GetVerificationScript
 
-  | 功能描述 | 获取交易中的 |
+  | 功能描述 | 获取交易中的验证脚本 |
   |--|--|
   | C#函数 | byte[] VerificationScript |
 
 - Neo.Account.IsStandard
 
-  | 功能描述 | 获取交易中的 |
+  | 功能描述 | 获取账户是否为标准账户 |
   |--|--|
   | C#函数 | bool IsStandard(byte[] scriptHash) |
 
@@ -1300,7 +1292,7 @@ Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智�
   |--|--|
   | C#函数 | string Deserialize(JObject jsonObj) |
 
-## 系统费
+## 系统费 {#systemfee}
 
 | OpCode | 系统费(GAS) |
 |---|---|
@@ -1455,7 +1447,7 @@ Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智�
 | Neo.Json.Serialize| 0.001  |
 | Neo.Json.Deserialize| 0.005  |
 
-## 网路资源访问(待补充)
+## 网路资源访问(待补充) {#networkresourcesaccess}
 ## 合约调用 
   合约中通过开发框架提供的互操作接口[System.Contract.Call](#contract-call)来调用其他合约
   例如在C#中可以如下方式调用：
