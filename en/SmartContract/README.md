@@ -1193,7 +1193,7 @@ Interoperability services are divided into System part and Neo part. The specifi
   | C# Function | Contract Create(byte[] script, string manifest) |
   | Explanation | The content of the script contract cannot exceed 1MB; The content of the manifest cannot exceed 2KB |
 
-- Neo.Contract.Update<a id="contract-update"></a>
+- Neo.Contract.Update<a id="contractupdate"></a>
 
   | Description | update contract |
   |--|--|
@@ -1440,7 +1440,7 @@ Interoperability services are divided into System part and Neo part. The specifi
 | Neo.Json.Serialize| 0.001  |
 | Neo.Json.Deserialize| 0.005  |
 
-## Network Resources Access
+## Internet Resources Access
 ## Contract Invokation
   When writing contract, you can invoke other contracts through the interop service provided by the development framework[System.Contract.Call](#contract-call)
   For example, in C#, it can be like as follows：
@@ -1509,7 +1509,7 @@ Interoperability services are divided into System part and Neo part. The specifi
   ```
 
 ## Contract Update
-If you need to modify the logic of the contract after the contract is deployed and retain the data in the storage area, you can use the contract upgrade, but you need to implement the upgrade interface in the old contract. Call the [Neo.Contract.Update](#contract-update) method in the old contract upgrade interface.
+If you need to modify the logic of the contract after the contract is deployed and retain the data in the storage area, you can use the contract upgrade, but you need to implement the upgrade interface in the old contract. Call the [Neo.Contract.Update](#contractupdate) method in the old contract upgrade interface.
 When the upgrade interface is called in the old contract, the method will build a new smart contract based on the parameters passed in. If the old contract has a storage area, the old contract's storage area will be transferred to the new contract. After the upgrade is complete, the old contract will be deleted. If the old contract has a storage area, the storage area will also be deleted. The old contract will then be unavailable and the Hash value of the new contract will need to be used.
 The C# code is as follows:
 
