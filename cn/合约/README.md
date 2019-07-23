@@ -149,7 +149,7 @@ SafeMethod = true)]
 private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
 ```
 
-<table style="width:600px; text-align:center">
+<table style="width:65%; text-align:center">
 <tr >
 <th rowspan="3">参数列表</th>
 <th >参数名称</th>
@@ -192,7 +192,7 @@ ContractParameterType.PublicKey
 ParameterNames = new[] { "pubkey" })]
 private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
 ```
-<table width="65%">
+<table style="width:65%; text-align:center">
 <tr >
 <th rowspan="3">参数列表</th>
 <th >参数名称</th>
@@ -233,7 +233,7 @@ SafeMethod = true)]
 private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args)
 ```
 
-<table style="width:600px; text-align:center">
+<table style="width:65%; text-align:center">
     <tr >
         <th >参数列表</th>
         <th colspan="2" >无参数</th>
@@ -261,7 +261,7 @@ private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args
 private StackItem GetValidators(ApplicationEngine engine, VMArray args)
 ```
 
-<table border="1" style="width:65%">
+<table style="width:65%; text-align:center">
 <tr >
 <th >参数列表</th>
 <th colspan="2">无参数</th>
@@ -287,7 +287,7 @@ private StackItem GetValidators(ApplicationEngine engine, VMArray args)
 [ContractMethod(1_00000000, ContractParameterType.Array, SafeMethod = true)]
 private StackItem GetNextBlockValidators(ApplicationEngine engine, VMArray args)
 ```
-<table border="1" style="width:65%">
+<table style="width:65%; text-align:center">
  <tr >
     <th >参数列表</th>
     <th colspan="2">无参数</th>
@@ -319,7 +319,7 @@ ParameterNames = new[] { "account", "pubkeys" })]
 private StackItem Vote(ApplicationEngine engine, VMArray args)
 ```
 
-<table border="1" style="width:">
+<table style="width:65%; text-align:center">
    <tr >
     <th rowspan="3">参数列表</th>
     <th >参数名称</th>
@@ -359,7 +359,7 @@ private StackItem Vote(ApplicationEngine engine, VMArray args)
 protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
 ```
 
-  <table border="1" style="width:65%">
+  <table style="width:65%; text-align:center">
  <tr >
     <th >参数列表</th>
     <th colspan="2">无参数</th>
@@ -385,7 +385,7 @@ protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
 [ContractMethod(0, ContractParameterType.String, Name = "symbol", SafeMethod = true)]
 protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
 ```
-  <table border="1" style="width:65%">
+  <table style="width:65%; text-align:center">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
@@ -411,7 +411,7 @@ protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
 [ContractMethod(0, ContractParameterType.Integer, Name = "decimals", SafeMethod = true)]
 protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
 ```
-  <table border="1" style="width:65%">
+  <table style="width:65%; text-align:center">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
@@ -437,7 +437,7 @@ protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
 [ContractMethod(0_01000000, ContractParameterType.Integer, SafeMethod = true)]
 protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
 ```
-  <table border="1" style="width:65%">
+  <table style="width:65%; text-align:center">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
@@ -468,7 +468,7 @@ protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
 protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
 ```
 
-<table border="1" style="width:65%">
+<table style="width:65%; text-align:center">
   <tr >
     <th rowspan="2">参数列表</th>
     <th >参数名称</th>
@@ -510,7 +510,7 @@ ParameterNames = new[] { "from", "to", "amount" })]
 protected StackItem Transfer(ApplicationEngine engine, VMArray args)
 ```
 
-<table border="1" style="width:65%">
+<table style="width:65%; text-align:center">
    <tr >
     <th rowspan="4">参数列表</th>
     <th >参数名称</th>
@@ -571,7 +571,7 @@ GasToken的详细接口介绍如下：
 private StackItem GetSysFeeAmount(ApplicationEngine engine, VMArray args)
 ```
 
-<table border="1" style="width:65%">
+<table style="width:65%; text-align:center">
    <tr >
     <th rowspan="2">参数列表</th>
     <th >参数名称</th>
@@ -604,7 +604,7 @@ private StackItem GetSysFeeAmount(ApplicationEngine engine, VMArray args)
 [ContractMethod(0, ContractParameterType.String, Name = "name", SafeMethod = true)]
 protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
 ```
-  <table border="1" style="width:65%">
+  <table style="width:65%; text-align:center">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
@@ -631,7 +631,7 @@ protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
 protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
 ```
 
-  <table border="1" style="width:65%">
+  <table style="width:65%; text-align:center">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
@@ -657,7 +657,7 @@ protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
 [ContractMethod(0, ContractParameterType.Integer, Name = "decimals", SafeMethod = true)]
 protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
 ```
-  <table border="1" style="width:65%">
+  <table style="width:65%; text-align:center">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
@@ -683,7 +683,7 @@ protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
 [ContractMethod(0_01000000, ContractParameterType.Integer, SafeMethod = true)]
 protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
 ```
-  <table border="1" style="width:65%">
+  <table style="width:65%; text-align:center">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
@@ -714,7 +714,7 @@ SafeMethod = true)]
 protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
 ```
 
-<table border="1" style="width:65%">
+<table style="width:65%; text-align:center">
   <tr >
     <th rowspan="2">参数列表</th>
     <th >参数名称</th>
@@ -754,7 +754,7 @@ ContractParameterType.Integer
 ParameterNames = new[] { "from", "to", "amount" })]
 protected StackItem Transfer(ApplicationEngine engine, VMArray args)
 ```
-<table border="1" style="width:65%">
+<table style="width:65%; text-align:center">
    <tr >
     <th rowspan="4">参数列表</th>
     <th >参数名称</th>
@@ -805,7 +805,7 @@ protected StackItem Transfer(ApplicationEngine engine, VMArray args)
 private StackItem GetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray args)
 ```
 
-  <table border="1" style="width:65%">
+  <table style="width:65%; text-align:center">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
@@ -832,7 +832,7 @@ private StackItem GetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray a
 private StackItem GetFeePerByte(ApplicationEngine engine, VMArray args)
 ```
 
-  <table border="1" style="width:65%">
+  <table style="width:65%; text-align:center">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
@@ -858,7 +858,7 @@ private StackItem GetFeePerByte(ApplicationEngine engine, VMArray args)
 [ContractMethod(0_01000000, ContractParameterType.Array, SafeMethod = true)]
 private StackItem GetBlockedAccounts(ApplicationEngine engine, VMArray args)
 ```
-  <table border="1" style="width:65%">
+  <table style="width:65%; text-align:center">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
@@ -885,7 +885,7 @@ private StackItem GetBlockedAccounts(ApplicationEngine engine, VMArray args)
 private StackItem SetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray args)
 ```
 
-<table border="1" style="width:65%">
+<table style="width:65%; text-align:center">
    <tr >
     <th rowspan="2">参数列表</th>
     <th >参数名称</th>
@@ -922,7 +922,7 @@ ParameterTypes = new[] { ContractParameterType.Integer },
 ParameterNames = new[] { "value" })]
 private StackItem SetFeePerByte(ApplicationEngine engine, VMArray args)
 ```
-<table border="1" style="width:65%">
+<table style="width:65%; text-align:center">
    <tr >
     <th rowspan="2">参数列表</th>
     <th >参数名称</th>
@@ -959,7 +959,7 @@ ParameterTypes = new[] { ContractParameterType.Hash160 },
 ParameterNames = new[] { "account" })]
 private StackItem BlockAccount(ApplicationEngine engine, VMArray args)
 ```
-<table border="1" style="width:65%">
+<table style="width:65%; text-align:center">
    <tr >
     <th rowspan="2">参数列表</th>
     <th >参数名称</th>
@@ -996,7 +996,7 @@ ParameterTypes = new[] { ContractParameterType.Hash160 },
 ParameterNames = new[] { "account" })]
 private StackItem UnblockAccount(ApplicationEngine engine, VMArray args)
 ```
-<table border="1" style="width:65%">
+<table style="width:65%; text-align:center">
    <tr >
     <th rowspan="2">参数列表</th>
     <th >参数名称</th>
