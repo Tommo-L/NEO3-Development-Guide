@@ -1,16 +1,3 @@
-
-<style>
-table{
-    border-collapse:collapse;
-}
-td{
-    text-align:center;
-    padding-right:5px;
-    padding-left:5px;
-}
-
-</style>
-
 # 智能合约
 
 <!-- /TOC -->
@@ -180,13 +167,13 @@ private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
     <td >要查询的截止高度</td>
    </tr>
    <tr >
-    <th class="xl66" rowspan="2">返回值</th>
-    <th class="xl66" >返回值类型</th>
-    <th class="xl66"  colspan="2">描述</th>
+    <th  rowspan="2">返回值</th>
+    <th>返回值类型</th>
+    <th colspan="2">描述</th>
    </tr>
    <tr >
-    <td class="xl66" >registerValidator</td>
-    <td colspan="2"class="xl66"  >未claimGAS数量 </td>
+    <td  >registerValidator</td>
+    <td colspan="2" >未claimGAS数量 </td>
    </tr>
    <tr >
     <th >费用（GAS）</th>
