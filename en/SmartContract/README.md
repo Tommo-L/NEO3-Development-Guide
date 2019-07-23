@@ -1,6 +1,7 @@
 <!-- TOC -->
 
 - [Smart Contracts](#Smart-Contracts)
+    - [Changes in NEO3](#Changes-in-NEO3)
     - [Manifest](#Manifest)
     - [Trigger](#Trigger)
     - [Native Contract](#Native-Contract)
@@ -9,9 +10,9 @@
             - [GasToken](#GasToken)
             - [PolicyToken](#PolicyToken)
         - [NativeContract Deploy](#NativeContract-Deploy)
-        - [NativeContract Invoke](#NativeContract-Invoke)
+        - [NativeContract Invokation](#NativeContract-Invokation)
     - [Interop Service](#Interop-Service)
-        - [What's Interop Service](#What's-Interop-Service)
+        - [Interop Service Principle](#Interop-Service-Principle)
         - [Usage of Interop Service](#Usage-of-Interop-Service)
         - [System Part](#System-Part)
         - [Neo Part](#Neo-Part)
@@ -24,9 +25,12 @@
 <!-- /TOC -->
 
 # Smart Contracts
-## Introduction
+## Changes in NEO3
 All transactions in NEO3 are invokations to smart contracts. In addition to some interop service and OpCode adjustments, the larger features of NEO3 include:
-Add Manifest file to describe the characteristics of the contract, reduce the handling fees for OpCode and interop service, and increase the contract's support for access to network resources.
+* Add [Manifest](#Manifest) file to describe the characteristics of the contract
+* Add [Native Contract](#Native-Contract)
+* Reduce the handling [system fee](#System-Fee) for OpCode and interop service
+* Increase the contract's support for [access to network resources](#Internet-Resources-Access).
 ## Manifest
 Now each contract requires a corresponding manifest file to describe its properties, including: Groups, Features, ABI, Permissions, Trusts, SafeMethods.
 Take a manifest file for example：
@@ -53,7 +57,7 @@ Take a manifest file for example：
   "safemethods": "*"
 }
 ```
-- **Groups**：Declare that the group to which this contract belongs can support multiple, each group is represented by a public key and signature.~~需要补充同一组中的特点~~
+- **Groups**：Declare that the group to which this contract belongs can support multiple, each group is represented by a public key and signature.
 - **Features**：Declare the features of a smart contract. Where the attribute value `storage` indicates that the contract can access the storage area, the `payable` table indicates the contract can accept the transfer of assets.
 - **ABI**：Declare the interface information of the smart contract, you can refer to [NEP-3](https://github.com/neo-project/proposals/blob/master/nep-3.mediawiki)。The basic properties of the interface include:
   - Hash: Hex-encoded contract script hash;
@@ -743,13 +747,13 @@ Parameters
 |--|--|--|
 | account | Hash160 | account |
 
-返回值
+Return
 
 | Type | Description |
 |--|--|
 | Boolean | Result. true：success，false：failed |
 
-费用(GAS)  
+Fee(GAS)  
 
 *0.03*
 
@@ -785,7 +789,7 @@ Fee(GAS)
 ### NativeContract Deploy
 NativeContract is deployed in the Genesis Block calling the Neo.Native.Deploy Interop Interface, which can only be executed in the Genesis Block.
 ### NativeContract Invokation
-There are two ways to call NativeContract. The first one is called by the script's ScriptHash, just like the normal contract, and the other is NativeContract-specific, which is called directly through the interop service.[Usage of Interop Service](#interopservice.usage)
+There are two ways to call NativeContract. The first one is called by the script's ScriptHash, just like the normal contract, and the other is NativeContract-specific, which is called directly through the interop service.[Usage of Interop Service](#Usage-of-Interop-Service)
 
 - **Special Way**：Using interop serivce.
   Each NativeContract registers an interop interface with the name of its ServiceName, which belongs to the Neo.Native namespace.
@@ -826,7 +830,7 @@ There are two ways to call NativeContract. The first one is called by the script
   |GasToken|0xa1760976db5fcdfab2a9930e8f6ce875b2d18225|
   |PolicyToken|0x9c5699b260bd468e2160dd5d45dfd2686bba8b77|
 
-  For details please refer [Contract Invokation](#contractinvokation)
+  For details please refer [Contract Invokation](#Contract-Invokation)
   
 ## Interop Service
 The interoperability service layer provides APIs for smart contractes to access blockchain data. These APIs provide access to block information, transaction information, contract information, asset information, and more. In addition to this, the interoperable service layer provides a persistent storage area for each contract. Each of Neo's smart contracts is optionally enabled with a private storage area. The storage area is in the form of a key-value. The Neo Smart Contract is determined by the callee of the contract to persist the context of the storage area, not the caller. To decide. Of course, after the caller needs to pass his storage context to the callee (ie, complete the authorization), the callee can perform read and write operations. Interoperability services are divided into the System part and the Neo part.
@@ -842,7 +846,7 @@ When registering, the service name of the interop interface of the Neo client, t
 
 For example: The hash of `System.Contract.Call` is `0x627d5b52`
 
-### Usage of Interop Service {#interopservice.usage} 
+### Usage of Interop Service
 
 * **SmartContract** The use of interoperable interfaces in smart contracts is provided by the corresponding smart contract development framework, which can be called directly. When compiled, it will be compiled by the compiler into operator instructions that can be executed in NEO-VM.
 * **Script in Transaction** Usually you need to manually splice the execution script. Using the hash value of the interface name of the interop service and the SYSCALL operator.
@@ -1130,7 +1134,7 @@ Interoperability services are divided into System part and Neo part. The specifi
 
 - Neo.Crypto.CheckSig
 
-  | Description | 根据公钥，验证当前脚本容器的签名 |
+  | Description | Verify signature of current container by public key |
   |--|--|
   | C# Function | bool CheckSig(byte[] signature, byte[] pubKey) |
 
@@ -1187,7 +1191,7 @@ Interoperability services are divided into System part and Neo part. The specifi
   | Description | deploy contract |
   |--|--|
   | C# Function | Contract Create(byte[] script, string manifest) |
-  | Explanation | script合约内容不能超过1MB，manifest内容不能超过2KB |
+  | Explanation | The content of the script contract cannot exceed 1MB; The content of the manifest cannot exceed 2KB |
 
 - Neo.Contract.Update<a id="contract-update"></a>
 
@@ -1436,8 +1440,8 @@ Interoperability services are divided into System part and Neo part. The specifi
 | Neo.Json.Serialize| 0.001  |
 | Neo.Json.Deserialize| 0.005  |
 
-## Network Resources Acceess(TO BE ADD)
-## Contract Invokation {#contractinvokation} 
+## Network Resources Access
+## Contract Invokation
   When writing contract, you can invoke other contracts through the interop service provided by the development framework[System.Contract.Call](#contract-call)
   For example, in C#, it can be like as follows：
   ```csharp
@@ -1459,7 +1463,7 @@ Interoperability services are divided into System part and Neo part. The specifi
     }
   }
   ```
-  Usually you need to manually splice the execution script. At this point you need to use the interop service [System.Contract.Call] (#contract-call) and the script's ScriptHash to call the contract.[How to use interop services](#interopservice.usage)
+  Usually you need to manually splice the execution script. At this point you need to use the interop service [System.Contract.Call] (#contract-call) and the script's ScriptHash to call the contract.[How to use interop services](#Usage-of-Interop-Service)
 
   For example, if you want to invoke method `transfer` of contract `0x43cf98eddbe047e198a3e5d57006311442a0ca15`：
 
