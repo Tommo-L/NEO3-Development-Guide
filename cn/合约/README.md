@@ -233,7 +233,7 @@ SafeMethod = true)]
 private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args)
 ```
 
-<table width="65%">
+<table style="width:600px; text-align:center">
  <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
