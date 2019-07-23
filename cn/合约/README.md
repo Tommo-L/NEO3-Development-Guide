@@ -149,7 +149,7 @@ SafeMethod = true)]
 private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
 ```
 
-<table width="65%">
+<table style="width:600px; text-align:center">
    <tr >
     <th rowspan="3">参数列表</th>
     <th >参数名称</th>
