@@ -33,7 +33,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
 * 减少了OpCode和互操作接口的[系统费](#系统费)
 * 增加合约对[网络资源访问](#网络资源访问)的支持。
 
-## Manifest {#manifest}
+## Manifest
 现在每个合约都需要对应的manifest文件描述其属性，其内容包括：Groups， Features， ABI，Permissions， Trusts， SafeMethods。
 
 一个manifest内容示例如下：
@@ -132,7 +132,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
     }
   ```
 
-## 原生合约 {#nativecontract}
+## 原生合约
 ### 介绍
 原生合约是直接在原生代码中执行，而不是在虚拟机中运行的合约。原生合约公开其服务名称，供其他合约调用。目前已有的原生合约包括NeoToken，GasToken，PolicyToken。
 
@@ -192,7 +192,7 @@ private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
 
 | 类型 | 描述 |
 |--|--|
-| Boolean | 注册结果，true：成功， false：失败 |
+| Boolean | 注册结果。true：成功， false：失败 |
 
 费用(GAS)
 
