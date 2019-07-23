@@ -26,10 +26,10 @@
 
 # Smart Contracts
 ## Changes in NEO3
-All transactions in NEO3 are invokations to smart contracts. In addition to some interop service and OpCode adjustments, the larger features of NEO3 include:
+All transactions in NEO3 are invokations to smart contracts. In addition to some interop services and OpCode adjustments, the larger features of NEO3 include:
 * Add [Manifest](#Manifest) file to describe the characteristics of the contract
 * Add [Native Contract](#Native-Contract)
-* Reduce the handling [system fee](#System-Fee) for OpCode and interop service
+* Reduce the handling [system fee](#System-Fee) for OpCode and interop services
 * Increase the contract's support for [access to network resources](#Internet-Resources-Access).
 ## Manifest
 Now each contract requires a corresponding manifest file to describe its properties, including: Groups, Features, ABI, Permissions, Trusts, SafeMethods.
@@ -75,58 +75,58 @@ Triggers allow contracts to execute different logic depending on the usage scena
 * **System** This trigger adds a trigger type to NEO3. When the node triggers after receiving a new block, it will only trigger the execution of NativeContract. When the node receives the new block, all NativeContract's onPersist methods are called before persistence. The trigger mode is System.。
 * **Application** The purpose of the application trigger is to call the contract as an application function. The application function can accept multiple parameters, change the state of the blockchain, and return any type of return value. Here is a simple c# smart contract：
 
-  ```csharp
-  public static Object Main(string operation, params object[] args)
-  {
-    if (Runtime.Trigger == TriggerType.Application)
+    ```csharp
+    public static Object Main(string operation, params object[] args)
     {
-        if (operation == "FunctionA") return FunctionA(args);
-    }  
-  }
-  public static bool FunctionA(params object[] args)
-  {
-    //some code  
-  }
-  ```
-
-All transactions in NEO3 are contract calls. When a transaction is broadcast and confirmed, the smart contract is executed by the consensus node, and the normal node does not execute the smart contract when forwarding the transaction. Successful execution of a smart contract does not represent the success of the transaction, and the success of the transaction does not determine the success of the smart contract execution.
-
-* **Verifycation** The purpose of the validation trigger is to call the contract as a validation function that accepts multiple arguments and should return a valid Boolean value indicating the validity of the transaction or block.
-
-When you want to transfer money from the A account to the B account, the verification contract will be triggered. All the nodes that receive the transaction (including the normal node and the consensus node) will verify the contract of the A account. If the return value is true, the transfer is successful. . If false is returned, the transfer fails.
-
-If the authentication contract fails to execute, the transaction will not be written to the blockchain.
-
-The following code is a simple example of a validation contract that returns true when condition A is satisfied, ie the transfer is successful. Otherwise it returns false and the transfer fails.
-  ```csharp
-  using Neo.SmartContract.Framework;
-  using Neo.SmartContract.Framework.Neo;
-
-  public static bool Main(byte[] signature)
-  {
-      if (/*条件A*/)
-          return true;
-      else
-          return false;
-  }
-  ```
-
-The following code works basically the same as above, but the runtime trigger is judged, and the code of the verification part is executed only when the trigger is a verification trigger, which is useful in complex smart contracts. A smart contract implements a variety of triggers, and the trigger should be evaluated in the Main method.
-  ```csharp
-  using Neo.SmartContract.Framework;
-  using Neo.SmartContract.Framework.Neo;
-
-  public static bool Main(byte[] signature)
-  {
-      if (Runtime.Trigger == TriggerType.Verification)
+      if (Runtime.Trigger == TriggerType.Application)
       {
-          if (/*条件A*/)
-                  return true;
-              else
-                  return false;
+          if (operation == "FunctionA") return FunctionA(args);
       }  
-  }
-  ```
+    }
+    public static bool FunctionA(params object[] args)
+    {
+      //some code  
+    }
+    ```
+
+  All transactions in NEO3 are contract calls. When a transaction is broadcast and confirmed, the smart contract is executed by the consensus node, and the normal node does not execute the smart contract when forwarding the transaction. Successful execution of a smart contract does not represent the success of the transaction, and the success of the transaction does not determine the success of the smart contract execution.
+
+* **Verification** The purpose of the validation trigger is to call the contract as a validation function that accepts multiple arguments and should return a valid Boolean value indicating the validity of the transaction or block.
+
+  When you want to transfer money from the A account to the B account, the verification contract will be triggered. All the nodes that receive the transaction (including the normal node and the consensus node) will verify the contract of the A account. If the return value is true, the transfer is successful. . If false is returned, the transfer fails.
+
+  If the authentication contract fails to execute, the transaction will not be written to the blockchain.
+
+  The following code is a simple example of a validation contract that returns true when condition A is satisfied, ie the transfer is successful. Otherwise it returns false and the transfer fails.
+    ```csharp
+    using Neo.SmartContract.Framework;
+    using Neo.SmartContract.Framework.Neo;
+
+    public static bool Main(byte[] signature)
+    {
+        if (/*条件A*/)
+            return true;
+        else
+            return false;
+    }
+    ```
+
+  The following code works basically the same as above, but the runtime trigger is judged, and the code of the verification part is executed only when the trigger is a verification trigger, which is useful in complex smart contracts. A smart contract implements a variety of triggers, and the trigger should be evaluated in the Main method.
+    ```csharp
+    using Neo.SmartContract.Framework;
+    using Neo.SmartContract.Framework.Neo;
+
+    public static bool Main(byte[] signature)
+    {
+        if (Runtime.Trigger == TriggerType.Verification)
+        {
+            if (/* condition A*/)
+                    return true;
+                else
+                    return false;
+        }  
+    }
+    ```
 
 ## Native Contract
 ### Introduction
@@ -155,19 +155,19 @@ Parameters
 |Parameter | Type | Description |
 |--|--|--|
 |account|Hash160| ScriptHash of the account |
-| end | Integer | the height to be queried |
+| end | Integer | The height to be queried |
 
-Return Value
+Return
 
 | Type | Description |
 |--|--|
 |Integer| GAS unclaimed |
 
-费用(GAS)
+Fee(GAS)
     
 *0.03*
 
-- **RegisterValidator**：regist to become candidate
+- **RegisterValidator**：Regist to become candidate
 
 ```csharp
 [ContractMethod(0_05000000, 
@@ -182,13 +182,13 @@ Parameters
 
 | Parameter | Type | Description |
 |--|--|--|
-| pubKey	| PublicKey | public key |
+| pubKey	| PublicKey | Public key |
 
 Return
 
 | Type | Description |
 |--|--|
-| Boolean | result，true：sucess， false：fail |
+| Boolean | Result, true: sucess, false: fail |
 
 Fee(GAS)
 
@@ -211,7 +211,7 @@ Return
 
 | Type | Description |
 |--|--|
-| Array | public keys of all validators |
+| Array | Public keys of all validators |
 
 Fee(GAS)  
 
@@ -232,9 +232,9 @@ Return
 
 | Type | Description |
 |--|--|
-| Array | public keys of all current validators |
+| Array | Public keys of all current validators |
 
-费用(GAS) 
+Fee(GAS) 
 
 *1.00*
 
@@ -253,7 +253,7 @@ Return
 
 | Type | Description |
 |--|--|
-| Array | all validators' public keys of next block |
+| Array | All validators' public keys of next block |
 
 Fee(GAS)  
 
@@ -271,20 +271,20 @@ ParameterNames = new[] { "account", "pubkeys" })]
 private StackItem Vote(ApplicationEngine engine, VMArray args)
 ```
 
-参数列表
+Parameters
 
 |Parameter | Type | Description |
 |--|--|--|
-| account	| Hash60 | voter's ScriptHash |
-| pubkeys | Array | the public keys of validators one vote to |
+| account	| Hash60 | Voter's ScriptHash |
+| pubkeys | Array | The public keys of validators one vote to |
 
-返回值
+Return
 
 | Type | Description |
 |--|--|
-| Boolean | result，true：success， false：fail |
+| Boolean | Result. true: success, false: fail |
 
-费用(GAS)  
+Fee(GAS)  
 
 *5.00*
 
@@ -303,7 +303,7 @@ Return
 
 | Type | Description |
 |--|--|
-| String | neme of the token |
+| String | Name of the token |
 
 Fee(GAS)
 
@@ -344,7 +344,7 @@ Return
 
 | Type | Description |
 |--|--|
-| uint | decimal |
+| uint | Decimal |
 
 Fee(GAS)  
 
@@ -365,7 +365,7 @@ Return
 
 | Type | Description |
 |--|--|
-| BigInteger | total supply |
+| BigInteger | Total supply |
 
 Fee(GAS)  
 
@@ -392,13 +392,13 @@ Return
 
 | Type | Description |
 |--|--|
-|Integer| balance |
+|Integer| Balance |
 
 Fee(GAS)  
 
 *0.01*
 
-- **transfer***: transfer token from one to another
+- **transfer***: Transfer token from one to another
 
 ```csharp
 [ContractMethod(0_08000000, 
@@ -416,15 +416,15 @@ Parameters
 
 |Parameter | Type | Description |
 |--|--|--|
-|from|Hash160| scriptHash who want to transfer |
-|from|Hash160| scriptHash of the receiver |
-|amount|Integer|amount of the token|
+|from|Hash160| ScriptHash who want to transfer |
+|from|Hash160| ScriptHash of the receiver |
+|amount|Integer| Amount of the token |
 
 Return
 
 | Type | Description |
 |--|--|
-|Boolean| Result，true：success，false：fail |
+|Boolean| Result, true: success，false: fail |
 
 Fee(GAS)  
 
@@ -458,13 +458,13 @@ Parameters
 
 | Parameter | Type | Description |
 |--|--|--|
-|index|int| the height one want to query |
+|index|int| The height one want to query |
 
 Return
 
 | Type | Description |
 |--|--|
-|Integer| total system fee |
+|Integer| Total system fee |
 
 Fee(GAS)  
 
@@ -484,13 +484,13 @@ Return
 
 | Type | Description |
 |--|--|
-| String | name of the token |
+| String | Name of the token |
 
 Fee(GAS)  
 
 *0.00*
 
-- **symbol**: symbol of the token
+- **symbol**: Symbol of the token
 
 ```csharp
 [ContractMethod(0, ContractParameterType.String, Name = "symbol", SafeMethod = true)]
@@ -505,7 +505,7 @@ Parameters
 
 | Type | Description |
 |--|--|
-| String | symbol of the token |
+| String | Symbol of the token |
 
 Fee(GAS) 
 
@@ -526,7 +526,7 @@ Return
 
 | Type | Description |
 |--|--|
-| uint | decimal |
+| uint | Decimal |
 
 Fee(GAS)  
 
@@ -547,7 +547,7 @@ Return
 
 | Type | Description |
 |--|--|
-| String | total supply |
+| BigInteger | Total supply |
 
 Fee(GAS)  
 
@@ -574,13 +574,13 @@ Return
 
 | Type | Description |
 |--|--|
-|Integer| balance |
+|Integer| Balance |
 
 Fee(GAS) 
 
 *0.01*
 
-- **transfer***: transfer token from one to another
+- **transfer***: Transfer token from one to another
 
 ```csharp
 [ContractMethod(0_08000000, 
@@ -600,13 +600,13 @@ protected StackItem Transfer(ApplicationEngine engine, VMArray args)
 |--|--|--|
 |from|Hash160|ScriptHash of the account transfer from |
 |from|Hash160|ScriptHash of the receiver |
-|amount|Integer| amount to transfer |
+|amount|Integer| Amount to transfer |
 
 返回值
 
 | Type | Description |
 |--|--|
-|Boolean| result，true：success，false：fail |
+|Boolean| Result, true: success, false: fail |
 
 Fee(GAS) 
 
@@ -634,7 +634,7 @@ Return
 
 | Type | Description |
 |--|--|
-| Integer | maximum transaction count per block  |
+| Integer | Maximum transaction count per block  |
 
 Fee(GAS)  
 
@@ -655,7 +655,7 @@ Return
 
 | Type | Description |
 |--|--|
-| Integer | fee per byte |
+| Integer | Fee per byte |
 
 Fee(GAS)  
 
@@ -676,7 +676,7 @@ Return
 
 | Type | Description |
 |--|--|
-| Array | blacklist |
+| Array | Blacklist |
 
 Fee(GAS)  
 
@@ -693,13 +693,13 @@ Parameters
 
 | Parameter | Type | Description |
 |--|--|--|
-| value | Integer | the maximum limitation |
+| value | Integer | The maximum limitation |
 
 返回值
 
 | Type | Description |
 |--|--|
-| Boolean | Result.true：success，false：fail |
+| Boolean | Result. true: success, false: fail |
 
 Fee(GAS)  
 
@@ -719,7 +719,7 @@ Parameters
 
 | Parameter | Type | Description |
 |--|--|--|
-| value | Integer | system fee per byte |
+| value | Integer | System fee per byte |
 
 返回值
 
@@ -745,7 +745,7 @@ Parameters
 
 | Parameter | Type | Description |
 |--|--|--|
-| account | Hash160 | account |
+| account | Hash160 | Account |
 
 Return
 
@@ -771,7 +771,7 @@ Parameters
 
 | Parameter | Type | Description |
 |--|--|--|
-| account | Hash160 | account to remove from blacklist |
+| account | Hash160 | Account to remove from blacklist |
 
 Return
 
@@ -956,13 +956,13 @@ Interoperability services are divided into System part and Neo part. The specifi
 
 - System.Runtime.Serialize
 
-  | Description | serialize an object |
+  | Description | Serialize an object |
   |--|--|
   | C# Function | object Deserialize(this byte[] source) |
 
 - System.Runtime.Deserialize
 
-  | Description | deserialize a byte array into object |
+  | Description | Deserialize a byte array into object |
   |--|--|
   | C# Function | byte[] Serialize(this object source) |
 
@@ -974,7 +974,7 @@ Interoperability services are divided into System part and Neo part. The specifi
 
 - System.Crypto.Verify
 
-  | Description | verify a signature of a message |
+  | Description | Verify a signature of a message |
   |--|--|
   | C# Function | bool Verify(object message, byte[] signature, byte[] pubKey) |
 
@@ -1066,7 +1066,7 @@ Interoperability services are divided into System part and Neo part. The specifi
 
 - System.Contract.Call <a id="contract-call" ></a>
 
-  | Description | invoke contract |
+  | Description | Invoke contract |
   |--|--|
   | C# Function | void Call(byte[] scriptHash, string method, object[] args) |
   |  | void Call(Contract contract, string method, object[] args) |
@@ -1182,13 +1182,13 @@ Interoperability services are divided into System part and Neo part. The specifi
 
 - Neo.Account.IsStandard
 
-  | Description | check if the account is standard |
+  | Description | Check if the account is standard |
   |--|--|
   | C# Function | bool IsStandard(byte[] scriptHash) |
 
 - Neo.Contract.Create
 
-  | Description | deploy contract |
+  | Description | Deploy contract |
   |--|--|
   | C# Function | Contract Create(byte[] script, string manifest) |
   | Explanation | The content of the script contract cannot exceed 1MB; The content of the manifest cannot exceed 2KB |
