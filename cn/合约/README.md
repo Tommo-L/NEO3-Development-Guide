@@ -149,9 +149,15 @@ SafeMethod = true)]
 private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
 ```
 
+```
+<style>
+#mytable {
+	width: 100%;    
+}
+</style>
+```
 
-
-<table width="800">
+<table class="mytable">
 <tr >
 <th rowspan="3">参数列表</th>
 <th >参数名称</th>
@@ -196,7 +202,7 @@ ContractParameterType.PublicKey
 ParameterNames = new[] { "pubkey" })]
 private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
 ```
-<table width="800" style=" text-align:center">
+<table class="mytable">
 <tr >
 <th rowspan="2">参数列表</th>
 <th >参数名称</th>
@@ -233,7 +239,7 @@ SafeMethod = true)]
 private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args)
 ```
 
-<table width="800">
+<table class="mytable">
     <tr >
         <th >参数列表</th>
         <th colspan="2" >无参数</th>
@@ -262,7 +268,7 @@ private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args
 private StackItem GetValidators(ApplicationEngine engine, VMArray args)
 ```
 
-<table width="800" style=" text-align:center">
+<table class="mytable">
 <tr >
 <th >参数列表</th>
 <th colspan="2">无参数</th>
@@ -289,7 +295,7 @@ private StackItem GetValidators(ApplicationEngine engine, VMArray args)
 [ContractMethod(1_00000000, ContractParameterType.Array, SafeMethod = true)]
 private StackItem GetNextBlockValidators(ApplicationEngine engine, VMArray args)
 ```
-<table style=" text-align:center">
+<table class="mytable">
  <tr >
     <th >参数列表</th>
     <th colspan="2">无参数</th>
