@@ -156,7 +156,7 @@ table {
 }
 </style>
 
-<table>
+<table width="800">
 <tr >
 <th rowspan="3">参数列表</th>
 <th >参数名称</th>
@@ -189,6 +189,7 @@ table {
 </table>
 
 
+
 - **RegisterValidator**：注册验证人
 
 ```csharp
@@ -200,7 +201,7 @@ ContractParameterType.PublicKey
 ParameterNames = new[] { "pubkey" })]
 private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
 ```
-<table style=" text-align:center">
+<table width="800" style=" text-align:center">
 <tr >
 <th rowspan="2">参数列表</th>
 <th >参数名称</th>
@@ -227,6 +228,7 @@ private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
 </tr>
 </table>
 
+
 - **getRegisteredValidators**：获取当前注册的验证人和备选节点信息
 
 ```csharp
@@ -236,7 +238,7 @@ SafeMethod = true)]
 private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args)
 ```
 
-<table >
+<table width="800">
     <tr >
         <th >参数列表</th>
         <th colspan="2" >无参数</th>
@@ -257,6 +259,7 @@ private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args
 </table>
 
 
+
 - **getValidators**: 获取当前区块所有验证人信息
 
 ```csharp
@@ -264,7 +267,7 @@ private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args
 private StackItem GetValidators(ApplicationEngine engine, VMArray args)
 ```
 
-<table style=" text-align:center">
+<table width="800" style=" text-align:center">
 <tr >
 <th >参数列表</th>
 <th colspan="2">无参数</th>
