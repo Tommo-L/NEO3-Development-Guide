@@ -149,13 +149,12 @@ SafeMethod = true)]
 private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
 ```
 
-```
 <style>
-#mytable {
+.mytable {
 	width: 100%;    
 }
 </style>
-```
+
 
 <table class="mytable">
 <tr >
@@ -314,6 +313,7 @@ private StackItem GetNextBlockValidators(ApplicationEngine engine, VMArray args)
     <th colspan="2">1.00</th>
    </tr>
   </table>
+
 
 - **vote**：投票选举验证人
 
