@@ -151,7 +151,7 @@ private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
 
 <style>
 table {
-    width: 800px;
+    width: 100%;
     text-align: center;
 }
 </style>
