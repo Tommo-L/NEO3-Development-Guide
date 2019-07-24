@@ -110,7 +110,7 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
 ```
 
 下面的这段代码的作用与上面的基本相同，但对运行时的触发器进行了判断，仅当触发器为验证触发器时执行验证部分的代码，这在复杂的智能合约中很有用，如果一个智能合约实现了多种触发器，应该在 Main 方法中对触发器进行判断。
-  
+
 ```csharp
   using Neo.SmartContract.Framework;
   using Neo.SmartContract.Framework.Neo;
@@ -136,7 +136,7 @@ NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后�
 简称 NEO，是Neo的治理代币，用于执行对 Neo 网络的管理权，符合 NEP-5 标准。NEO 的总量为 1 亿，最小单位为 1，且不可分割。Neo 在创世块中注册生成。具体接口细节如下：
 
 - **unClaimGas**：获取到指定高度，未claim的GAS数量
-   
+  
 ```csharp
 [ContractMethod(0_03000000, 
 ContractParameterType.Integer, 
@@ -149,7 +149,14 @@ SafeMethod = true)]
 private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
 ```
 
-<table style="width:65%; text-align:center">
+<style>
+table {
+    width: 800px;
+    text-align: center;
+}
+</style>
+
+<table>
 <tr >
 <th rowspan="3">参数列表</th>
 <th >参数名称</th>
@@ -181,6 +188,7 @@ private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
 </tr>
 </table>
 
+
 - **RegisterValidator**：注册验证人
 
 ```csharp
@@ -192,7 +200,7 @@ ContractParameterType.PublicKey
 ParameterNames = new[] { "pubkey" })]
 private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
 ```
-<table style="width:65%; text-align:center">
+<table style=" text-align:center">
 <tr >
 <th rowspan="2">参数列表</th>
 <th >参数名称</th>
@@ -228,7 +236,7 @@ SafeMethod = true)]
 private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args)
 ```
 
-<table width="100%">
+<table >
     <tr >
         <th >参数列表</th>
         <th colspan="2" >无参数</th>
@@ -256,7 +264,7 @@ private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args
 private StackItem GetValidators(ApplicationEngine engine, VMArray args)
 ```
 
-<table style="width:65%; text-align:center">
+<table style=" text-align:center">
 <tr >
 <th >参数列表</th>
 <th colspan="2">无参数</th>
@@ -282,7 +290,7 @@ private StackItem GetValidators(ApplicationEngine engine, VMArray args)
 [ContractMethod(1_00000000, ContractParameterType.Array, SafeMethod = true)]
 private StackItem GetNextBlockValidators(ApplicationEngine engine, VMArray args)
 ```
-<table style="width:65%; text-align:center">
+<table style=" text-align:center">
  <tr >
     <th >参数列表</th>
     <th colspan="2">无参数</th>
@@ -475,7 +483,7 @@ protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
     <td >Hash60</td>
     <td>要查询账户的ScriptHash</td>
    </tr>
-   
+
    <tr >
     <th  rowspan="2">返回值</th>
     <th  >返回值类型</th>
@@ -791,7 +799,7 @@ protected StackItem Transfer(ApplicationEngine engine, VMArray args)
 #### PolicyToken
 
 配置公式策略的合约，保存了共识过程中相关参数，例如区块最大交易数，每字节手续费等。接口详细介绍如下：
-  
+
 - getMaxTransactionPerBlock  
 获取每个区块最大交易数
 
@@ -1020,7 +1028,7 @@ private StackItem UnblockAccount(ApplicationEngine engine, VMArray args)
     <th colspan="3" >0.03</th>
    </tr>
   </table>
-  
+
 
 **更多NativeContract，敬请期待**
 
@@ -1043,7 +1051,7 @@ NativeContract的调用有两种方法, 第一种是跟普通合约一样，通�
 |PolicyToken|NeoNeo.Native.Policy|
 
   例如在c#编写智能合约中，如果需要调用GAS转账就可以如下编写：
-  
+
 ```csharp
   using Neo.SmartContract.Framework;
   using Neo.SmartContract.Framework.Neo;
@@ -1074,7 +1082,7 @@ NativeContract的调用有两种方法, 第一种是跟普通合约一样，通�
 |PolicyToken|0x9c5699b260bd468e2160dd5d45dfd2686bba8b77|
 
 具体调用细节参考[合约调用](#合约调用)
-  
+
 ## Interop Service
 互操作服务层提供了智能合约所能访问区块链数据的一些 API，利用这些 API，可以访问区块信息、交易信息、合约信息、资产信息等。除此之外互操作服务层还为每个合约提供了一个持久化存储区的功能。Neo 的每个智能合约在创建的时候都可选地启用一个私有存储区，存储区是 key-value 形式的，Neo 智能合约由合约的被调用者决定持久化存储区的上下文，而非调用者来决定。当然，调用者需要将自己的存储上下文传给被调用者（即完成授权）后，被调用者才可以执行读写操作。互操作服务分为System部分和Neo部分。
 
@@ -1096,14 +1104,14 @@ Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智�
 - **交易Script** 很多时候需要手动拼接执行脚本，这时候使用互操作服务的接口名称的哈希值与SYSCALL操作符来实现。
 
 例如，如果要通过`System.Contract.Call`来调用合约`0x43cf98eddbe047e198a3e5d57006311442a0ca15`的`name`方法：
-  
+
 ```
   PUSH0
   NEWARRAY
   PUSHBYTES4  6e616d65
   PUSHBYTES20 0x43cf98eddbe047e198a3e5d57006311442a0ca15
   SYSCALL     0x627d5b52
-  ```
+```
   C#代码为：
   ```csharp
   ScriptBuilder sb = new ScriptBuilder()
@@ -1113,10 +1121,10 @@ Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智�
   sb.EmitPush(scriptHash);
   sb.EmitSysCall(InteropService.System_Contract_Call); //根据互操作索引调用
   byte[] script = sb.ToArray();
-```
-  
+  ```
+
   例如在c#中可以如下方式调用：
-  
+
 ```csharp
   using Neo.SmartContract.Framework;
   using Neo.SmartContract.Framework.Neo;
@@ -1145,19 +1153,19 @@ Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智�
 
 | 功能描述 | 获取该智能合约的脚本容器|
 |--|--|
-| C#函数| byte[] GetScriptContainer() | 
+| C#函数| byte[] GetScriptContainer() |
 
 - System.ExecutionEngine.GetExecutingScriptHash
 
 | 功能描述 | 获取正在执行的智能合约的脚本哈希 |
 |--|--|
-| C#函数| byte[] GetExecutingScriptHash() | 
+| C#函数| byte[] GetExecutingScriptHash() |
 
 - System.ExecutionEngine.GetCallingScriptHash
 
 | 功能描述 | 获取智能合约调用者的脚本哈希 |
 |--|--|
-| C#函数| byte[] GetExecutingScriptHash() | 
+| C#函数| byte[] GetExecutingScriptHash() |
 
 - System.ExecutionEngine.GetEntryScriptHash
 
@@ -1456,7 +1464,7 @@ Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智�
 - Neo.Contract.IsPayable
 
 | 功能描述 | 获取合约是否可以接收转账 |
-|--|--
+|--|--|
 | C#函数 | bool IsPayable(this Contract contract) |
 
 - Neo.Storage.Find
@@ -1691,7 +1699,7 @@ Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智�
 ## 合约调用 
   合约中通过开发框架提供的互操作接口[System.Contract.Call](#contract-call)来调用其他合约
   例如在C#中可以如下方式调用：
-  
+
 ```csharp
   using Neo.SmartContract.Framework;
   using Neo.SmartContract.Framework.Neo;
@@ -1711,7 +1719,7 @@ Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智�
     }
   }
 ```
-  
+
   很多时候需要手动拼接执行脚本，这时候需要使用互操作接口[System.Contract.Call](#contract-call)与合约的脚本哈希来调用合约。[如何使用互操作接口](#互操作服务使用)
 
   例如，如果要通过来调用合约`0x43cf98eddbe047e198a3e5d57006311442a0ca15`的`transfer`方法：
