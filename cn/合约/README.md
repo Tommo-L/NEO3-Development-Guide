@@ -149,12 +149,7 @@ SafeMethod = true)]
 private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
 ```
 
-<style>
-table {
-    width: 100%;
-    text-align: center;
-}
-</style>
+
 
 <table width="800">
 <tr >
@@ -286,6 +281,7 @@ private StackItem GetValidators(ApplicationEngine engine, VMArray args)
 <th colspan="2">1.00</th>
 </tr>
 </table>
+
 
 - **getNextBlockValidators**: 获取下一个区块的验证人信息
 
