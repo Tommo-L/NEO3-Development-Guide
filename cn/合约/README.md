@@ -194,7 +194,7 @@ private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
 ```
 <table style="width:65%; text-align:center">
 <tr >
-<th rowspan="3">参数列表</th>
+<th rowspan="2">参数列表</th>
 <th >参数名称</th>
 <th >参数类型</th>
 <th  >描述</th>
@@ -203,11 +203,6 @@ private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
 <td>pubKey</td>
 <td >PublicKey</td>
 <td>要注册验证人的账户的公钥</td>
-</tr>
-<tr >
-<td >end</td>
-<td >Integer</td>
-<td >要查询的截止高度</td>
 </tr>
 <tr >
 <th  rowspan="2">返回值</th>
@@ -881,7 +876,9 @@ private StackItem GetBlockedAccounts(ApplicationEngine engine, VMArray args)
 - **setMaxTransactionsPerBlock**: 设置每个区块的最大交易数
 
 ```csharp
-[ContractMethod(0_03000000, ContractParameterType.Boolean, ParameterTypes = new[] { ContractParameterType.Integer }, ParameterNames = new[] { "value" })]
+[ContractMethod(0_03000000, ContractParameterType.Boolean, 
+ParameterTypes = new[] { ContractParameterType.Integer }, 
+ParameterNames = new[] { "value" })]
 private StackItem SetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray args)
 ```
 
