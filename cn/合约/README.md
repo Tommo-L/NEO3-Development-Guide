@@ -149,11 +149,7 @@ SafeMethod = true)]
 private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
 ```
 
-<style>
-.mytable {
-	width: 800px;    
-}
-</style>
+
 
 
 <table class="mytable">
@@ -327,7 +323,7 @@ ParameterNames = new[] { "account", "pubkeys" })]
 private StackItem Vote(ApplicationEngine engine, VMArray args)
 ```
 
-<table style="width:65%; text-align:center">
+<table class="mytable">
    <tr >
     <th rowspan="3">参数列表</th>
     <th >参数名称</th>
@@ -358,6 +354,7 @@ private StackItem Vote(ApplicationEngine engine, VMArray args)
     <th colspan="3">5.00</th>
    </tr>
   </table>
+
 
 
 - **name***： Token的名称
@@ -465,6 +462,7 @@ protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
    </tr>
   </table>
 
+
 - **balanceOf***: 指定地址的Token余额
 
 ```csharp
@@ -488,7 +486,6 @@ protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
     <td >Hash60</td>
     <td>要查询账户的ScriptHash</td>
    </tr>
-
    <tr >
     <th  rowspan="2">返回值</th>
     <th  >返回值类型</th>
