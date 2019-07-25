@@ -25,3 +25,7 @@
 - NEO3 renews the following commands' returned content: getblock, getblockheader, getrawtransaction, getversion, getcontractstate.
 - NEO3 abandons the following opcodes: APPCALL, TAILCALL, SHA1, SHA256, HASH160, HASH256, CHECKSIG, VERIFY, CHECKMULTISIG, CALL_I, CALL_E, CALL_ED, CALL_ET, CALL_EDT, etc.
 - NEO3 adds the following opcode: DUPFROMALTSTACKBOTTOM.
+- Add the Manifest file to describe the characteristics of the contract
+- Add native contracts
+- Reduce the system fee for OpCode and interop services
+- Provide the contract with the support for accessing to network resources
