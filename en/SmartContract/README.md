@@ -9,31 +9,31 @@
             - [NeoToken](#NeoToken)
             - [GasToken](#GasToken)
             - [PolicyToken](#PolicyToken)
-        - [NativeContract Deploy](#NativeContract-Deploy)
-        - [NativeContract Invokation](#NativeContract-Invokation)
+        - [NativeContract Deployment](#NativeContract-Deployment)
+        - [NativeContract Invocation](#NativeContract-Invocation)
     - [Interop Service](#Interop-Service)
-        - [Interop Service Principle](#Interop-Service-Principle)
+        - [Principle of Interop Service](#Principle-of-Interop-Service)
         - [Usage of Interop Service](#Usage-of-Interop-Service)
         - [System Part](#System-Part)
         - [Neo Part](#Neo-Part)
     - [System Fee](#System-Fee)
-    - [Internet Resources Access](#Internet-Resources-Access)
-    - [Contract Invokation](#Contract-Invokation)
-    - [Contract Update](#Contract-Update)
-    - [Contract Destroy](#Contract-Destroy)
+    - [Access to Internet Resources (TO BE ADDED)](#Access-to-Internet-Resources-(TO-BE-ADDED))
+    - [Contract Invocation](#Contract-Invocation)
+    - [Contract Upgrade](#Contract-Upgrade)
+    - [Contract Destroying](#Contract-Destroying)
 
 <!-- /TOC -->
 
 # Smart Contracts
 ## Changes in NEO3
-All transactions in NEO3 are invokations to smart contracts. In addition to some interop services and OpCode adjustments, the larger features of NEO3 include:
-* Add [Manifest](#Manifest) file to describe the characteristics of the contract
+All transactions in NEO3 are the invocation of the smart contract. In addition to some interop services and OpCode adjustments, NEO3 also features the following changes.
+* Add the [Manifest](#Manifest) file to describe the characteristics of the contract
 * Add [Native Contract](#Native-Contract)
-* Reduce the handling [system fee](#System-Fee) for OpCode and interop services
-* Increase the contract's support for [access to network resources](#Internet-Resources-Access).
+* Reduce the [system fee](#System-Fee) for OpCode and interop services
+* Provide the contract with the support for [accessing to network resources](#Internet-Resources-Access).
 ## Manifest
-Now each contract requires a corresponding manifest file to describe its properties, including: Groups, Features, ABI, Permissions, Trusts, SafeMethods.
-Take a manifest file for example：
+Now each contract is required to provide a manifest file to describe its properties, including Groups, Features, ABI, Permissions, Trusts, SafeMethods, as shown below:
+
 ```json
 {
   "groups": [
@@ -57,25 +57,27 @@ Take a manifest file for example：
   "safemethods": "*"
 }
 ```
-- **Groups**：Declare that the group to which this contract belongs can support multiple, each group is represented by a public key and signature.
-- **Features**：Declare the features of a smart contract. Where the attribute value `storage` indicates that the contract can access the storage area, the `payable` table indicates the contract can accept the transfer of assets.
-- **ABI**：Declare the interface information of the smart contract, you can refer to [NEP-3](https://github.com/neo-project/proposals/blob/master/nep-3.mediawiki)。The basic properties of the interface include:
-  - Hash: Hex-encoded contract script hash;
-  - EntryPoint: Provides details of the contract entry method, including method name, method parameters, and method return value;
-  - Methods: An array of details of the contract method;
-  - Events: An array of contract events. Based on ABI information, mutual call between contracts can be realized。
-- **Permissions**：Declare other contracts and methods that the contract can call. When the contract call is executed, the configuration in Permission is checked.
-Permissions, if there is no corresponding permission, the call operation will fail.
-- **Trusts**：Declare which contracts or which contract groups can be safely called。
-- **SafeMethods**：Declare which method is SafeMethod, SafeMethod usually does not modify the memory area, only the method of reading the blockchain data, will not return a warning message to the user interface when called。
+
+- **Groups**：Declare the groups to which the contract belongs. Each group is identified by a public key and a signature.
+- **Features**：Declare the features of the smart contract. Where the attribute value `storage` indicates that the contract can access the storage area, and the `payable` indicates the contract can accept the transfer of assets.
+- **ABI**：Declare the interface information about the smart contract, you can refer to [NEP-3](https://github.com/neo-project/proposals/blob/master/nep-3.mediawiki) for the details. The basic properties of the interface include:
+  - Hash: the script hash of the contract. It is encoded as a hexadecimal string in big-endian;
+  - EntryPoint: a Method object which describes the details of the entry point of the contract, including name, parameters, and the value returned;
+  - Methods: an array of Method objects which describe the details of each method in the contract;
+  - Events: an array of Event objects which describe the details of each event in the contract. 
+
+  Based on the ABI information, mutual invocation between contracts can be realized.
+- **Permissions**：Declare which contracts may be invoked and which methods are called. If a contract invokes a contract or method that is not declared in the manifest at runtime, the invocation will fail.
+- **Trusts**：Declare which contracts or groups can call the contract safely.
+- **SafeMethods**：Declare an array containing a set of method names. SafeMethods usually won't modify the storage area, only involved in reading the blockchain data. If a method is marked as safe, the user interface will not give any warnings when it is called by any other contract.
 
 ## Trigger
-Triggers allow contracts to execute different logic depending on the usage scenario。
+Triggers allow contracts to execute different logic depending on the usage scenario.
 
-* **System** This trigger adds a trigger type to NEO3. When the node triggers after receiving a new block, it will only trigger the execution of NativeContract. When the node receives the new block, all NativeContract's onPersist methods are called before persistence. The trigger mode is System.。
-* **Application** The purpose of the application trigger is to call the contract as an application function. The application function can accept multiple parameters, change the state of the blockchain, and return any type of return value. Here is a simple c# smart contract：
+* **System** This type of trigger is newly added in NEO3. It is triggered when the node receives a new block and currently only triggers the execution of the native contract. After receiving a new block, the node will be triggered by the System Trigger to invoke the onPersist method in all native contracts before the persistence.
+* **Application** An application trigger is used to invoke a contract as an application function, which can accept multiple parameters, change blockchain status, and return values of any type. Here is a simple c# smart contract：
 
-    ```csharp
+```csharp
     public static Object Main(string operation, params object[] args)
     {
       if (Runtime.Trigger == TriggerType.Application)
@@ -87,18 +89,19 @@ Triggers allow contracts to execute different logic depending on the usage scena
     {
       //some code  
     }
-    ```
+```
 
-  All transactions in NEO3 are contract calls. When a transaction is broadcast and confirmed, the smart contract is executed by the consensus node, and the normal node does not execute the smart contract when forwarding the transaction. Successful execution of a smart contract does not represent the success of the transaction, and the success of the transaction does not determine the success of the smart contract execution.
+  All transactions in NEO3 are the invocation of the smart contract. When a transaction is broadcast and confirmed, the smart contract is executed by the consensus node, and the normal node does not execute the smart contract when forwarding the transaction. Successful execution of a smart contract does not represent the success of the transaction, and the success of the transaction does not determine the success of the smart contract execution.
 
-* **Verification** The purpose of the validation trigger is to call the contract as a validation function that accepts multiple arguments and should return a valid Boolean value indicating the validity of the transaction or block.
+* **Verification** The purpose of the validation trigger is to call the contract as a verification function that accepts multiple arguments and should return a Boolean value indicating the validity of the transaction or block.
 
-  When you want to transfer money from the A account to the B account, the verification contract will be triggered. All the nodes that receive the transaction (including the normal node and the consensus node) will verify the contract of the A account. If the return value is true, the transfer is successful. . If false is returned, the transfer fails.
+  When you transfer tokens from account A to account B, the verification contract will be triggered. All the nodes that receive the transaction (including the normal node and the consensus node) will verify the contract of the account A. If the return value is true, the transfer is successful, and fails otherwise.
 
-  If the authentication contract fails to execute, the transaction will not be written to the blockchain.
+  If the authentication contract fails to execute, the transaction will not be included in the blockchain.
 
-  The following code is a simple example of a validation contract that returns true when condition A is satisfied, ie the transfer is successful. Otherwise it returns false and the transfer fails.
-    ```csharp
+  The following code is a simple example of a verification contract. It returns true if condition A is satisfied, indicating the success of the transfer. Otherwise, it returns false and the transfer fails.
+  
+```csharp
     using Neo.SmartContract.Framework;
     using Neo.SmartContract.Framework.Neo;
 
@@ -109,9 +112,9 @@ Triggers allow contracts to execute different logic depending on the usage scena
         else
             return false;
     }
-    ```
+```
 
-  The following code works basically the same as above, but the runtime trigger is judged, and the code of the verification part is executed only when the trigger is a verification trigger, which is useful in complex smart contracts. A smart contract implements a variety of triggers, and the trigger should be evaluated in the Main method.
+  The following code works the same as above, but with an additional check for the trigger in the runtime. The code of the verification part is executed only when the trigger is a verification trigger, which is of great use in complex smart contracts. If a smart contract implements multiple triggers, the type of triggers should be judged in the `Main` method.
     ```csharp
     using Neo.SmartContract.Framework;
     using Neo.SmartContract.Framework.Neo;
@@ -130,13 +133,13 @@ Triggers allow contracts to execute different logic depending on the usage scena
 
 ## Native Contract
 ### Introduction
-Native contracts are executed directly in native code, not contracts that run in a virtual machine. The native contract discloses its service name for other contracts to call. Currently available NativeContract includes NeoToken, GasToken, and PolicyToken.
+Native contracts are executed directly in native code, rather than in a virtual machine. The native contract exposes its service name to other contracts for invocation. Currently, available NativeContract includes NeoToken, GasToken, and PolicyToken.
 
 #### NeoToken
 
-NEO, referred to as Neo's governance token, is used to enforce management of the Neo network and is compliant with the NEP-5 standard. The total amount of NEO is 100 million, and the minimum unit is 1, and it is indivisible. Neo is registered in the Genesis block. The specific interface details are as follows：
+Referred to as NEO, it acts as the governance token which is used to enforce the management of the Neo network and conforms to the NEP-5 standard. It has a hard cap total of 100 million tokens, with the smallest unit of 1, and is not divisible. NEO was pre-mined during the genesis block creation. The specific interface details are as follows：
 
-- **unClaimGas**：Get the specified height, the number of unclaimed GAS
+- **unClaimGas**：Get the amount of GAS unclaimed at the specified height
   
  ```csharp
 [ContractMethod(0_03000000, 
@@ -148,26 +151,42 @@ ContractParameterType.Integer
 ParameterNames = new[] { "account", "end" }, 
 SafeMethod = true)]
 private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
- ```
 
-Parameters
+```
 
-|Parameter | Type | Description |
-|--|--|--|
-|account|Hash160| ScriptHash of the account |
-| end | Integer | The height to be queried |
+<table class="mytable">
+<tr >
+<th rowspan="3">Parameters</th>
+<th >Parameter</th>
+<th >Type</th>
+<th  >Description</th>
+</tr>
+<tr >
+<td>account</td>
+<td >Hash60</td>
+<td>ScriptHash of the account</td>
+</tr>
+<tr >
+<td >end</td>
+<td >Integer</td>
+<td >The height to be queried</td>
+</tr>
+<tr >
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >Integer</td>
+<td colspan="2" >GAS unclaimed </td>
+</tr>
+<tr >
+<th >Fee(GAS)</th>
+<td colspan="3" >0.03</td>
+</tr>
+</table>
 
-Return
-
-| Type | Description |
-|--|--|
-|Integer| GAS unclaimed |
-
-Fee(GAS)
-    
-*0.03*
-
-- **RegisterValidator**：Regist to become candidate
+- **RegisterValidator**：Register to become a candidate for the validator
 
 ```csharp
 [ContractMethod(0_05000000, 
@@ -178,23 +197,35 @@ ContractParameterType.PublicKey
 ParameterNames = new[] { "pubkey" })]
 private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
 ```
-Parameters
 
-| Parameter | Type | Description |
-|--|--|--|
-| pubKey	| PublicKey | Public key |
+<table class="mytable">
+<tr >
+<th rowspan="2">Parameters</th>
+<th >Parameter</th>
+<th >Type</th>
+<th  >Description</th>
+</tr>
+<tr >
+<td>pubKey</td>
+<td >PublicKey</td>
+<td>Public key of the account</td>
+</tr>
+<tr >
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >Boolean</td>
+<td colspan="2" >Result. true: sucess, false: failure</td>
+</tr>
+<tr >
+<th >Fee(GAS)</th>
+<td colspan="3" >0.05</td>
+</tr>
+</table>
 
-Return
-
-| Type | Description |
-|--|--|
-| Boolean | Result, true: sucess, false: fail |
-
-Fee(GAS)
-
-*0.05*
-
-- **getRegisteredValidators**：Get all validators
+- **getRegisteredValidators**：Gets the information of currently registered validators and backup nodes 
 
 ```csharp
 [ContractMethod(1_00000000, 
@@ -203,19 +234,24 @@ SafeMethod = true)]
 private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters 
-
-*none*  
-
-Return
-
-| Type | Description |
-|--|--|
-| Array | Public keys of all validators |
-
-Fee(GAS)  
-
-*1.00*
+<table class="mytable">
+<tr >
+    <th >Parameters</th>
+    <th colspan="2" >none</th>
+</tr>
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >Array</td>
+<td colspan="2" >Public keys of all validators and backup nodes </td>
+</tr>
+<tr >
+    <th >Fee(GAS)</th>
+    <td colspan="2" >1.00</td>
+</tr>
+</table>
 
 - **getValidators**: Get all current validators
 
@@ -224,40 +260,51 @@ Fee(GAS)
 private StackItem GetValidators(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters
+<table class="mytable">
+<tr >
+    <th >Parameters</th>
+    <th colspan="2" >none</th>
+</tr>
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >Array</td>
+<td colspan="2" >Public keys of all current validators </td>
+</tr>
+<tr >
+    <th >Fee(GAS)</th>
+    <td colspan="2" >1.00</td>
+</tr>
+</table>
 
-*none*
-
-Return
-
-| Type | Description |
-|--|--|
-| Array | Public keys of all current validators |
-
-Fee(GAS) 
-
-*1.00*
-
-- **getNextBlockValidators**: validators of next block
+- **getNextBlockValidators**: Get validators of the next block
 
 ```csharp
 [ContractMethod(1_00000000, ContractParameterType.Array, SafeMethod = true)]
 private StackItem GetNextBlockValidators(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters 
+<table class="mytable">
+<tr >
+    <th >Parameters</th>
+    <th colspan="2" >none</th>
+</tr>
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >Array</td>
+<td colspan="2" >Public keys of validators in the next round of consensus </td>
+</tr>
+<tr >
+    <th >Fee(GAS)</th>
+    <td colspan="2" >1.00</td>
+</tr>
+</table>
 
-*none*  
-
-Return
-
-| Type | Description |
-|--|--|
-| Array | All validators' public keys of next block |
-
-Fee(GAS)  
-
-*1.00*
 
 - **vote**：Vote for to validators
 
@@ -271,22 +318,37 @@ ParameterNames = new[] { "account", "pubkeys" })]
 private StackItem Vote(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters
-
-|Parameter | Type | Description |
-|--|--|--|
-| account	| Hash60 | Voter's ScriptHash |
-| pubkeys | Array | The public keys of validators one vote to |
-
-Return
-
-| Type | Description |
-|--|--|
-| Boolean | Result. true: success, false: fail |
-
-Fee(GAS)  
-
-*5.00*
+<table class="mytable">
+<tr >
+<th rowspan="3">Parameters</th>
+<th >Parameter</th>
+<th >Type</th>
+<th  >Description</th>
+</tr>
+<tr >
+<td>account</td>
+<td >Hash60</td>
+<td>Voter's ScriptHash</td>
+</tr>
+<tr >
+<td >pubkeys</td>
+<td >Array</td>
+<td >The public keys of validators one vote to</td>
+</tr>
+<tr >
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >Boolean</td>
+<td colspan="2" >Result. true: success, false: failure</td>
+</tr>
+<tr >
+<th >Fee(GAS)</th>
+<td colspan="3" >5.00</td>
+</tr>
+</table>
 
 - **name***： Name of the token
 
@@ -295,39 +357,51 @@ Fee(GAS)
 protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters  
-
-*none*  
-
-Return
-
-| Type | Description |
-|--|--|
-| String | Name of the token |
-
-Fee(GAS)
-
-*0.00*
+<table class="mytable">
+<tr >
+    <th >Parameters</th>
+    <th colspan="2" >none</th>
+</tr>
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >String</td>
+<td colspan="2" >Name of the token  </td>
+</tr>
+<tr >
+    <th >Fee(GAS)</th>
+    <td colspan="2" >0.00</td>
+</tr>
+</table>
 
 - **symbol***：Symbol of the token
+
 ```csharp
 [ContractMethod(0, ContractParameterType.String, Name = "symbol", SafeMethod = true)]
 protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters  
 
-*none*  
-
-Return
-
-| Type | Description |
-|--|--|
-| String | Symbol of the token |
-
-Fee(GAS) 
-
-*0.00*
+<table class="mytable">
+<tr >
+    <th >Parameters</th>
+    <th colspan="2" >none</th>
+</tr>
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >String</td>
+<td colspan="2" >Symbol of the token  </td>
+</tr>
+<tr >
+    <th >Fee(GAS)</th>
+    <td colspan="2" >0.00</td>
+</tr>
+</table>
 
 - **decimals***: Decimals of the token
 
@@ -336,19 +410,24 @@ Fee(GAS)
 protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters 
-
-*none*  
-
-Return
-
-| Type | Description |
-|--|--|
-| uint | Decimal |
-
-Fee(GAS)  
-
-*0.00*
+<table class="mytable">
+<tr >
+    <th >Parameters</th>
+    <th colspan="2" >none</th>
+</tr>
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >uint</td>
+<td colspan="2" >Decimal  </td>
+</tr>
+<tr >
+    <th >Fee(GAS)</th>
+    <td colspan="2" >0.00</td>
+</tr>
+</table>
 
 - **totalSupply***: Total supply
 
@@ -357,46 +436,62 @@ Fee(GAS)
 protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters  
+<table class="mytable">
+<tr >
+    <th >Parameters</th>
+    <th colspan="2" >none</th>
+</tr>
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >BigInteger</td>
+<td colspan="2" >Total supply  </td>
+</tr>
+<tr >
+    <th >Fee(GAS)</th>
+    <td colspan="2" >0.01</td>
+</tr>
+</table>
 
-*none*  
-
-Return
-
-| Type | Description |
-|--|--|
-| BigInteger | Total supply |
-
-Fee(GAS)  
-
-*0.01*
 
 - **balanceOf***: Balance of an account
 
 ```csharp
 [ContractMethod(0_01000000, 
-    ContractParameterType.Integer, 
-    ParameterTypes = new[] { ContractParameterType.Hash160 }, 
-    ParameterNames = new[] { "account" }, 
-    SafeMethod = true)]
+  ContractParameterType.Integer, 
+  ParameterTypes = new[] { ContractParameterType.Hash160 }, 
+  ParameterNames = new[] { "account" }, 
+  SafeMethod = true)]
 protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters
-
-|Parameter | Type | Description |
-|--|--|--|
-|account|Hash160| ScriptHash of an account |
-
-Return
-
-| Type | Description |
-|--|--|
-|Integer| Balance |
-
-Fee(GAS)  
-
-*0.01*
+<table class="mytable">
+<tr >
+<th rowspan="2">Parameters</th>
+<th >Parameter</th>
+<th >Type</th>
+<th  >Description</th>
+</tr>
+<tr >
+<td>account</td>
+<td >Hash60</td>
+<td>ScriptHash of the account</td>
+<tr >
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >Integer</td>
+<td colspan="2" >Balance </td>
+</tr>
+<tr >
+<th >Fee(GAS)</th>
+<td colspan="3" >0.01</td>
+</tr>
+</table>
 
 - **transfer***: Transfer token from one to another
 
@@ -412,30 +507,49 @@ ParameterNames = new[] { "from", "to", "amount" })]
 protected StackItem Transfer(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters
-
-|Parameter | Type | Description |
-|--|--|--|
-|from|Hash160| ScriptHash who want to transfer |
-|from|Hash160| ScriptHash of the receiver |
-|amount|Integer| Amount of the token |
-
-Return
-
-| Type | Description |
-|--|--|
-|Boolean| Result, true: success，false: fail |
-
-Fee(GAS)  
-
-*0.08*
+<table class="mytable">
+<tr >
+<th rowspan="4">Parameters</th>
+<th >Parameter</th>
+<th >Type</th>
+<th  >Description</th>
+</tr>
+<tr >
+<td>from</td>
+<td >Hash60</td>
+<td>ScriptHash who want to transfer</td>
+</tr >
+<tr >
+<td>to</td>
+<td >Hash60</td>
+<td>ScriptHash of the receiver</td>
+</tr >
+<tr >
+<td>amount</td>
+<td >Integer</td>
+<td>Amount of the token </td>
+</tr >
+<tr>
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >Boolean</td>
+<td colspan="2" >Result, true: success，false: failure </td>
+</tr>
+<tr >
+<th >Fee(GAS)</th>
+<td colspan="3" >0.08</td>
+</tr>
+</table>
 
 > Method marked * is [NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki) standard interface.
 
 #### GasToken
 
 Referred to as GAS, Neo's fuel token, used to pay the handling fee, in line with NEP-5 standards. Transaction costs and consensus node incentives on the Neo network are paid in GAS. The total amount of GAS is 100 million, and the minimum unit is 0.00000001. GAS is registered in the founding block but not distributed.
-GAS distribution mechanism: When a new block is generated, a new GAS is generated, and the generated GAS and system fees are distributed to NEO holders. The calculation and distribution of GAS is automatically performed when the NEO balance in the user's address changes. The calculation method is as follows:  
+GAS distribution mechanism: When a new block is generated, a new GAS is generated, and the generated GAS and system fees are distributed to NEO holders. The calculation and distribution of GAS are automatically performed when the NEO balance in the user's address changes. The calculation method is as follows:  
 
 ![GAS distribution](../../images/GAS_distribution.png) 
 
@@ -443,52 +557,70 @@ Where `m` is the height of the block where the user last extracted the GAS, `n` 
 
 GasToken methods details following：
 
-- **getSysFeeAmount**: Total system fee till specific height
+- **getSysFeeAmount**: Total system fee till a specific height
 
 ```csharp
 [ContractMethod(0_01000000, 
-    ContractParameterType.Integer, 
-    ParameterTypes = new[] { ContractParameterType.Integer }, 
-    ParameterNames = new[] { "index" }, 
-    SafeMethod = true)]
+  ContractParameterType.Integer, 
+  ParameterTypes = new[] { ContractParameterType.Integer }, 
+  ParameterNames = new[] { "index" }, 
+  SafeMethod = true)]
 private StackItem GetSysFeeAmount(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters
-
-| Parameter | Type | Description |
-|--|--|--|
-|index|int| The height one want to query |
-
-Return
-
-| Type | Description |
-|--|--|
-|Integer| Total system fee |
-
-Fee(GAS)  
-
-*0.01*
+<table class="mytable">
+<tr >
+<th rowspan="2">Parameters</th>
+<th >Parameter</th>
+<th >Type</th>
+<th  >Description</th>
+</tr>
+<tr >
+<td>index</td>
+<td >Integer</td>
+<td>The height one want to query</td>
+</tr>
+<tr >
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >Integer</td>
+<td colspan="2" >Total system fee </td>
+</tr>
+<tr >
+<th >Fee(GAS)</th>
+<td colspan="3" >0.01</td>
+</tr>
+</table>
 
 - **name***: Name of the token
+
 ```csharp
 [ContractMethod(0, ContractParameterType.String, Name = "name", SafeMethod = true)]
 protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters  
 
-*none*  
-
-Return
-
-| Type | Description |
-|--|--|
-| String | Name of the token |
-
-Fee(GAS)  
-
-*0.00*
+<table class="mytable">
+<tr >
+    <th >Parameters</th>
+    <th colspan="2" >none</th>
+</tr>
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >String</td>
+<td colspan="2" >Name of the token </td>
+</tr>
+<tr >
+    <th >Fee(GAS)</th>
+    <td colspan="2" >0.00</td>
+</tr>
+</table>
 
 - **symbol**: Symbol of the token
 
@@ -497,19 +629,24 @@ Fee(GAS)
 protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters  
-
-*none*  
-
-返回值
-
-| Type | Description |
-|--|--|
-| String | Symbol of the token |
-
-Fee(GAS) 
-
-*0.00*
+<table class="mytable">
+<tr >
+    <th >Parameters</th>
+    <th colspan="2" >none</th>
+</tr>
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >String</td>
+<td colspan="2" >Symbol of the token </td>
+</tr>
+<tr >
+    <th >Fee(GAS)</th>
+    <td colspan="2" >0.00</td>
+</tr>
+</table>
 
 - **decimals***: Decimals of the token
 
@@ -518,19 +655,25 @@ Fee(GAS)
 protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters  
+<table class="mytable">
+<tr >
+    <th >Parameters</th>
+    <th colspan="2" >none</th>
+</tr>
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >uint</td>
+<td colspan="2" >Decimal</td>
+</tr>
+<tr >
+    <th >Fee(GAS)</th>
+    <td colspan="2" >0.00</td>
+</tr>
+</table>
 
-*none*  
-
-Return
-
-| Type | Description |
-|--|--|
-| uint | Decimal |
-
-Fee(GAS)  
-
-*0.00*
 
 - **totalSupply***: Total supply
 
@@ -539,19 +682,24 @@ Fee(GAS)
 protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters  
-
-*none*  
-
-Return
-
-| Type | Description |
-|--|--|
-| BigInteger | Total supply |
-
-Fee(GAS)  
-
-*0.01*
+<table class="mytable">
+<tr >
+    <th >Parameters</th>
+    <th colspan="2" >none</th>
+</tr>
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >BigInteger</td>
+<td colspan="2" >Total supply</td>
+</tr>
+<tr >
+    <th >Fee(GAS)</th>
+    <td colspan="2" >0.01</td>
+</tr>
+</table>
 
 - **balanceOf***: Balance of a specific account
 
@@ -564,23 +712,34 @@ SafeMethod = true)]
 protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters
+<table class="mytable">
+<tr >
+<th rowspan="2">Parameters</th>
+<th >Parameter</th>
+<th >Type</th>
+<th  >Description</th>
+</tr>
+<tr >
+<td>account</td>
+<td >Hash60</td>
+<td>ScriptHash of the account to be queried </td>
+</tr>
+<tr >
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >Integer</td>
+<td colspan="2" >Balance </td>
+</tr>
+<tr >
+<th >Fee(GAS)</th>
+<td colspan="3" >0.01</td>
+</tr>
+</table>
 
-| Parameter | Type | Description |
-|--|--|--|
-|account|Hash160| ScriptHash of an account to query |
-
-Return
-
-| Type | Description |
-|--|--|
-|Integer| Balance |
-
-Fee(GAS) 
-
-*0.01*
-
-- **transfer***: Transfer token from one to another
+- **transfer***: Transfer token from one account to another
 
 ```csharp
 [ContractMethod(0_08000000, 
@@ -594,51 +753,75 @@ ParameterNames = new[] { "from", "to", "amount" })]
 protected StackItem Transfer(ApplicationEngine engine, VMArray args)
 ```
 
-参数
+<table class="mytable">
+<tr >
+<th rowspan="4">Parameters</th>
+<th >Parameter</th>
+<th >Type</th>
+<th  >Description</th>
+</tr>
+<tr >
+<td>from</td>
+<td >Hash60</td>
+<td>ScriptHash of the sender's account</td>
+</tr >
+<tr >
+<td>to</td>
+<td >Hash60</td>
+<td>ScriptHash of the receiver's account</td>
+</tr >
+<tr >
+<td>amount</td>
+<td >Integer</td>
+<td> Transferred amount</td>
+<tr >
 
-| Parameter | Type | Description |
-|--|--|--|
-|from|Hash160|ScriptHash of the account transfer from |
-|from|Hash160|ScriptHash of the receiver |
-|amount|Integer| Amount to transfer |
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >Boolean</td>
+<td colspan="2" >Result, true: success，false: failure </td>
+</tr>
+<tr >
+<th >Fee(GAS)</th>
+<td colspan="3" >0.08</td>
+</tr>
+</table>
 
-返回值
-
-| Type | Description |
-|--|--|
-|Boolean| Result, true: success, false: fail |
-
-Fee(GAS) 
-
-*0.08*
 
 > Method marked * is [NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki) standard interface
 
 #### PolicyToken
 
-The contract for configuring the formula strategy saves relevant parameters in the consensus process, such as the maximum number of transactions in the block, the handling fee per byte, and so on. The interface is described in detail below：
+It is the contract for configuring the consensus strategy and saves relevant parameters in the consensus process, including maximum transactions per block, maximum low-priority transactions per block, maximum low-priority-transaction size, the fee per byte, etc. The interface is described in detail below：
 
-- getMaxTransactionPerBlock  
-Get maximum transactions count limitation per block.
+- getMaxTransactionPerBlock: Get maximum transactions per block.
 
 ```csharp
 [ContractMethod(0_01000000, ContractParameterType.Integer, SafeMethod = true)]
 private StackItem GetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters  
-
-*none*  
-
-Return
-
-| Type | Description |
-|--|--|
-| Integer | Maximum transaction count per block  |
-
-Fee(GAS)  
-
-*0.01*
+<table class="mytable">
+<tr >
+    <th >Parameters</th>
+    <th colspan="2" >none</th>
+</tr>
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >Integer</td>
+<td colspan="2" >Maximum transaction count per block</td>
+</tr>
+<tr >
+    <th >Fee(GAS)</th>
+    <td colspan="2" >0.01</td>
+</tr>
+</table>
 
 - **GetFeePerByte**： Get system fee per byte
 
@@ -647,19 +830,24 @@ Fee(GAS)
 private StackItem GetFeePerByte(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters  
-
-*none*  
-
-Return
-
-| Type | Description |
-|--|--|
-| Integer | Fee per byte |
-
-Fee(GAS)  
-
-*0.01*
+<table class="mytable">
+<tr >
+    <th >Parameters</th>
+    <th colspan="2" >none</th>
+</tr>
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >Integer</td>
+<td colspan="2" >Fee per byte</td>
+</tr>
+<tr >
+    <th >Fee(GAS)</th>
+    <td colspan="2" >0.01</td>
+</tr>
+</table>
 
 - **getBlockedAccounts**: Get the addresses in the blacklist
 
@@ -668,42 +856,62 @@ Fee(GAS)
 private StackItem GetBlockedAccounts(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters  
+<table class="mytable">
+<tr >
+    <th >Parameters</th>
+    <th colspan="2" >none</th>
+</tr>
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >Array</td>
+<td colspan="2" >Address blacklist</td>
+</tr>
+<tr >
+    <th >Fee(GAS)</th>
+    <td colspan="2" >0.01</td>
+</tr>
+</table>
 
-*none*  
 
-Return
-
-| Type | Description |
-|--|--|
-| Array | Blacklist |
-
-Fee(GAS)  
-
-*0.01*
-
-- **setMaxTransactionsPerBlock**: Set the miximum limitation of a block
+- **setMaxTransactionsPerBlock**: Set maximum transactions count per block
 
 ```csharp
-[ContractMethod(0_03000000, ContractParameterType.Boolean, ParameterTypes = new[] { ContractParameterType.Integer }, ParameterNames = new[] { "value" })]
+[ContractMethod(0_03000000, ContractParameterType.Boolean, 
+ParameterTypes = new[] { ContractParameterType.Integer }, 
+ParameterNames = new[] { "value" })]
 private StackItem SetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters  
+<table class="mytable">
+<tr >
+<th rowspan="2">Parameters</th>
+<th >Parameter</th>
+<th >Type</th>
+<th  >Description</th>
+</tr>
+<tr >
+<td>value</td>
+<td >Integer</td>
+<td>Maximum transactions count to be set</td>
+</tr>
 
-| Parameter | Type | Description |
-|--|--|--|
-| value | Integer | The maximum limitation |
-
-返回值
-
-| Type | Description |
-|--|--|
-| Boolean | Result. true: success, false: fail |
-
-Fee(GAS)  
-
-*0.03*
+<tr >
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >Boolean</td>
+<td colspan="2" >Result. true: success, false: failure</td>
+</tr>
+<tr >
+<th >Fee(GAS)</th>
+<td colspan="3" >0.03</td>
+</tr>
+</table>
 
 - **setFeePerByte**：Set system fee per byte.
 
@@ -715,23 +923,37 @@ ParameterNames = new[] { "value" })]
 private StackItem SetFeePerByte(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters  
+<table class="mytable">
+<tr >
+<th rowspan="2">Parameters</th>
+<th >Parameter</th>
+<th >Type</th>
+<th  >Description</th>
+</tr>
+<tr >
+<td>value</td>
+<td >Integer</td>
+<td> System fee per byte </td>
+</tr>
 
-| Parameter | Type | Description |
-|--|--|--|
-| value | Integer | System fee per byte |
-
-返回值
-
-| Type | Description |
-|--|--|
-| Boolean | Result. true：success. false：fail. |
-
-费用(GAS)  
+<tr >
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >Boolean</td>
+<td colspan="2" >Result. true: success, false: failure</td>
+</tr>
+<tr >
+<th >Fee(GAS)</th>
+<td colspan="3" >0.03</td>
+</tr>
+</table>
 
 *0.03*
 
-- **blockAccount**：Add an account into blacklist.
+- **blockAccount**：Add an account into the blacklist.
 
 ```csharp
 [ContractMethod(0_03000000, 
@@ -741,23 +963,36 @@ ParameterNames = new[] { "account" })]
 private StackItem BlockAccount(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters  
+<table class="mytable">
+<tr >
+<th rowspan="2">Parameters</th>
+<th >Parameter</th>
+<th >Type</th>
+<th  >Description</th>
+</tr>
+<tr >
+<td>account</td>
+<td >Hash160</td>
+<td> ScriptHash of the account to be added</td>
+</tr>
 
-| Parameter | Type | Description |
-|--|--|--|
-| account | Hash160 | Account |
+<tr >
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >Boolean</td>
+<td colspan="2" >Result. true: success, false: failure</td>
+</tr>
+<tr >
+<th >Fee(GAS)</th>
+<td colspan="3" >0.03</td>
+</tr>
+</table>
 
-Return
 
-| Type | Description |
-|--|--|
-| Boolean | Result. true：success，false：failed |
-
-Fee(GAS)  
-
-*0.03*
-
-- **unblockAccount**：Remove account from blacklist.
+- **unblockAccount**：Remove an account from the blacklist.
 
 ```csharp
 [ContractMethod(0_03000000, 
@@ -767,523 +1002,543 @@ ParameterNames = new[] { "account" })]
 private StackItem UnblockAccount(ApplicationEngine engine, VMArray args)
 ```
 
-Parameters  
+<table class="mytable">
+<tr >
+<th rowspan="2">Parameters</th>
+<th >Parameter</th>
+<th >Type</th>
+<th  >Description</th>
+</tr>
+<tr >
+<td>account</td>
+<td >Hash160</td>
+<td> ScriptHash of the account to be removed </td>
+</tr>
 
-| Parameter | Type | Description |
-|--|--|--|
-| account | Hash160 | Account to remove from blacklist |
+<tr >
+<th  rowspan="2">Return</th>
+<th>Type</th>
+<th colspan="2">Description</th>
+</tr>
+<tr >
+<td  >Boolean</td>
+<td colspan="2" >Result. true: success, false: failure</td>
+</tr>
+<tr >
+<th >Fee(GAS)</th>
+<td colspan="3" >0.03</td>
+</tr>
+</table>
 
-Return
+**For more NativeContract, Please stay stunned**
 
-| Type | Description |
-|--|--|
-| Boolean | Result. true: success, false：failed. |
+### NativeContract Deployment
+NativeContract is deployed in the Genesis Block by calling the interop interface of Neo.Native.Deploy, and can only be executed in the Genesis Block.
+### NativeContract Invocation
+There are two ways to invoke a native contract. The first one is to invoke the contract with its ScriptHash, just like the normal contract, and the other is specific to the native contract-specific, that is, direct invocation through the interop service. You can refer to [Usage of Interop Service](#Usage-of-Interop-Service)
 
-Fee(GAS)  
+- **Specific Way**：Using the interop service
 
-*0.03*
-
-
-**More NativeContract, Please wait**
-
-### NativeContract Deploy
-NativeContract is deployed in the Genesis Block calling the Neo.Native.Deploy Interop Interface, which can only be executed in the Genesis Block.
-### NativeContract Invokation
-There are two ways to call NativeContract. The first one is called by the script's ScriptHash, just like the normal contract, and the other is NativeContract-specific, which is called directly through the interop service.[Usage of Interop Service](#Usage-of-Interop-Service)
-
-- **Special Way**：Using interop serivce.
-  Each NativeContract registers an interop interface with the name of its ServiceName, which belongs to the Neo.Native namespace.
+  Each NativeContract registers an interop interface with the name of its ServiceName, which is under the Neo.Native namespace.
   The ServiceName corresponding to each NativeContract is as follows：
 
-  |NativeContract|ServiceName|
+|NativeContract|ServiceName|
   |---|---|
   |NeoToken|Neo.Native.Tokens.NEO|
   |GasToken|Neo.Native.Tokens.GAS|
   |PolicyToken|NeoNeo.Native.Policy|
 
-  For example, in c# writing smart contracts, if you need to call GAS transfer, you can write as follows：
-  ```csharp
-  using Neo.SmartContract.Framework;
-  using Neo.SmartContract.Framework.Neo;
+  If you want to implement a function for transferring GAS, a smart contract written in C# can be as follows:
 
-  namespace MyContract
+```csharp
+using Neo.SmartContract.Framework;
+using Neo.SmartContract.Framework.Neo;
+
+namespace MyContract
+{
+  public class MyContract: SmartContract
   {
-    public class MyContract: SmartContract
+    public static object main(string method, object[] args)
     {
-      public static object main(string method, object[] args)
-      {
-        if (method == "test") {
-          if (args.Length < 3) return false;
-          return Native.Tokens.GAS("transfer", args);
-        }
+      if (method == "test") {
+        if (args.Length < 3) return false;
+        return Native.Tokens.GAS("transfer", args);
       }
     }
   }
+}
   ```
-- **General Way**：Using ScriptHash and System.Contract.Call.
 
-  NativeContract's ScriptHash is fixed and can be called with the System.Contract.Call interop interface and NativeContract's ScriptHash just like any other normal contract. The existing NativeContract ScriptHash is as follows：
+- **General Way**：Using ScriptHash and System.Contract.Call
 
-  |NativeContract|ScriptHash|
+  Since the ScriptHash of the native contract is fixed, it can be invoked with the interop interface of the System.Contract.Call and the ScriptHash, just like any other normal contract. The existing script hash of the native contract is as follows：
+
+|NativeContract|ScriptHash|
   |---|---|
   |NeoToken| 0x43cf98eddbe047e198a3e5d57006311442a0ca15 |
   |GasToken|0xa1760976db5fcdfab2a9930e8f6ce875b2d18225|
   |PolicyToken|0x9c5699b260bd468e2160dd5d45dfd2686bba8b77|
 
-  For details please refer [Contract Invokation](#Contract-Invokation)
+  For details please refer to [Contract Invokation](#Contract-Invocation)
   
 ## Interop Service
-The interoperability service layer provides APIs for smart contractes to access blockchain data. These APIs provide access to block information, transaction information, contract information, asset information, and more. In addition to this, the interoperable service layer provides a persistent storage area for each contract. Each of Neo's smart contracts is optionally enabled with a private storage area. The storage area is in the form of a key-value. The Neo Smart Contract is determined by the callee of the contract to persist the context of the storage area, not the caller. To decide. Of course, after the caller needs to pass his storage context to the callee (ie, complete the authorization), the callee can perform read and write operations. Interoperability services are divided into the System part and the Neo part.
-### Interop Service Principle
-When the Neo program starts, it registers a series of interop interfaces to the virtual machine for smart contract execution.
-* **ServiceName** Each interoperation has a name, for example `System.Contract.Call`。
-* **Mapping Method** Each interoperable service has a corresponding native method, such as`private static bool Contract_Call(ApplicationEngine engine)`，It is the method actually called in the client's native code.
-* **System Fee** Each interop interface has its own system fee calculation method or fixed system fee.
-* **Trigger** Each interop interface has a supported trigger mode, such as `TriggerType.All` supports all triggers.
+The interop service layer provides APIs for smart contracts to access the blockchain data, including the block information, transaction information, contract information, asset information, etc. Besides, the interop service layer provides the persistence capability for each contract. Each Neo smart contract is allowed to optionally enable a private storage area with the form of key-value pair. The context of persisting the storage for Neo smart contracts is determined by the callee of the contract, not the caller. The caller needs to pass its storage context to the callee (that is, authorization) before the callee can perform the read-write operation. There are two types of interop service, namely System and Neo.
 
-When registering, the service name of the interop interface of the Neo client, the mapping method, the system fee calculation method, and the supported trigger are encapsulated into an InteropDescriptor stored in the Dictionary, and the index is the hash value of the name of the interop interface. The hash method is:
+### Principle of Interop Service 
+When the Neo program starts, it registers a series of interop interfaces to the virtual machine for smart contract invocation.
+* **Service Name** Each interoperation has a service name, such as `System.Contract.Call`。
+* **Mapping Method** Each interop service corresponds to a  native method. Also taking the `System.Contract.Call` as an example, `private static bool Contract_Call(ApplicationEngine engine)` is the method invoked in the client.
+* **System Fee** Each interop interface has its method for system fee calculation or fixed system fee.
+* **Triggering** Each interop interface has a supported trigger mode. For instance, `TriggerType.All` supports all triggers.
+
+When registering, the Neo client encapsulates the service name of the interop interface, the mapping method, the method of calculating system fee, and the supported trigger mode as an InteropDescriptor and stores it in the Dictionary with the index of the hash value of the interop interface name, which is calculated as follows:
 `BitConverter.ToUInt32(Encoding.ASCII.GetBytes(ServiceName).Sha256(), 0)`
 
-For example: The hash of `System.Contract.Call` is `0x627d5b52`
+For example the hash of `System.Contract.Call` is `0x627d5b52`
 
 ### Usage of Interop Service
 
-* **SmartContract** The use of interoperable interfaces in smart contracts is provided by the corresponding smart contract development framework, which can be called directly. When compiled, it will be compiled by the compiler into operator instructions that can be executed in NEO-VM.
-* **Script in Transaction** Usually you need to manually splice the execution script. Using the hash value of the interface name of the interop service and the SYSCALL operator.
+* **Smart Contract** The interop interface used in the smart contract is provided by the corresponding smart contract development framework, which can be invoked directly. When compiled, the interop interface is compiled by the compiler into the operating instructions that can be executed in NeoVM.
+* **Script of the Transaction** The execution script can be constructed with the hash value of the interop service name and the SYSCALL operator.
 
-For example, if you want to call the `name` method of contract `0x43cf98eddbe047e198a3e5d57006311442a0ca15` via `System.Contract.Call`：
-  ```
+Here is an example for calling the `name` method of the contract `0x43cf98eddbe047e198a3e5d57006311442a0ca15` via `System.Contract.Call`：
+ 
+```
   PUSH0
   NEWARRAY
   PUSHBYTES4  6e616d65
   PUSHBYTES20 0x43cf98eddbe047e198a3e5d57006311442a0ca15
   SYSCALL     0x627d5b52
-  ```
-  C# code：
-  ```csharp
-  ScriptBuilder sb = new ScriptBuilder()
-  sb.EmitPush(0);
-  sb.Emit(OpCode.NEWARRAY);
-  sb.EmitPush(operation);
-  sb.EmitPush(scriptHash);
-  sb.EmitSysCall(InteropService.System_Contract_Call); //Call interop service
-  byte[] script = sb.ToArray();
-  ```
-  For example, in c#, it can be called as follows：
-  ```csharp
-  using Neo.SmartContract.Framework;
-  using Neo.SmartContract.Framework.Neo;
+ ```
 
-  namespace MyContract
+  C# code：
+
+```csharp
+ScriptBuilder sb = new ScriptBuilder()
+sb.EmitPush(0);
+sb.Emit(OpCode.NEWARRAY);
+sb.EmitPush(operation);
+sb.EmitPush(scriptHash);
+sb.EmitSysCall(InteropService.System_Contract_Call); //Call interop service
+byte[] script = sb.ToArray();
+```
+
+In C#, it can be called as follows：
+
+```csharp
+using Neo.SmartContract.Framework;
+using Neo.SmartContract.Framework.Neo;
+
+namespace MyContract
+{
+  public class MyContract: SmartContract
   {
-    public class MyContract: SmartContract
+    public static readonly byte[] GAS = HexToBytes("0xa1760976db5fcdfab2a9930e8f6ce875b2d18225");
+    public static object main(string method, object[] args)
     {
-      public static readonly byte[] GAS = HexToBytes("0xa1760976db5fcdfab2a9930e8f6ce875b2d18225");
-      public static object main(string method, object[] args)
-      {
-        if (method == "transferGAS") {
-          if (args.Length < 3) return false;
-          return Contract.Call(GAS, "Transfer", args);
-        }
+      if (method == "transferGAS") {
+        if (args.Length < 3) return false;
+        return Contract.Call(GAS, "Transfer", args);
       }
     }
   }
-  ```
+}
+```
 
-Interoperability services are divided into System part and Neo part. The specific interfaces are as follows:
+Interop services are divided into System part and Neo part. The specific interfaces are as follows:
 
 ### System Part
 
 - System.ExecutionEngine.GetScriptContainer  
 
-  | Description | Get SmartContract script container |
-  |--|--|
-  | C# Function | byte[] GetScriptContainer() |
+| Description | Get the script container of the smart contract |
+|--|--|
+| C# Function | byte[] GetScriptContainer() |
 
 - System.ExecutionEngine.GetExecutingScriptHash
 
-  | Description | Get ScriptHash of executing contract |
-  |--|--|
-  | C# Function| byte[] GetExecutingScriptHash() |
+| Description | Get the script hash of the contract being executed |
+|--|--|
+| C# Function| byte[] GetExecutingScriptHash() |
 
 - System.ExecutionEngine.GetCallingScriptHash
 
-  | Description | Get ScriptHash of calling contract |
-  |--|--|
-  | C# Function| byte[] GetExecutingScriptHash() |
+| Description | Get the script hash of the contract caller |
+|--|--|
+| C# Function| byte[] GetExecutingScriptHash() |
 
 - System.ExecutionEngine.GetEntryScriptHash
 
-  | Description | Get the scripthash of the entry point for the smart contract (the starting point of the contract call chain) |
-  |--|-- |
-  | C# Function| byte[] GetEntryScriptHash() |
+| Description | Get the script hash of the entry point of the smart contract (the starting point of the contract invocation chain) |
+|--|-- |
+| C# Function| byte[] GetEntryScriptHash() |
 
 - System.Runtime.Platform
 
-  | Description | Get the executing platform of contract |
-  |--|--|
-  | C# Function| string Platform() |
+| Description | Get the platform information of the contract being executed |
+|--|--|
+| C# Function| string Platform() |
 
 - System.Runtime.GetTrigger
 
-  | Description | Get the trigger of contract |
-  |--|--|
-  | C# Function | TriggerType Trigger() |
+| Description | Get the triggering condition of the contract |
+|--|--|
+| C# Function | TriggerType Trigger() |
 
 - System.Runtime.CheckWitness
 
-  | Description |  Verifies that the calling contract has verified the required script hashes of the transaction/block |
-  |--|--|
-  | C# Function | bool CheckWitness(byte[] hashOrPubKey) |
+| Description |  Verify whether the container calling the contract is signed by the script hash of the specific account |
+|--|--|
+| C# Function | bool CheckWitness(byte[] hashOrPubKey) |
 
 - System.Runtime.Notify
 
-  | Description | Notifies the client with a notification during smart contract execution |
-  |--|--|
-  | C# Function | bool Notify(params object[] state) |
+| Description | Notify the client executing the contract |
+|--|--|
+| C# Function | bool Notify(params object[] state) |
 
 - System.Runtime.Log
 
-  | Description | Notifies the client with a log message during smart contract execution |
-  |--|--|
-  | C# Function | void Log(string message) |
+| Description | Record the log |
+|--|--|
+| C# Function | void Log(string message) |
 
 - System.Runtime.GetTime
 
-  | Description | Get the timestamp of current block |
-  |--|--|
-  | C# Function | uint Time |
+| Description | Get the timestamp of the current block |
+|--|--|
+| C# Function | uint Time |
 
 - System.Runtime.Serialize
 
-  | Description | Serialize an object |
-  |--|--|
-  | C# Function | object Deserialize(this byte[] source) |
+| Description | Serialize an object |
+|--|--|
+| C# Function | byte[] Serialize(this object source) |
 
 - System.Runtime.Deserialize
 
-  | Description | Deserialize a byte array into object |
-  |--|--|
-  | C# Function | byte[] Serialize(this object source) |
+| Description | Deserialize a byte array into object |
+|--|--|
+| C# Function |  object Deserialize(this byte[] source)|
 
 - System.Runtime.GetInvocationCounter
 
-  | Description | Get invoke count of current contract |
-  |--|--|
-  | C# Function | int GetInvocationCounter() |
+| Description | Get invocation count of the current contract |
+|--|--|
+| C# Function | int GetInvocationCounter() |
 
 - System.Crypto.Verify
 
-  | Description | Verify a signature of a message |
-  |--|--|
-  | C# Function | bool Verify(object message, byte[] signature, byte[] pubKey) |
+| Description | Verify the signature of the message with the public key |
+|--|--|
+| C# Function | bool Verify(object message, byte[] signature, byte[] pubKey) |
 
 - System.Blockchain.GetHeight
 
-  | Description | Get height of current block |
-  |--|--|
-  | C# Function | uint GetHeight() |
+| Description | Get the current block height |
+|--|--|
+| C# Function | uint GetHeight() |
 
 - System.Blockchain.GetHeader
 
-  | Description | Get header of a block |
-  |--|--|
-  | C# Function | Header GetHeader(uint height) |
-  || Header GetHeader(byte[] hash)  |
+| Description | Get the current block header|
+|--|--|
+| C# Function | Header GetHeader(uint height) |
+|| Header GetHeader(byte[] hash)  |
 
 - System.Blockchain.GetBlock
 
-  | Description | Get block by height or hash |
-  |--|--|
-  | C# Function | Block GetBlock(uint height) |
-  || Block GetBlock(byte[] hash)  |
+| Description | Get a block by block height or block hash |
+|--|--|
+| C# Function | Block GetBlock(uint height) |
+|| Block GetBlock(byte[] hash)  |
 
 - System.Blockchain.GetTransaction
 
-  | Description | Get transaction by transaction ID |
-  |--|--|
-  | C# Function | Transaction GetTransaction(byte[] hash) |
+| Description | Get transaction by transaction ID |
+|--|--|
+| C# Function | Transaction GetTransaction(byte[] hash) |
 
 - System.Blockchain.GetTransactionHeight
 
-  | Description | Get block height of a transaction by transaction ID |
-  |--|--|
-  | C# Function | int GetTransactionHeight(byte[] hash) |
+| Description | Get the index of the block including the transaction by transaction ID |
+|--|--|
+| C# Function | int GetTransactionHeight(byte[] hash) |
 
 - System.Blockchain.GetContract
 
-  | Description | Get contract by scripthash |
-  |--|--|
-  | C# Function | Contract GetContract(byte[] scriptHash) |
+| Description | Get contract by scripthash |
+|--|--|
+| C# Function | Contract GetContract(byte[] scriptHash) |
 
 - System.Header.GetIndex
 
-  | Description | Get height from block header |
-  |--|--|
-  | C# Function | uint Index |
+| Description | Get block index from block header |
+|--|--|
+| C# Function | uint Index |
 
 - System.Header.GetHash
 
-  | Description | Get block hash from block header |
-  |--|--|
-  | C# Function | byte[] Hash |
+| Description | Get block hash from block header |
+|--|--|
+| C# Function | byte[] Hash |
 
 - System.Header.GetPrevHash
 
-  | Description | Get hash of previous block from block header |
-  |--|--|
-  | C# Function | byte[] PreHash |
+| Description | Get hash of the previous block from block header |
+|--|--|
+| C# Function | byte[] PreHash |
 
 - System.Header.GetTimestamp
 
-  | Description | Get timestamp from block header |
-  |--|--|
-  | C# Function | byte[] Timestamp |
+| Description | Get timestamp from block header |
+|--|--|
+| C# Function | byte[] Timestamp |
 
 - System.Block.GetTransactionCount
 
-  | Description | Get transaction count from a block |
-  |--|--|
-  | C# Function | int GetTransactionCount |
+| Description | Get the number of transactions included in the block |
+|--|--|
+| C# Function | int GetTransactionCount |
 
 - System.Block.GetTransactions
 
-  | Description | Get all transactions from a block |
-  |--|--|
-  | C# Function | Transaction[] GetTransactions() |
+| Description | Get all transactions included in the block |
+|--|--|
+| C# Function | Transaction[] GetTransactions() |
 
 - System.Block.GetTransaction
 
-  | Description | Get transaction from a block by index |
-  |--|--|
-  | C# Function | Transaction[] GetTransaction(int index) |
+| Description | Get a transaction in the block by transaction index |
+|--|--|
+| C# Function | Transaction[] GetTransaction(int index) |
 
 - System.Transaction.GetHash
 
-  | Description | Get hash from a transaction |
-  |--|--|
-  | C# Function | byte[] Hash |
+| Description | Get hash of the transaction |
+|--|--|
+| C# Function | byte[] Hash |
 
 - System.Contract.Call <a id="contract-call" ></a>
 
-  | Description | Invoke contract |
-  |--|--|
-  | C# Function | void Call(byte[] scriptHash, string method, object[] args) |
-  |  | void Call(Contract contract, string method, object[] args) |
+| Description | Invoke a contract |
+|--|--|
+| C# Function | void Call(byte[] scriptHash, string method, object[] args) |
+|  | void Call(Contract contract, string method, object[] args) |
 
 - System.Contract.Destroy
 
-  | Description | Destroy current contract |
-  |--|--|
-  | C# Function | void Destroy() |
+| Description | Destroy current contract |
+|--|--|
+| C# Function | void Destroy() |
 
 - System.Storage.GetContext
 
-  | Description | Get context of current contract |
-  |--|--|
-  | C# Function | StorageContext GetContext() |
-  | Explanation | IsReadOnly of StorageContext is false |
+| Description | Get storage context of the current contract |
+|--|--|
+| C# Function | StorageContext GetContext() |
+| Explanation | the IsReadOnly flag of StorageContext is false |
 
 - System.Storage.GetReadOnlyContext
 
-  | Description | Get context of current contract in read-only mode |
-  |--|--|
-  | C# Function | StorageContext GetContext() |
-  | Explanation | IsReadOnly of StorageContext is false |
+| Description | Get storage context of the current contract in read-only mode |
+|--|--|
+| C# Function | StorageContext GetContext() |
+| Explanation | the IsReadOnly flag of StorageContext is true |
 
 - System.Storage.Get
 
-  | Description | Get value from storage by key |
-  |--|--|
-  | C# Function | byte[] Get(StorageContext context, byte[] key) |
+| Description | Get value from the storage by key |
+|--|--|
+| C# Function | byte[] Get(StorageContext context, byte[] key) |
 
 - System.Storage.Put
 
-  | Description | Put key-value into storage by current context |
-  |--|--|
-  | C# Function | byte[] Get(StorageContext context, byte[] key, byte[] value) |
+| Description | Put key-value into storage based on the storage context |
+|--|--|
+| C# Function | byte[] Get(StorageContext context, byte[] key, byte[] value) |
 
 - System.Storage.PutEx
 
-  | Description | Write Key-Value to the storage area according to the flag and storage context. |
-  |--|--|
-  | C# Function | byte[] Get(StorageContext context, byte[] key, byte[] value, StorageFlags flags) |
-  | Explanation | StorageFlags indicates the attributes of the write data. By default, the data can be read and written. If it is Constant, the data cannot be modified or deleted after it is written to the storage area.|
+| Description | Put Key-Value into the storage based on the storage context and the flag |
+|--|--|
+| C# Function | byte[] Get(StorageContext context, byte[] key, byte[] value, StorageFlags flags) |
+| Explanation | The parameter StorageFlags defines the attribute of the written data. The default value is None, indicating that data can be read and written. If it is Constant, the data cannot be modified or deleted once it is written to the storage area.|
 
 - System.Storage.Delete
 
-  | Description | Delete the stored Key-Value data from the storage area according to the Key value |
-  |--|--|
-  | C# Function | void Delete(StorageContext context, byte[] key) |
-  | Explanation | If the StorageFlags of the data contain Constant, they cannot be deleted. |
+| Description | Delete the stored Key-Value data from the storage area by the Key|
+|--|--|
+| C# Function | void Delete(StorageContext context, byte[] key) |
+| Explanation | Data cannot be deleted if its StorageFlags is Constant|
 
 - System.StorageContext.AsReadOnly
 
-  | Description | Modify the current context to read-only mode |
-  |--|--|
-  | C# Function | void AsReadOnly(this StorageContext context) |
-  | Explanation | Set IsReadOnly in the StorageContext to true |
+| Description | Set the current context to read-only mode |
+|--|--|
+| C# Function | void AsReadOnly(this StorageContext context) |
+| Explanation | Set the IsReadOnly flag of the StorageContext to true |
 
 ### Neo Part
 
 - Neo.Native.Deploy
 
-  | Description | Deploy and initialize all native contracts |
-  |--|--|
-  | Explanation | Can only be called in the genesis block |
+| Description | Deploy and initialize all native contracts |
+|--|--|
+| Explanation | Ut can only be invoked in the genesis block |
 
 - Neo.Crypto.CheckSig
 
-  | Description | Verify signature of current container by public key |
-  |--|--|
-  | C# Function | bool CheckSig(byte[] signature, byte[] pubKey) |
+| Description | Verify signature of the current script container by public key |
+|--|--|
+| C# Function | bool CheckSig(byte[] signature, byte[] pubKey) |
 
 - Neo.Crypto.CheckMultiSig
 
-  | Description | Verify the signature of the current script container based on the public key |
-  |--|--|
-  | C# Function | bool CheckMultiSig(byte[][] signatures, byte[][] pubKeys) |
+| Description | Verify the multiple signature of the current script container by public key |
+|--|--|
+| C# Function | bool CheckMultiSig(byte[][] signatures, byte[][] pubKeys) |
 
 - Neo.Header.GetVersion
 
-  | Description | Get verison from block header |
-  |--|--|
-  | C# Function | uint Version |
+| Description | Get version from block header |
+|--|--|
+| C# Function | uint Version |
 
 - Neo.Header.GetMerkleRoot
 
-  | Description | Get root of transactions merkletree from header |
-  |--|--|
-  | C# Function | byte[] MerkleRoot |
+| Description | Get MerkleRoot built with all included transactions from block header |
+|--|--|
+| C# Function | byte[] MerkleRoot |
 
 - Neo.Header.GetNextConsensus
 
-  | Description | Get the script hash of the next round validators' multi-signature contract |
-  |--|--|
-  | C# Function | byte[] NextConsensus |
+| Description | Get the script hash of the next-round validators' multi-signature contract |
+|--|--|
+| C# Function | byte[] NextConsensus |
 
 - Neo.Transaction.GetScript
 
-  | Description | Get the script in the transaction |
-  |--|--|
-  | C# Function | byte[] Script |
+| Description | Get the script in the transaction |
+|--|--|
+| C# Function | byte[] Script |
 
 - Neo.Transaction.GetWitnesses
 
-  | Description | Get witnesses from transaction |
-  |--|--|
-  | C# Function | Witness[] GetWitnesses(this Transaction transaction) |
+| Description | Get witnesses in the transaction |
+|--|--|
+| C# Function | Witness[] GetWitnesses(this Transaction transaction) |
 
 - Neo.Witness.GetVerificationScript
 
-  | Description | Get verification script from transaction |
-  |--|--|
-  | C# Function | byte[] VerificationScript |
+| Description | Get verification script in the transaction |
+|--|--|
+| C# Function | byte[] VerificationScript |
 
 - Neo.Account.IsStandard
 
-  | Description | Check if the account is standard |
-  |--|--|
-  | C# Function | bool IsStandard(byte[] scriptHash) |
+| Description | Check if the account is standard |
+|--|--|
+| C# Function | bool IsStandard(byte[] scriptHash) |
 
 - Neo.Contract.Create
 
-  | Description | Deploy contract |
-  |--|--|
-  | C# Function | Contract Create(byte[] script, string manifest) |
-  | Explanation | The content of the script contract cannot exceed 1MB; The content of the manifest cannot exceed 2KB |
+| Description | Create a contract |
+|--|--|
+| C# Function | Contract Create(byte[] script, string manifest) |
+| Explanation | The size of the script contract cannot exceed 1MB and the size of the manifest cannot exceed 2KB |
 
 - Neo.Contract.Update<a id="contractupdate"></a>
 
-  | Description | update contract |
-  |--|--|
-  | C# Function | Contract Create(byte[] script, string manifest) |
-  | Explanation | The content of the script contract cannot exceed 1MB, it cannot be a contract already deployed; the content of the manifest cannot exceed 2KB; the old contract will be destroyed after the upgrade. |
+| Description | Update a contract |
+|--|--|
+| C# Function | Contract Create(byte[] script, string manifest) |
+| Explanation | The size of the script contract cannot exceed 1MB and it cannot be deployed before. The size of the manifest cannot exceed 2KB. The old contract will be destroyed after the upgrade. |
 
 - Neo.Contract.GetScript
 
-  | Description | Get script from contract |
-  |--|--|
-  | C# Function | byte[] Script |
+| Description | Get script of the contract |
+|--|--|
+| C# Function | byte[] Script |
 
 - Neo.Contract.IsPayable
 
-  | Description | Get if the contract can receive asset |
-  |--|--|
-  | C# Function | bool IsPayable(this Contract contract) |
+| Description | Check if the contract is able to receive assets |
+|--|--|
+| C# Function | bool IsPayable(this Contract contract) |
 
 - Neo.Storage.Find
 
-   Description | Find the specified prefix content in the storage area in the current storage context |
-  |--|--|
-  | C# Function | Iterator < byte[], byte[] > Find(StorageContext context, byte[] prefix) |
+|Description | Find the data in the storage area of the current storage context with the specified prefix | 
+|--|--|
+| C# Function | Iterator < byte[], byte[] > Find(StorageContext context, byte[] prefix) |
 
 - Neo.Enumerator.Create
 
-  | Description | Create an enumerator |
-  |--|--|
-  | C# Function | Enumerator Create(object[] array) |
+| Description | Create an enumerator |
+|--|--|
+| C# Function | Enumerator Create(object[] array) |
 
 - Neo.Enumerator.Next
 
-  | Description | Get the next element |
-  |--|--|
-  | C# Function | bool Next(this Enumerator enumerator) |
+| Description | Check if the enumerator has more element|
+|--|--|
+| C# Function | bool Next(this Enumerator enumerator) |
 
 - Neo.Enumerator.Value
 
-  | Description | Get the current value |
-  |--|--|
-  | C# Function | object Next(this Enumerator enumerator) |
+| Description | Get the current value of the enumerator |
+|--|--|
+| C# Function | object Value(this Enumerator enumerator) |
 
 - Neo.Enumerator.Concat
 
-  | Description | Connect two enumerators |
-  |--|--|
-  | C# Function | Enumerator Concat(Enumerator enumerator1, Enumerator enumerator2) |
+| Description | Concat two enumerators |
+|--|--|
+| C# Function | Enumerator Concat(Enumerator enumerator1, Enumerator enumerator2) |
 
 - Neo.Iterator.Create
 
-  | Description | Create an iterator |
-  |--|--|
-  | C# Function | Iterator Create(object[] array) |
-  | | Iterator Create(Dictionary<object, object> map) |
+| Description | Create an iterator |
+|--|--|
+| C# Function | Iterator Create(object[] array) |
+| | Iterator Create(Dictionary<object, object> map) |
 
 - Neo.Iterator.Key
 
-  | Description | Get iterator of all keys |
-  |--|--|
-  | C# Function | object Key(this Iterator it) |
+| Description | Get the current key of the iterator |
+|--|--|
+| C# Function | object Key(this Iterator it) |
 
 - Neo.Iterator.Keys
 
-  | Description | Get an iterator of all keys |
-  |--|--|
-  | C# Function | Iterator Keys(this Iterator it) |
+| Description | Get all keys of the iterator |
+|--|--|
+| C# Function | Iterator Keys(this Iterator it) |
 
 - Neo.Iterator.Values
 
-  | Description | Get iterator of all values |
-  |--|--|
-  | C# Function | Iterator Values(this Iterator it) |
+| Description | Get all values of the iterator |
+|--|--|
+| C# Function | Iterator Values(this Iterator it) |
 
 - Neo.Iterator.Concat
 
-  | Description | Connect two iterators |
-  |--|--|
-  | C# Function | Iterator Concat(Iterator iterator1, Iterator iterator2) |
+| Description | Concat two iterators |
+|--|--|
+| C# Function | Iterator Concat(Iterator iterator1, Iterator iterator2) |
 
 - Neo.Json.Serialize
 
-  | Description | Serialize a json object to string |
-  |--|--|
-  | C# Function | string Serialize(JObject jsonObj) |
+| Description | Serialize a string to Json object |
+|--|--|
+| C# Function | JObject Serialize(string jsonStr) |
 
 - Neo.Json.Deserialize
 
-  | Description | deserialize a string to Json object |
-  |--|--|
-  | C# Function | JObject Deserialize(string jsonStr) |
+| Description | Deserialize a json object to string |
+|--|--|
+| C# Function | string Deserialize(JObject jsonObj) |
 
 ## System Fee
 
@@ -1311,68 +1566,68 @@ Interoperability services are divided into System part and Neo part. The specifi
 | XSWAP | 0.0000006 |
 | XTUCK | 0.000004 |
 | DEPTH | 0.0000006 |
-| DROP 	| 0.0000006 |
-| DUP 	| 0.0000006 |
-| NIP 	| 0.0000006 |
-| OVER 	| 0.0000006 |
-| PICK 	| 0.0000006 |
-| ROLL 	| 0.000004 |
-| ROT 	| 0.0000006 |
-| SWAP 	| 0.0000006 |
-| TUCK 	| 0.0000006 |
-| CAT 	| 0.0008 |
-| SUBSTR 	| 0.0008 |
-| LEFT 	| 0.0008 |
-| RIGHT 	| 0.0008 |
-| SIZE 	| 0.0000006 |
-| INVERT 	| 0.000001 |
-| AND 	| 0.000002 |
-| OR 	| 0.000002 |
-| XOR 	| 0.000002 |
-| EQUAL 	| 0.000002 |
-| INC 	| 0.000001 |
-| DEC 	| 0.000001 |
-| SIGN 	| 0.000001 |
-| NEGATE 	| 0.000001 |
-| ABS 	| 0.000001 |
-| NOT 	| 0.000001 |
-| NZ 	| 0.000001 |
-| ADD 	| 0.000002 |
-| SUB 	| 0.000002 |
-| MUL 	| 0.000003 |
-| DIV 	| 0.000003 |
-| MOD 	| 0.000003 |
-| SHL 	| 0.000003 |
-| SHR 	| 0.000003 |
-| BOOLAND 	| 0.000002 |
-| BOOLOR 	| 0.000002 |
-| NUMEQUAL 	| 0.000002 |
-| NUMNOTEQUAL 	| 0.000002 |
-| LT 	| 0.000002 |
-| GT 	| 0.000002 |
-| LTE 	| 0.000002 |
-| GTE 	| 0.000002 |
-| MIN 	| 0.000002 |
-| MAX 	| 0.000002 |
-| WITHIN 	| 0.000002 |
-| SHA1 	| 0.003 |
-| SHA256 	| 0.01 |
-| ARRAYSIZE 	| 0.0000015 |
-| PACK 	| 0.00007 |
-| UNPACK 	| 0.00007 |
-| PICKITEM 	| 0.0027 |
-| SETITEM 	| 0.0027 |
-| NEWARRAY 	| 0.00015 |
-| NEWSTRUCT 	| 0.00015 |
-| NEWMAP 	| 0.000002 |
-| APPEND 	| 0.00015 |
-| REVERSE 	| 0.000005 |
-| REMOVE 	| 0.000005 |
-| HASKEY 	| 0.0027 |
-| KEYS 	| 0.000005 |
-| VALUES 	| 0.00007 |
-| THROW 	| 0.0000003 |
-| THROWIFNOT 	| 0.0000003 |
+| DROP     | 0.0000006 |
+| DUP     | 0.0000006 |
+| NIP     | 0.0000006 |
+| OVER     | 0.0000006 |
+| PICK     | 0.0000006 |
+| ROLL     | 0.000004 |
+| ROT     | 0.0000006 |
+| SWAP     | 0.0000006 |
+| TUCK     | 0.0000006 |
+| CAT     | 0.0008 |
+| SUBSTR     | 0.0008 |
+| LEFT     | 0.0008 |
+| RIGHT     | 0.0008 |
+| SIZE     | 0.0000006 |
+| INVERT     | 0.000001 |
+| AND     | 0.000002 |
+| OR     | 0.000002 |
+| XOR     | 0.000002 |
+| EQUAL     | 0.000002 |
+| INC     | 0.000001 |
+| DEC     | 0.000001 |
+| SIGN     | 0.000001 |
+| NEGATE     | 0.000001 |
+| ABS     | 0.000001 |
+| NOT     | 0.000001 |
+| NZ     | 0.000001 |
+| ADD     | 0.000002 |
+| SUB     | 0.000002 |
+| MUL     | 0.000003 |
+| DIV     | 0.000003 |
+| MOD     | 0.000003 |
+| SHL     | 0.000003 |
+| SHR     | 0.000003 |
+| BOOLAND     | 0.000002 |
+| BOOLOR     | 0.000002 |
+| NUMEQUAL     | 0.000002 |
+| NUMNOTEQUAL     | 0.000002 |
+| LT     | 0.000002 |
+| GT     | 0.000002 |
+| LTE     | 0.000002 |
+| GTE     | 0.000002 |
+| MIN     | 0.000002 |
+| MAX     | 0.000002 |
+| WITHIN     | 0.000002 |
+| SHA1     | 0.003 |
+| SHA256     | 0.01 |
+| ARRAYSIZE     | 0.0000015 |
+| PACK     | 0.00007 |
+| UNPACK     | 0.00007 |
+| PICKITEM     | 0.0027 |
+| SETITEM     | 0.0027 |
+| NEWARRAY     | 0.00015 |
+| NEWSTRUCT     | 0.00015 |
+| NEWMAP     | 0.000002 |
+| APPEND     | 0.00015 |
+| REVERSE     | 0.000005 |
+| REMOVE     | 0.000005 |
+| HASKEY     | 0.0027 |
+| KEYS     | 0.000005 |
+| VALUES     | 0.00007 |
+| THROW     | 0.0000003 |
+| THROWIFNOT     | 0.0000003 |
 
 | Interop Service | System Fee (GAS) |
 |--|--|
@@ -1440,78 +1695,81 @@ Interoperability services are divided into System part and Neo part. The specifi
 | Neo.Json.Serialize| 0.001  |
 | Neo.Json.Deserialize| 0.005  |
 
-## Internet Resources Access
-## Contract Invokation
-  When writing contract, you can invoke other contracts through the interop service provided by the development framework[System.Contract.Call](#contract-call)
-  For example, in C#, it can be like as follows：
-  ```csharp
-  using Neo.SmartContract.Framework;
-  using Neo.SmartContract.Framework.Neo;
+## Access to Internet Resources (TO BE ADDED) 
+## Contract Invocation
+  When writing a contract, you can invoke other contracts through the interop service provided by the development framework[System.Contract.Call](#contract-call). Here is an example in C#:
 
-  namespace MyContract
+```csharp
+using Neo.SmartContract.Framework;
+using Neo.SmartContract.Framework.Neo;
+
+namespace MyContract
+{
+  public class MyContract: SmartContract
   {
-    public class MyContract: SmartContract
+    public static readonly byte[] GAS = HexToBytes("0xa1760976db5fcdfab2a9930e8f6ce875b2d18225");
+    public static object main(string method, object[] args)
     {
-      public static readonly byte[] GAS = HexToBytes("0xa1760976db5fcdfab2a9930e8f6ce875b2d18225");
-      public static object main(string method, object[] args)
-      {
-        if (method == "transferGAS") {
-          if (args.Length < 3) return false;
-          return Contract.Call(GAS, "transfer", args);
-        }
+      if (method == "transferGAS") {
+        if (args.Length < 3) return false;
+        return Contract.Call(GAS, "transfer", args);
       }
     }
   }
-  ```
-  Usually you need to manually splice the execution script. At this point you need to use the interop service [System.Contract.Call] (#contract-call) and the script's ScriptHash to call the contract.[How to use interop services](#Usage-of-Interop-Service)
+}
+```
 
-  For example, if you want to invoke method `transfer` of contract `0x43cf98eddbe047e198a3e5d57006311442a0ca15`：
+  In the case of the execution script constructed manually, the contract should be invoked with the interop service [System.Contract.Call](#contract-call) and the ScriptHash of the contract. Please refer to [How to use interop services](#Usage-of-Interop-Service)
 
-  ```
-  PUSHBYTES4  0x00e1f505
-  PUSHBYTES20 0xfb5fd311a3ae2b2c8ab6b63c10502f9cf58ebeed
-  PUSHBYTES20 0xa6b9b510a67009e61f4f95115c188437f76dd2d0
-  PUSH3
-  PACK                                                      //Third parameter, parameter list
-  PUSHBYTES4  0x6e616d65                                    //Second parameter, method
-  PUSHBYTES20 0x43cf98eddbe047e198a3e5d57006311442a0ca15    //First parameter, contract's ScriptHash
-  SYSCALL     0x627d5b52                                    //Calling interop service by hash
-  ```
+  Here is an example for invoking method `transfer` of the contract `0x43cf98eddbe047e198a3e5d57006311442a0ca15` via `System.Contract.Call`：
 
-  C# code：
+```
+PUSHBYTES4  0x00e1f505
+PUSHBYTES20 0xfb5fd311a3ae2b2c8ab6b63c10502f9cf58ebeed
+PUSHBYTES20 0xa6b9b510a67009e61f4f95115c188437f76dd2d0
+PUSH3
+PACK                                                      //The third parameter, parameter list
+PUSHBYTES4  0x6e616d65                                    //The second parameter, method name
+PUSHBYTES20 0x43cf98eddbe047e198a3e5d57006311442a0ca15    //The first parameter, contract's ScriptHash
+SYSCALL     0x627d5b52                                    //Calling interop service by hash
+```
 
-  ```csharp
-  ScriptBuilder sb        = new ScriptBuilder();
-  UInt160 scriptHash      = UInt160.Parse("0x43cf98eddbe047e198a3e5d57006311442a0ca15");
-  string operation        = "transfer";
-  ContractParameter from  = new ContractParameter(ContractParameterType.Hash160);
-  ContractParameter to    = new ContractParameter(ContractParameterType.Hash160);
-  ContractParameter value = new ContractParameter(ContractParameterType.Integer);
+C# code：
 
-  from.SetValue("0xa6b9b510a67009e61f4f95115c188437f76dd2d0");
-  to.SetValue("0xfb5fd311a3ae2b2c8ab6b63c10502f9cf58ebeed");
-  value.SetValue("100000000");
+```csharp
+ScriptBuilder sb        = new ScriptBuilder();
+UInt160 scriptHash      = UInt160.Parse("0x43cf98eddbe047e198a3e5d57006311442a0ca15");
+string operation        = "transfer";
+ContractParameter from  = new ContractParameter(ContractParameterType.Hash160);
+ContractParameter to    = new ContractParameter(ContractParameterType.Hash160);
+ContractParameter value = new ContractParameter(ContractParameterType.Integer);
 
-  sb.EmitAppCall(scriptHash, operation, new ContractParameter[]{from, to, value});
-  byte[] script = sb.ToArray();
+from.SetValue("0xa6b9b510a67009e61f4f95115c188437f76dd2d0");
+to.SetValue("0xfb5fd311a3ae2b2c8ab6b63c10502f9cf58ebeed");
+value.SetValue("100000000");
 
-  public static ScriptBuilder EmitAppCall(this ScriptBuilder sb, UInt160 scriptHash, string operation, params ContractParameter[] args)
-  {
-      for (int i = args.Length - 1; i >= 0; i--)
-          sb.EmitPush(args[i]);
-      sb.EmitPush(args.Length);
-      sb.Emit(OpCode.PACK);
-      sb.EmitPush(operation);
-      sb.EmitPush(scriptHash);
-      sb.EmitSysCall(InteropService.System_Contract_Call);
-      return sb;
-  }
-  ```
+sb.EmitAppCall(scriptHash, operation, new ContractParameter[]{from, to, value});
+byte[] script = sb.ToArray();
 
-## Contract Update
-If you need to modify the logic of the contract after the contract is deployed and retain the data in the storage area, you can use the contract upgrade, but you need to implement the upgrade interface in the old contract. Call the [Neo.Contract.Update](#contractupdate) method in the old contract upgrade interface.
-When the upgrade interface is called in the old contract, the method will build a new smart contract based on the parameters passed in. If the old contract has a storage area, the old contract's storage area will be transferred to the new contract. After the upgrade is complete, the old contract will be deleted. If the old contract has a storage area, the storage area will also be deleted. The old contract will then be unavailable and the Hash value of the new contract will need to be used.
-The C# code is as follows:
+public static ScriptBuilder EmitAppCall(this ScriptBuilder sb, UInt160 scriptHash, string operation, params ContractParameter[] args)
+{
+    for (int i = args.Length - 1; i >= 0; i--)
+        sb.EmitPush(args[i]);
+    sb.EmitPush(args.Length);
+    sb.Emit(OpCode.PACK);
+    sb.EmitPush(operation);
+    sb.EmitPush(scriptHash);
+    sb.EmitSysCall(InteropService.System_Contract_Call);
+    return sb;
+}
+```
+
+## Contract Upgrade
+You can upgrade the contract to modify the logic of the contract and keep the data in the storage area after the contract is deployed, but you need to implement the upgrade interface in the old contract through invoking the [Neo.Contract.Update](#contractupdate) method.
+
+When the upgrade interface is called in the old contract, the method will build a new smart contract based on the parameters passed in. If the old contract has a storage area, the storage area will be transferred to the new contract. After the upgrade, the old contract will be deleted, as well as its storage area (if any). The old contract will then be unavailable and instead, the hash of the new contract should be used.
+
+C# code:
 
 ```csharp
 using Neo.SmartContract.Framework;
@@ -1535,24 +1793,23 @@ void update(byte[] newScript, string manifest)
 }
 ```
 
-## Contract Destroy
-The smart contract supports the destruction operation after the release, but the destruction interface needs to be reserved in the old contract.
-Contract destruction mainly calls the `System.Contract.Destroy` method.
+## Contract Destroying
+The smart contract supports the destruction operation after the release, but the interface for destroying the contract needs to be reserved in the old contract, mainly involved in the invocation of `System.Contract.Destroy` method.
 
 C# code：
 
-  ```csharp
-  using Neo.SmartContract.Framework;
-  using Neo.SmartContract.Framework.System;
+```csharp
+using Neo.SmartContract.Framework;
+using Neo.SmartContract.Framework.System;
 
-  public static bool Main(string method, params object[] args){
-      if (method == "destroy") {
-        destroy();
-    }
-      return true;
+public static bool Main(string method, params object[] args){
+    if (method == "destroy") {
+      destroy();
   }
+    return true;
+}
 
-  void destroy(){
-    Contract.Destroy();
-  }
-  ```
+void destroy(){
+  Contract.Destroy();
+}
+```

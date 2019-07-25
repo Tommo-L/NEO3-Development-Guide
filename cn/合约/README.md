@@ -23,8 +23,15 @@
 
 <!-- /TOC -->
 
+# 智能合约
+
+## NEO3改动
+
 NEO3中所有交易都是智能合约的调用，除了一些互操作指令和OpCode的调整，NEO3中比较大的特性包括：
-增加Manifest文件来描述合约的特性，减少了OpCode和互操作接口的手续费，增加合约对网络资源访问的支持。
+* 增加[Manifest](#Manifest)文件来描述合约的特性
+* 增加[原生合约](#原生合约)
+* 减少了OpCode和互操作接口的[系统费](#系统费)
+* 增加合约对[网络资源访问](#网络资源访问)的支持。
 
 ## Manifest
 现在每个合约都需要对应的manifest文件描述其属性，其内容包括：Groups， Features， ABI，Permissions， Trusts， SafeMethods。
@@ -53,7 +60,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   "safemethods": "*"
 }
 ```
-- **Groups**：声明本合约所归属的组，可以支持多个, 每一个组由一个公钥和签名表示。~~需要补充同一组中的特点~~
+- **Groups**：声明本合约所归属的组，可以支持多个, 每一个组由一个公钥和签名表示。
 - **Features**：声明智能合约的特性。其中属性值 storage 表明合约可以访问存储区，payable 表
  明合约可以接受资产的转入。
 - **ABI**：声明智能合约的接口信息，可以参考[NEP-3](https://github.com/neo-project/proposals/blob/master/nep-3.mediawiki)。接口的基础属性包括:
@@ -800,10 +807,9 @@ protected StackItem Transfer(ApplicationEngine engine, VMArray args)
 
 #### PolicyToken
 
-配置公式策略的合约，保存了共识过程中相关参数，例如区块最大交易数，每字节手续费等。接口详细介绍如下：
+配置共识策略的合约，保存了共识过程中相关参数，例如区块最大交易数，每字节手续费等。接口详细介绍如下：
 
-- getMaxTransactionPerBlock  
-获取每个区块最大交易数
+- getMaxTransactionPerBlock: 获取每个区块最大交易数
 
 ```csharp
 [ContractMethod(0_01000000, ContractParameterType.Integer, SafeMethod = true)]
@@ -1035,7 +1041,7 @@ private StackItem UnblockAccount(ApplicationEngine engine, VMArray args)
 **更多NativeContract，敬请期待**
 
 ### NativeContract 部署
-NativeContract在创世区块中通过调用Neo.Native.Deploy互操作接口部署其只能在创世区块执行。
+NativeContract在创世区块中通过调用Neo.Native.Deploy互操作接口部署，且只能在创世块中执行。
 
 
 ### NativeContract 调用
@@ -1102,7 +1108,7 @@ Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智�
 
 ### 互操作服务使用 
 
-- **智能合约** 智能合约中使用互操作接口由对应的智能合约开发框架提供，直接调用即可，当编译时会由编译器编译成可在Neo-VM中执行的操作符指令
+- **智能合约** 智能合约中使用的互操作接口由对应的智能合约开发框架提供，直接调用即可，当编译时会由编译器编译成可在NeoVM中执行的操作符指令
 - **交易Script** 很多时候需要手动拼接执行脚本，这时候使用互操作服务的接口名称的哈希值与SYSCALL操作符来实现。
 
 例如，如果要通过`System.Contract.Call`来调用合约`0x43cf98eddbe047e198a3e5d57006311442a0ca15`的`name`方法：
