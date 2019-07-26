@@ -2,20 +2,103 @@
 
 <!-- TOC -->
 
-- [NeoVM Architecture](#neovm-architecture)
-  - [Execution Engine](#execution-engine)
-  - [Temporary Storage](#temporary-storage)
-- [Interoperable service layer](#interoperable-service-layer)
-- [Built-in data types](#built-in-data-types)
-- [Instructions](#instructions)
-  - [Contrant](#contrant)
-  - [Flow Control](#flow-control)
-  - [Stack Operation](#stack-operation)
-  - [String Operation](#string-operation)
-  - [Logical Operation](#logical-operation)
-  - [Arithmetic Operation](#arithmetic-operation)
-  - [Advanced Data Structure](#Advanced-Data-Structure)
-  - [Exception Processing](#exception-processing)
+- [Neo Virtual Machine](#neo-virtual-machine)
+    - [Changes in NEO3](#changes-in-neo3)
+    - [NeoVM Architecture](#neovm-architecture)
+        - [Execution Engine](#execution-engine)
+        - [Temporary Storage](#temporary-storage)
+    - [Interoperable service layer](#interoperable-service-layer)
+    - [Built-in data types](#built-in-data-types)
+    - [Instructions](#instructions)
+        - [Contrant](#contrant)
+            - [PUSH0](#push0)
+            - [PUSHBYTES](#pushbytes)
+            - [PUSHDATA](#pushdata)
+            - [PUSHM1](#pushm1)
+            - [PUSHN](#pushn)
+        - [Flow Control](#flow-control)
+            - [NOP](#nop)
+            - [JMP](#jmp)
+            - [JMPIF](#jmpif)
+            - [JMPIFNOT](#jmpifnot)
+            - [CALL](#call)
+            - [RET](#ret)
+            - [SYSCALL](#syscall)
+        - [Stack Operation](#stack-operation)
+            - [DUPFROMALTSTACKBOTTOM](#dupfromaltstackbottom)
+            - [DUPFROMALTSTACK](#dupfromaltstack)
+            - [TOALTSTACK](#toaltstack)
+            - [FROMALTSTACK](#fromaltstack)
+            - [XDROP](#xdrop)
+            - [XSWAP](#xswap)
+            - [XTUCK](#xtuck)
+            - [DEPTH](#depth)
+            - [DROP](#drop)
+            - [DUP](#dup)
+            - [NIP](#nip)
+            - [OVER](#over)
+            - [PICK](#pick)
+            - [ROLL](#roll)
+            - [ROT](#rot)
+            - [SWAP](#swap)
+            - [TUCK](#tuck)
+        - [String Operation](#string-operation)
+            - [CAT](#cat)
+            - [SUBSTR](#substr)
+            - [LEFT](#left)
+            - [RIGHT](#right)
+            - [SIZE](#size)
+        - [Logical Operation](#logical-operation)
+            - [INVERT](#invert)
+            - [AND](#and)
+            - [OR](#or)
+            - [XOR](#xor)
+            - [EQUAL](#equal)
+        - [Arithmetic Operation](#arithmetic-operation)
+            - [INC](#inc)
+            - [DEC](#dec)
+            - [SIGN](#sign)
+            - [NEGATE](#negate)
+            - [ABS](#abs)
+            - [NOT](#not)
+            - [NZ](#nz)
+            - [ADD](#add)
+            - [SUB](#sub)
+            - [MUL](#mul)
+            - [DIV](#div)
+            - [MOD](#mod)
+            - [SHL](#shl)
+            - [SHR](#shr)
+            - [BOOLAND](#booland)
+            - [BOOLOR](#boolor)
+            - [NUMEQUAL](#numequal)
+            - [NUMNOTEQUAL](#numnotequal)
+            - [LT](#lt)
+            - [GT](#gt)
+            - [LTE](#lte)
+            - [GTE](#gte)
+            - [MIN](#min)
+            - [MAX](#max)
+            - [WITHIN](#within)
+        - [Advanced Data Structure](#advanced-data-structure)
+        - [ARRAYSIZE](#arraysize)
+            - [PACK](#pack)
+            - [UNPACK](#unpack)
+            - [PICKITEM](#pickitem)
+            - [SETITEM\*](#setitem\)
+            - [NEWARRAY](#newarray)
+            - [NEWSTRUCT](#newstruct)
+            - [NEWMAP](#newmap)
+            - [APPEND*](#append)
+            - [REVERSE*](#reverse)
+            - [REMOVE*](#remove)
+            - [HASKEY](#haskey)
+            - [KEYS](#keys)
+            - [VALUES](#values)
+        - [Exception Processing](#exception-processing)
+            - [THROW](#throw)
+            - [THROWIFNOT](#throwifnot)
+    - [Fee](#fee)
 
 <!-- /TOC -->
 
@@ -905,3 +988,91 @@ It has implemented common operations for array, map, struct, etc.
 
 Note: The operation code with \* indicates that the result of the operation is not pushed back to the `EvaluationStack`.
 
+## Fee
+
+| OpCode | Fee (GAS) |
+|---|---|
+| PUSH0 | 0.00000030 |
+| PUSHBYTES1 ~ PUSHBYTES75 | 0.00000120 |
+| PUSHDATA1 | 0.00000180 |
+| PUSHDATA2 | 0.00013000 |
+| PUSHDATA4 | 0.00110000 |
+| PUSHM1 | 0.00000030 |
+| PUSH1 ~ PUSH16 | 0.00000030 |
+| NOP | 0.00000030 |
+| JMP | 0.00000070 |
+| JMPIF | 0.00000070 |
+| JMPIFNOT | 0.00000070 |
+| CALL | 0.00022000 |
+| RET | 0.00000040 |
+| SYSCALL | 0 |
+| DUPFROMALTSTACKBOTTOM | 0.00000060 |
+| DUPFROMALTSTACK | 0.00000060 |
+| TOALTSTACK | 0.00000060 |
+| FROMALTSTACK | 0.00000060 |
+| XDROP | 0.00000400 |
+| XSWAP | 0.0000006 |
+| XTUCK | 0.000004 |
+| DEPTH | 0.0000006 |
+| DROP     | 0.0000006 |
+| DUP     | 0.0000006 |
+| NIP     | 0.0000006 |
+| OVER     | 0.0000006 |
+| PICK     | 0.0000006 |
+| ROLL     | 0.000004 |
+| ROT     | 0.0000006 |
+| SWAP     | 0.0000006 |
+| TUCK     | 0.0000006 |
+| CAT     | 0.0008 |
+| SUBSTR     | 0.0008 |
+| LEFT     | 0.0008 |
+| RIGHT     | 0.0008 |
+| SIZE     | 0.0000006 |
+| INVERT     | 0.000001 |
+| AND     | 0.000002 |
+| OR     | 0.000002 |
+| XOR     | 0.000002 |
+| EQUAL     | 0.000002 |
+| INC     | 0.000001 |
+| DEC     | 0.000001 |
+| SIGN     | 0.000001 |
+| NEGATE     | 0.000001 |
+| ABS     | 0.000001 |
+| NOT     | 0.000001 |
+| NZ     | 0.000001 |
+| ADD     | 0.000002 |
+| SUB     | 0.000002 |
+| MUL     | 0.000003 |
+| DIV     | 0.000003 |
+| MOD     | 0.000003 |
+| SHL     | 0.000003 |
+| SHR     | 0.000003 |
+| BOOLAND     | 0.000002 |
+| BOOLOR     | 0.000002 |
+| NUMEQUAL     | 0.000002 |
+| NUMNOTEQUAL     | 0.000002 |
+| LT     | 0.000002 |
+| GT     | 0.000002 |
+| LTE     | 0.000002 |
+| GTE     | 0.000002 |
+| MIN     | 0.000002 |
+| MAX     | 0.000002 |
+| WITHIN     | 0.000002 |
+| SHA1     | 0.003 |
+| SHA256     | 0.01 |
+| ARRAYSIZE     | 0.0000015 |
+| PACK     | 0.00007 |
+| UNPACK     | 0.00007 |
+| PICKITEM     | 0.0027 |
+| SETITEM     | 0.0027 |
+| NEWARRAY     | 0.00015 |
+| NEWSTRUCT     | 0.00015 |
+| NEWMAP     | 0.000002 |
+| APPEND     | 0.00015 |
+| REVERSE     | 0.000005 |
+| REMOVE     | 0.000005 |
+| HASKEY     | 0.0027 |
+| KEYS     | 0.000005 |
+| VALUES     | 0.00007 |
+| THROW     | 0.0000003 |
+| THROWIFNOT     | 0.0000003 |
