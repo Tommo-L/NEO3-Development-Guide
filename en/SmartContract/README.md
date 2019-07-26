@@ -79,8 +79,8 @@
             - [Neo.Iterator.Concat](#neoiteratorconcat)
             - [Neo.Json.Serialize](#neojsonserialize)
             - [Neo.Json.Deserialize](#neojsondeserialize)
-    - [Fee](#fee)
-    - [Access to Internet Resources (TO BE ADDED)](#access-to-internet-resources-to-be-added)
+    - [Fees](#fees)
+    - [Accessing to Internet Resources (TO BE ADDED)](#accessing-to-internet-resources-to-be-added)
     - [Contract Invocation](#contract-invocation)
     - [Contract Upgrade](#contract-upgrade)
     - [Contract Destroying](#contract-destroying)
@@ -1481,7 +1481,7 @@ Interop services are divided into System part and Neo part. The specific interfa
 
 | Description | Deploy and initialize all native contracts |
 |--|--|
-| Explanation | Ut can only be invoked in the genesis block |
+| Explanation | It can only be invoked in the genesis block |
 
 #### Neo.Crypto.CheckSig
 
@@ -1636,7 +1636,7 @@ Interop services are divided into System part and Neo part. The specific interfa
 |--|--|
 | C# Function | string Deserialize(JObject jsonObj) |
 
-## Fee
+## Fees
 
 | Interop Service | Fee (GAS) |
 |--|--|
@@ -1704,7 +1704,7 @@ Interop services are divided into System part and Neo part. The specific interfa
 | Neo.Json.Serialize| 0.001  |
 | Neo.Json.Deserialize| 0.005  |
 
-## Access to Internet Resources (TO BE ADDED) 
+## Accessing to Internet Resources (TO BE ADDED) 
 ## Contract Invocation
 When writing a contract, you can invoke other contracts through the interop service provided by the development framework[System.Contract.Call](#SystemContractCall). Here is an example in C#:
 

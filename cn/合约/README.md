@@ -1279,7 +1279,7 @@ namespace MyContract
 #### System.ExecutionEngine.GetEntryScriptHash
 
 | 功能描述 | 获得该智能合约的入口点（合约调用链的起点）的脚本散列 |
-|--|-#### |
+|--|-- |
 | C#函数| byte[] GetEntryScriptHash() |
 
 #### System.Runtime.Platform
@@ -1472,7 +1472,7 @@ namespace MyContract
 | 功能描述 | 根据存储上下文，依据flag，向存储区写入Key-Value |
 |--|--|
 | C#函数 | byte[] Get(StorageContext context, byte[] key, byte[] value, StorageFlags flags) |
-| 说明 | StorageFlags表明了写入数据的属性，默认None，数据可以被读写。如果是Constant，数据被写入存储区后不能被修改也不能被删除|
+| 说明 | StorageFlags表明了写入数据的属性，默认None，<br/>数据可以被读写。如果是Constant，数据被写入存储区后不能被修改也不能被删除|
 
 #### System.Storage.Delete
 
@@ -1562,7 +1562,7 @@ namespace MyContract
 | 功能描述 | 升级合约 |
 |--|--|
 | C#函数 | Contract Create(byte[] script, string manifest) |
-| 说明 | script合约内容不能超过1MB，不能是已经部署的合约；manifest内容不能超过2KB；升级后旧合约会被摧毁 |
+| 说明 | script合约内容不能超过1MB，不能是已经部署的合约；manifest内容不能超过2KB；<br/>升级后旧合约会被摧毁 |
 
 #### Neo.Contract.GetScript
 
