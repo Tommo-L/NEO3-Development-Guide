@@ -1775,6 +1775,7 @@ public static ScriptBuilder EmitAppCall(this ScriptBuilder sb, UInt160 scriptHas
 ```
 
 ## Contract Upgrade
+
 You can upgrade the contract to modify the logic of the contract and keep the data in the storage area after the contract is deployed, but you need to implement the upgrade interface in the old contract through invoking the [Neo.Contract.Update](#NeoContractUpdate) method.
 
 When the upgrade interface is called in the old contract, the method will build a new smart contract based on the parameters passed in. If the old contract has a storage area, the storage area will be transferred to the new contract. After the upgrade, the old contract will be deleted, as well as its storage area (if any). The old contract will then be unavailable and instead, the hash of the new contract should be used.
