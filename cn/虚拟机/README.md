@@ -1,19 +1,105 @@
 ﻿# NeoVM 虚拟机 
+<!-- TOC -->
 
-- [NeoVM 架构原理](#NeoVM-架构原理)
-  - [执行引擎](#执行引擎)
-  - [存储器](#存储器)
-- [互操作接口](#互操作接口)
-- [内置数据类型](#内置数据类型)
-- [指令集](#指令集)
-  - [常数](#常数)
-  - [流程控制](#流程控制)
-  - [栈操作](#栈操作)
-  - [字符串操作](#字符串操作)
-  - [逻辑运算](#逻辑运算)
-  - [算术运算](#算术运算)
-  - [高级数据结构](#高级数据结构)
-  - [异常处理](#异常处理)
+- [NeoVM 虚拟机](#neovm-虚拟机)
+    - [NEO3 变更部分](#neo3-变更部分)
+    - [NeoVM 架构原理](#neovm-架构原理)
+        - [执行引擎](#执行引擎)
+        - [存储器](#存储器)
+    - [互操作接口](#互操作接口)
+    - [内置数据类型](#内置数据类型)
+    - [指令集](#指令集)
+        - [常数](#常数)
+            - [PUSH0](#push0)
+            - [PUSHBYTES](#pushbytes)
+            - [PUSHDATA](#pushdata)
+            - [PUSHM1](#pushm1)
+            - [PUSHN](#pushn)
+        - [流程控制](#流程控制)
+            - [NOP](#nop)
+            - [JMP](#jmp)
+            - [JMPIF](#jmpif)
+            - [JMPIFNOT](#jmpifnot)
+            - [CALL](#call)
+            - [RET](#ret)
+            - [SYSCALL](#syscall)
+        - [栈操作](#栈操作)
+            - [DUPFROMALTSTACKBOTTOM](#dupfromaltstackbottom)
+            - [DUPFROMALTSTACK](#dupfromaltstack)
+            - [TOALTSTACK](#toaltstack)
+            - [FROMALTSTACK](#fromaltstack)
+            - [XDROP](#xdrop)
+            - [XSWAP](#xswap)
+            - [XTUCK](#xtuck)
+            - [DEPTH](#depth)
+            - [DROP](#drop)
+            - [DUP](#dup)
+            - [NIP](#nip)
+            - [OVER](#over)
+            - [PICK](#pick)
+            - [ROLL](#roll)
+            - [ROT](#rot)
+            - [SWAP](#swap)
+            - [TUCK](#tuck)
+        - [字符串操作](#字符串操作)
+            - [CAT](#cat)
+            - [SUBSTR](#substr)
+            - [LEFT](#left)
+            - [RIGHT](#right)
+            - [SIZE](#size)
+        - [逻辑运算](#逻辑运算)
+            - [INVERT](#invert)
+            - [AND](#and)
+            - [OR](#or)
+            - [XOR](#xor)
+            - [EQUAL](#equal)
+        - [算术运算](#算术运算)
+            - [INC](#inc)
+            - [DEC](#dec)
+            - [SIGN](#sign)
+            - [NEGATE](#negate)
+            - [ABS](#abs)
+            - [NOT](#not)
+            - [NZ](#nz)
+            - [ADD](#add)
+            - [SUB](#sub)
+            - [MUL](#mul)
+            - [DIV](#div)
+            - [MOD](#mod)
+            - [SHL](#shl)
+            - [SHR](#shr)
+            - [BOOLAND](#booland)
+            - [BOOLOR](#boolor)
+            - [NUMEQUAL](#numequal)
+            - [NUMNOTEQUAL](#numnotequal)
+            - [LT](#lt)
+            - [GT](#gt)
+            - [LTE](#lte)
+            - [GTE](#gte)
+            - [MIN](#min)
+            - [MAX](#max)
+            - [WITHIN](#within)
+        - [高级数据结构](#高级数据结构)
+            - [ARRAYSIZE](#arraysize)
+            - [PACK](#pack)
+            - [UNPACK](#unpack)
+            - [PICKITEM](#pickitem)
+            - [SETITEM*](#setitem)
+            - [NEWARRAY](#newarray)
+            - [NEWSTRUCT](#newstruct)
+            - [NEWMAP](#newmap)
+        - [APPEND*](#append)
+            - [REVERSE*](#reverse)
+            - [REMOVE*](#remove)
+            - [HASKEY](#haskey)
+            - [KEYS](#keys)
+            - [VALUES](#values)
+        - [异常处理](#异常处理)
+            - [THROW](#throw)
+            - [THROWIFNOT](#throwifnot)
+    - [费用](#费用)
+
+<!-- /TOC -->
 
 NeoVM 是执行 Neo 智能合约代码的虚拟机。本文所讲述的虚拟机概念比较狭义，并非是借助于操作系统对物理机器的一种模拟，与 vmware 或者 Hyper-V 不同，主要是针对具体语言所实现的虚拟机。
 
@@ -890,3 +976,91 @@ NeoVM虚拟机一共实现了173个指令，类别如下：
 | 功能：   | 从计算栈栈顶读取一个布尔值，如果为False，则将虚拟机状态置为FAULT |
 
 > 注：带 `*` 操作码表示该操作码的操作结果并未使用PUSH()放回计算栈。
+## 费用
+
+| OpCode | 费用 (GAS) |
+|---|---|
+| PUSH0 | 0.00000030 |
+| PUSHBYTES1 ~ PUSHBYTES75 | 0.00000120 |
+| PUSHDATA1 | 0.00000180 |
+| PUSHDATA2 | 0.00013000 |
+| PUSHDATA4 | 0.00110000 |
+| PUSHM1 | 0.00000030 |
+| PUSH1 ~ PUSH16 | 0.00000030 |
+| NOP | 0.00000030 |
+| JMP | 0.00000070 |
+| JMPIF | 0.00000070 |
+| JMPIFNOT | 0.00000070 |
+| CALL | 0.00022000 |
+| RET | 0.00000040 |
+| SYSCALL | 0 |
+| DUPFROMALTSTACKBOTTOM | 0.00000060 |
+| DUPFROMALTSTACK | 0.00000060 |
+| TOALTSTACK | 0.00000060 |
+| FROMALTSTACK | 0.00000060 |
+| XDROP | 0.00000400 |
+| XSWAP | 0.0000006 |
+| XTUCK | 0.000004 |
+| DEPTH | 0.0000006 |
+| DROP     | 0.0000006 |
+| DUP     | 0.0000006 |
+| NIP     | 0.0000006 |
+| OVER     | 0.0000006 |
+| PICK     | 0.0000006 |
+| ROLL     | 0.000004 |
+| ROT     | 0.0000006 |
+| SWAP     | 0.0000006 |
+| TUCK     | 0.0000006 |
+| CAT     | 0.0008 |
+| SUBSTR     | 0.0008 |
+| LEFT     | 0.0008 |
+| RIGHT     | 0.0008 |
+| SIZE     | 0.0000006 |
+| INVERT     | 0.000001 |
+| AND     | 0.000002 |
+| OR     | 0.000002 |
+| XOR     | 0.000002 |
+| EQUAL     | 0.000002 |
+| INC     | 0.000001 |
+| DEC     | 0.000001 |
+| SIGN     | 0.000001 |
+| NEGATE     | 0.000001 |
+| ABS     | 0.000001 |
+| NOT     | 0.000001 |
+| NZ     | 0.000001 |
+| ADD     | 0.000002 |
+| SUB     | 0.000002 |
+| MUL     | 0.000003 |
+| DIV     | 0.000003 |
+| MOD     | 0.000003 |
+| SHL     | 0.000003 |
+| SHR     | 0.000003 |
+| BOOLAND     | 0.000002 |
+| BOOLOR     | 0.000002 |
+| NUMEQUAL     | 0.000002 |
+| NUMNOTEQUAL     | 0.000002 |
+| LT     | 0.000002 |
+| GT     | 0.000002 |
+| LTE     | 0.000002 |
+| GTE     | 0.000002 |
+| MIN     | 0.000002 |
+| MAX     | 0.000002 |
+| WITHIN     | 0.000002 |
+| SHA1     | 0.003 |
+| SHA256     | 0.01 |
+| ARRAYSIZE     | 0.0000015 |
+| PACK     | 0.00007 |
+| UNPACK     | 0.00007 |
+| PICKITEM     | 0.0027 |
+| SETITEM     | 0.0027 |
+| NEWARRAY     | 0.00015 |
+| NEWSTRUCT     | 0.00015 |
+| NEWMAP     | 0.000002 |
+| APPEND     | 0.00015 |
+| REVERSE     | 0.000005 |
+| REMOVE     | 0.000005 |
+| HASKEY     | 0.0027 |
+| KEYS     | 0.000005 |
+| VALUES     | 0.00007 |
+| THROW     | 0.0000003 |
+| THROWIFNOT     | 0.0000003 |
