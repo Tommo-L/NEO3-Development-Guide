@@ -110,7 +110,7 @@ For example, in JVM or CLR of .Net, source code will be compiled into relevant b
 ## Changes in NEO3
 
 - NEO3 abandons the following opcodes: APPCALL, TAILCALL, SHA1, SHA256, HASH160, HASH256, CHECKSIG, VERIFY, CHECKMULTISIG, CALL_I, CALL_E, CALL_ED, CALL_ET, CALL_EDT, etc.
-- NEO3 adds the following opcode: DUPFROMALTSTACKBOTTOM.
+- NEO3 adds the following opcode: [DUPFROMALTSTACKBOTTOM](#stack-operation).
 
 ## NeoVM Architecture
 ![nvm](../../images/nvm.jpg)
