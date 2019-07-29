@@ -28,7 +28,7 @@
 
 - NEO3 redefines the following commands' references: [getblockheader](en/RPC/api/getblockheader.md) and [getrawmempool](en/RPC/api/getrawmempool.md).
 - NEO3 renews the following commands' returned content: [getblock](en/RPC/api/getblock.md), [getblockheader](en/RPC/api/getblockheader.md), [getrawtransaction](en/RPC/api/getrawtransaction.md), [getversion](en/RPC/api/getversion.md) and [getcontractstate](en/RPC/api/getcontractstate.md).
-- NEO3 abandons the following commands: claimgas, dumpprivkey, getaccountstate, getapplicationlog, getassetstate, getbalance, getclaimable, getmetricblocktimestamp, getnep5balances, getnep5transfers, getnewaddress, gettxout, getunclaimed, getunclaimedgas, getunspents, getwalletheight, importprivkey, invoke, listaddress, sendfrom, sendtoaddress, sendmany, etc.
+- NEO3 abandons the following commands: `claimgas, dumpprivkey, getaccountstate, getapplicationlog, getassetstate, getbalance, getclaimable, getmetricblocktimestamp, getnep5balances, getnep5transfers, getnewaddress, gettxout, getunclaimed, getunclaimedgas, getunspents, getwalletheight, importprivkey, invoke, listaddress, sendfrom, sendtoaddress, sendmany`, etc.
 
 ### Smart contracts
 
@@ -40,7 +40,7 @@
 ### NeoVM
 
 - NEO3 adds the following opcode: [DUPFROMALTSTACKBOTTOM](en/NeoVM#stack-operation)
-- NEO3 abandons the following opcodes: APPCALL, TAILCALL, SHA1, SHA256, HASH160, HASH256, CHECKSIG, VERIFY, CHECKMULTISIG, CALL_I, CALL_E, CALL_ED, CALL_ET, CALL_EDT, etc.
+- NEO3 abandons the following opcodes: `APPCALL, TAILCALL, SHA1, SHA256, HASH160, HASH256, CHECKSIG, VERIFY, CHECKMULTISIG, CALL_I, CALL_E, CALL_ED, CALL_ET, CALL_EDT`, etc.
 
 
 
