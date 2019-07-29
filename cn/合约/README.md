@@ -31,6 +31,7 @@
             - [System.Runtime.Serialize](#systemruntimeserialize)
             - [System.Runtime.Deserialize](#systemruntimedeserialize)
             - [System.Runtime.GetInvocationCounter](#systemruntimegetinvocationcounter)
+            - [System.Runtime.GetNotifications](#systemruntimegetnotifications)
             - [System.Crypto.Verify](#systemcryptoverify)
             - [System.Blockchain.GetHeight](#systemblockchaingetheight)
             - [System.Blockchain.GetHeader](#systemblockchaingetheader)
@@ -1335,6 +1336,12 @@ namespace MyContract
 | 功能描述 | 获取当前合约的调用次数 |
 |--|--|
 | C#函数 | int GetInvocationCounter() |
+
+#### System.Runtime.GetNotifications
+
+| Description | 获取某合约执行的所有通知 |
+|--|--|
+| C# Function | StackItem[][] GetNotifications(Hash160 scriptHash) |
 
 #### System.Crypto.Verify
 

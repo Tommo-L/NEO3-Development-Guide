@@ -28,6 +28,7 @@
             - [System.Runtime.Serialize](#systemruntimeserialize)
             - [System.Runtime.Deserialize](#systemruntimedeserialize)
             - [System.Runtime.GetInvocationCounter](#systemruntimegetinvocationcounter)
+            - [System.Runtime.GetNotifications](#systemruntimegetnotifications)
             - [System.Crypto.Verify](#systemcryptoverify)
             - [System.Blockchain.GetHeight](#systemblockchaingetheight)
             - [System.Blockchain.GetHeader](#systemblockchaingetheader)
@@ -1322,6 +1323,12 @@ Interop services are divided into System part and Neo part. The specific interfa
 | Description | Get invocation count of the current contract |
 |--|--|
 | C# Function | int GetInvocationCounter() |
+
+#### System.Runtime.GetNotifications
+
+| Description | Get notifications of a contract |
+|--|--|
+| C# Function | StackItem[][] GetNotifications(Hash160 scriptHash) |
 
 #### System.Crypto.Verify
 
