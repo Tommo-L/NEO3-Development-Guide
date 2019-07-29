@@ -89,11 +89,14 @@
 
 # Smart Contracts
 ## Changes in NEO3
+
 All transactions in NEO3 are the invocation of the smart contract. In addition to some interop services and OpCode adjustments, NEO3 also features the following changes.
-* Add the [Manifest](#manifest) file to describe the characteristics of the contract
-* Add [Native Contract](#native-contract)
-* Reduce the [system fee](#fees) for OpCode and interop services
-* Provide the contract with the support for [accessing to network resources](#accessing-to-internet-resources-to-be-added).
+- Add the [Manifest](#manifest) file to describe the characteristics of the contract
+- Add [Native Contract](#native-contract)
+- Reduce the [system fee](#fees) for OpCode and interop services
+- Provide the contract with the support for [accessing to network resources](#accessing-to-internet-resources-to-be-added)
+- Add new trigger type of `System` 
+
 ## Manifest
 Now each contract is required to provide a manifest file to describe its properties, including Groups, Features, ABI, Permissions, Trusts, SafeMethods, as shown below:
 
@@ -124,12 +127,12 @@ Now each contract is required to provide a manifest file to describe its propert
 - **Groups**：Declare the groups to which the contract belongs. Each group is identified by a public key and a signature.
 - **Features**：Declare the features of the smart contract. Where the attribute value `storage` indicates that the contract can access the storage area, and the `payable` indicates the contract can accept the transfer of assets.
 - **ABI**：Declare the interface information about the smart contract, you can refer to [NEP-3](https://github.com/neo-project/proposals/blob/master/nep-3.mediawiki) for the details. The basic properties of the interface include:
-- Hash: the script hash of the contract. It is encoded as a hexadecimal string in big-endian;
-- EntryPoint: a Method object which describes the details of the entry point of the contract, including name, parameters, and the value returned;
-- Methods: an array of Method objects which describe the details of each method in the contract;
-- Events: an array of Event objects which describe the details of each event in the contract. 
+  - Hash: the script hash of the contract. It is encoded as a hexadecimal string in big-endian;
+  - EntryPoint: a Method object which describes the details of the entry point of the contract, including name, parameters, and the value returned;
+  - Methods: an array of Method objects which describe the details of each method in the contract;
+  - Events: an array of Event objects which describe the details of each event in the contract. 
 
-Based on the ABI information, mutual invocation between contracts can be realized.
+  Based on the ABI information, mutual invocation between contracts can be realized.
 - **Permissions**：Declare which contracts may be invoked and which methods are called. If a contract invokes a contract or method that is not declared in the manifest at runtime, the invocation will fail.
 - **Trusts**：Declare which contracts or groups can call the contract safely.
 - **SafeMethods**：Declare an array containing a set of method names. SafeMethods usually won't modify the storage area, only involved in reading the blockchain data. If a method is marked as safe, the user interface will not give any warnings when it is called by any other contract.

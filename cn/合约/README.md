@@ -4,16 +4,16 @@
 
 - [智能合约](#智能合约)
 - [智能合约](#智能合约-1)
-    - [NEO3改动](#neo3改动)
+    - [NEO3变更部分](#neo3变更部分)
     - [Manifest](#manifest)
     - [Trigger](#trigger)
-    - [Native Contract](#native-contract)
+    - [原生合约](#原生合约)
         - [介绍](#介绍)
             - [NeoToken](#neotoken)
             - [GasToken](#gastoken)
             - [PolicyToken](#policytoken)
-        - [NativeContract 部署](#nativecontract-部署)
-        - [NativeContract 调用](#nativecontract-调用)
+        - [原生合约 部署](#原生合约-部署)
+        - [原生合约 调用](#原生合约-调用)
     - [Interop Service](#interop-service)
         - [互操作服务原理](#互操作服务原理)
         - [互操作服务使用](#互操作服务使用)
@@ -92,13 +92,15 @@
 
 # 智能合约
 
-## NEO3改动
+## NEO3变更部分
 
 NEO3中所有交易都是智能合约的调用，除了一些互操作指令和OpCode的调整，NEO3中比较大的特性包括：
-* 增加[Manifest](#manifest)文件来描述合约的特性
-* 增加[原生合约](#native-contract)
-* 减少了OpCode和互操作接口的[系统费](#费用)
-* 增加合约对[网络资源访问](#网路资源访问-待补充)的支持。
+
+- 增加[Manifest](#manifest)文件来描述合约的特性
+- 增加[原生合约](#原生合约)
+- 减少了OpCode和互操作接口的[系统费](#费用)
+- 增加合约对[网络资源访问](#网路资源访问-待补充)的支持。
+- 新增`System`触发器类型
 
 ## Manifest
 现在每个合约都需要对应的manifest文件描述其属性，其内容包括：Groups， Features， ABI，Permissions， Trusts， SafeMethods。
@@ -128,22 +130,20 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
 }
 ```
 - **Groups**：声明本合约所归属的组，可以支持多个, 每一个组由一个公钥和签名表示。
-- **Features**：声明智能合约的特性。其中属性值 storage 表明合约可以访问存储区，payable 表
-明合约可以接受资产的转入。
+- **Features**：声明智能合约的特性。其中属性值 storage 表明合约可以访问存储区，payable 表明合约可以接受资产的转入。
 - **ABI**：声明智能合约的接口信息，可以参考[NEP-3](https://github.com/neo-project/proposals/blob/master/nep-3.mediawiki)。接口的基础属性包括:
-- Hash: 16进制编码的合约脚本哈希;
-- EntryPoint: 提供了合约入口方法的详细信息，包括方法名、方法参数以及方法返回值;
-- Methods: 由合约方法的详细信息构成的数组;
-- Events: 由合约事件构成的数组。基于 ABI 信息，可实现合约间的相互调用。
-- **Permissions**：声明合约可调用的其他合约和方法。执行合约调用时，会检查 Permission 中配置
-的权限，若没有相应权限，则调用操作会执行失败。
+  - Hash: 16进制编码的合约脚本哈希;
+  - EntryPoint: 提供了合约入口方法的详细信息，包括方法名、方法参数以及方法返回值;
+  - Methods: 由合约方法的详细信息构成的数组;
+  - Events: 由合约事件构成的数组。基于 ABI 信息，可实现合约间的相互调用。
+- **Permissions**：声明合约可调用的其他合约和方法。执行合约调用时，会检查 Permission 中配置的权限，若没有相应权限，则调用操作会执行失败。
 - **Trusts**：声明合约可以被哪些合约或者哪些合约组安全地调用。
 - **SafeMethods**：声明哪些方法是SafeMethod，SafeMethod通常是不会修改存储区，只读取区块链数据的方法，被调用时不会给用户接口返回警告信息。
 
 ## Trigger
 触发器可以使合约根据不同的使用场景执行不同的逻辑。
 
-- **System** 此触发器为NEO3新增触发器类型。当节点收到新区块后触发，目前只会触发NativeContract的执行。当节点收到新区块，持久化之前会调用所有NativeContract的onPersist方法，触发方式为System。
+- **System** 此触发器为NEO3新增触发器类型。当节点收到新区块后触发，目前只会触发原生合约的执行。当节点收到新区块，持久化之前会调用所有原生合约的onPersist方法，触发方式为System。
 - **Application** 应用触发器的目的在于将该合约作为应用函数进行调用，应用函数可以接受多个参数，对区块链的状态进行更改，并返回任意类型的返回值。以下是一个简单的c#智能合约：
 
 ```csharp
@@ -201,9 +201,9 @@ public static bool Main(byte[] signature)
 }
 ```
 
-## Native Contract
+## 原生合约
 ### 介绍
-原生合约是直接在原生代码中执行，而不是在虚拟机中运行的合约。原生合约公开其服务名称，供其他合约调用。目前已有的NativeContract包括NeoToken，GasToken，PolicyToken。
+原生合约是直接在原生代码中执行，而不是在虚拟机中运行的合约。原生合约公开其服务名称，供其他合约调用。目前已有的原生合约包括NeoToken，GasToken，PolicyToken。
 
 #### NeoToken
 
@@ -1138,21 +1138,21 @@ private StackItem UnblockAccount(ApplicationEngine engine, VMArray args)
 </table>
 
 
-**更多NativeContract，敬请期待**
+**更多原生合约，敬请期待**
 
-### NativeContract 部署
-NativeContract在创世区块中通过调用Neo.Native.Deploy互操作接口部署，且只能在创世块中执行。
+### 原生合约 部署
+原生合约在创世区块中通过调用Neo.Native.Deploy互操作接口部署，且只能在创世块中执行。
 
 
-### NativeContract 调用
-NativeContract的调用有两种方法, 第一种是跟普通合约一样，通过合约的脚本哈希来调用，另一种是NativeContract特有的，直接通过互操作服务调用。[查看互操作服务使用](#互操作服务使用)
+### 原生合约 调用
+原生合约的调用有两种方法, 第一种是跟普通合约一样，通过合约的脚本哈希来调用，另一种是原生合约特有的，直接通过互操作服务调用。[查看互操作服务使用](#互操作服务使用)
 
 - **特有方法**：通过互操作接口直接调用
 
-每个NativeContract都会注册一个互操作接口，互操作接口名称为其ServiceName，都属于Neo.Native命名空间。
-每个NativeContract对应的ServiceName如下：
+每个原生合约都会注册一个互操作接口，互操作接口名称为其ServiceName，都属于Neo.Native命名空间。
+每个原生合约对应的ServiceName如下：
 
-|NativeContract|ServiceName|
+|原生合约|服务名称|
 |---|---|
 |NeoToken|Neo.Native.Tokens.NEO|
 |GasToken|Neo.Native.Tokens.GAS|
@@ -1181,9 +1181,9 @@ namespace MyContract
 
 - **通用方法**：通过ScriptHash调用
 
-NativeContract的ScriptHash都是固定的，可以像调用其他普通合约一样用System.Contract.Call互操作接口和NativeContract的ScriptHash调用。现有NativeContract的ScriptHash如下：
+原生合约的ScriptHash都是固定的，可以像调用其他普通合约一样用System.Contract.Call互操作接口和原生合约的ScriptHash调用。现有原生合约的ScriptHash如下：
 
-|NativeContract|ScriptHash|
+|原生合约|脚本哈希|
 |---|---|
 |NeoToken| 0x43cf98eddbe047e198a3e5d57006311442a0ca15 |
 |GasToken|0xa1760976db5fcdfab2a9930e8f6ce875b2d18225|
@@ -1534,19 +1534,19 @@ namespace MyContract
 
 #### Neo.Transaction.GetWitnesses
 
-| 功能描述 | 获取交易中的 |
+| 功能描述 | 获取交易中的见证人 |
 |--|--|
 | C#函数 | Witness[] GetWitnesses(this Transaction transaction) |
 
 #### Neo.Witness.GetVerificationScript
 
-| 功能描述 | 获取交易中的 |
+| 功能描述 | 获取交易中的验证脚本 |
 |--|--|
 | C#函数 | byte[] VerificationScript |
 
 #### Neo.Account.IsStandard
 
-| 功能描述 | 获取交易中的 |
+| 功能描述 | 判断是否是标准账户 |
 |--|--|
 | C#函数 | bool IsStandard(byte[] scriptHash) |
 
@@ -1744,7 +1744,7 @@ namespace MyContract
 
 很多时候需要手动拼接执行脚本，这时候需要使用互操作接口[System.Contract.Call](#contract-call)与合约的脚本哈希来调用合约。[如何使用互操作接口](#互操作服务使用)
 
-例如，如果要通过来调用合约`0x43cf98eddbe047e198a3e5d57006311442a0ca15`的`transfer`方法：
+例如，如果要通过`System.Contract.Call`来调用合约`0x43cf98eddbe047e198a3e5d57006311442a0ca15`的`transfer`方法：
 
 ```
 PUSHBYTES4  0x00e1f505
