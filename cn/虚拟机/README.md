@@ -2,7 +2,7 @@
 <!-- TOC -->
 
 - [NeoVM 虚拟机](#neovm-虚拟机)
-    - [NEO3 变更部分](#neo3-变更部分)
+    - [NEO3变更部分](#neo3变更部分)
     - [NeoVM 架构原理](#neovm-架构原理)
         - [执行引擎](#执行引擎)
         - [存储器](#存储器)
@@ -105,10 +105,10 @@ NeoVM 是执行 Neo 智能合约代码的虚拟机。本文所讲述的虚拟机
 
 例如在 Java 的 JVM 或者 .Net 的 CLR 中，Java 或者 .Net 源码会被编译成相关的字节码，然后在对应虚拟机上运行， JVM 或 CLR 会对这些字节码进行取指令、译码、执行、结果回写等操作。这些步骤和真实物理机器上的概念都很相似。相对应的二进制指令仍然是在物理机器上运行，物理机器从内存中取指令，通过总线传输到 CPU，然后译码、执行、结果存储。
 
-## NEO3 变更部分
+## NEO3变更部分
 
-- NEO3取消了APPCALL，TAILCALL，SHA1，SHA256，HASH160，HASH256，CHECKSIG，VERIFY，CHECKMULTISIG，CALL_I，CALL_E，CALL_ED，CALL_ET，CALL_EDT 等Opcode。
-- NEO3新增了 [DUPFROMALTSTACKBOTTOM](#栈操作) 等Opcode。
+- 弃用了APPCALL，TAILCALL，SHA1，SHA256，HASH160，HASH256，CHECKSIG，VERIFY，CHECKMULTISIG，CALL_I，CALL_E，CALL_ED，CALL_ET，CALL_EDT 等Opcode。
+- 新增[DUPFROMALTSTACKBOTTOM](#栈操作) 等Opcode。
 
 ## NeoVM 架构原理
 ![nvm](../../images/nvm.jpg)
@@ -220,7 +220,6 @@ NeoVM虚拟机一共实现了173个指令，类别如下：
 | 功能：   | 向计算栈中压入一个字节数组，其长度由本指令后的 1\|2\|4 字节指定。 |
 
 #### PUSHM1
-------
 
 | 指令：   | PUSHM1                                   |
 |----------|------------------------------------------|
@@ -229,7 +228,6 @@ NeoVM虚拟机一共实现了173个指令，类别如下：
 | 功能：   | 向计算栈中压入一个大整数，其数值等于-1。 |
 
 #### PUSHN
------
 
 | 指令：   | PUSH1\~PUSH16                               |
 |----------|---------------------------------------------|

@@ -26,8 +26,9 @@ A Neo Transaction is a signed data package with an instruction for the network a
 
 ## Changes in NEO3
 
-- NEO3 abandoned UTXO model with only account balance model retained
-- NEO3 cancels the free discount of 10 GAS for each transaction. The [total fee](#systemfee) is subject to the quantity and type of instructions in the contract script
+- Update the [transaction structure](cn/交易#transaction-structure), including the removal of fields `inputs`, `outputs` and adding fields `validUntilBlock`, `witnesses`, etc.
+- Abandone UTXO model with only account balance model retained
+- Cancel the free discount of 10 GAS for each transaction. The [total fee](#systemfee) is subject to the quantity and type of instructions in the contract script
 - The [address script](#verification-script) in NEO3 has changed not using the Opcode.CheckSig and OpCode.CheckMultiSig but the interoperable service call `SysCall "Neo.Crypto.CheckSig".hash2uint`, `SysCall "Neo.Crypto .CheckMultiSig".hash2unit` instead.
 
 ## Transaction Structure
@@ -55,13 +56,14 @@ The system fee is a fixed cost calculated by instructions to be executed by the 
 
 ![system fee](../../images/system_fee.png)
 
-where OpcodeSet is opcode set,  is the cost of instruction i,  is the number of instruction i in the contract script.
+where *OpcodeSet* is opcode set, 𝑂𝑝𝑐𝑜𝑑𝑒𝑃𝑟𝑖𝑐𝑒<sub>𝑖</sub> is the cost of instruction *i*, 𝑛<sub>𝑖</sub> is the number of instruction *i* in the contract script.
+
 ### networkFee
 The network fee is the fee paid by users when they submit transactions to the Neo network and is used to pay the validator for producing new blocks. For each transaction, there is a minimum network fee, which is calculated as follows,
 
 ![network fee](../../images/network_fee.png)
 
-where VerificationCost is the costs for transaction signature verification in NeoVM, tx.Length is the byte length of transaction data, FeePerByte is the fee per byte. The network fee paid by users must be greater than or equal to NetworkFee, otherwise, the verification of the transaction will fail.
+where *VerificationCost* is the costs for transaction signature verification in NeoVM, *tx.Length* is the byte length of transaction data, *FeePerByte* is the fee per byte. The network fee paid by users must be greater than or equal to NetworkFee, otherwise, the verification of the transaction will fail.
 ### attributes
 Depending on the transaction type, it is allowed to add attributes to the transaction. For each attribute, a usage type has to be specified, together with the external data and the size of the external data.
 

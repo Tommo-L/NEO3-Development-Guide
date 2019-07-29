@@ -109,8 +109,8 @@ For example, in JVM or CLR of .Net, source code will be compiled into relevant b
 
 ## Changes in NEO3
 
-- NEO3 abandons the following opcodes: APPCALL, TAILCALL, SHA1, SHA256, HASH160, HASH256, CHECKSIG, VERIFY, CHECKMULTISIG, CALL_I, CALL_E, CALL_ED, CALL_ET, CALL_EDT, etc.
-- NEO3 adds the following opcode: [DUPFROMALTSTACKBOTTOM](#stack-operation).
+- Abandon the following opcodes: APPCALL, TAILCALL, SHA1, SHA256, HASH160, HASH256, CHECKSIG, VERIFY, CHECKMULTISIG, CALL_I, CALL_E, CALL_ED, CALL_ET, CALL_EDT, etc.
+- Add the following opcode: [DUPFROMALTSTACKBOTTOM](#stack-operation).
 
 ## NeoVM Architecture
 ![nvm](../../images/nvm.jpg)
@@ -226,7 +226,6 @@ The constant instructions mainly complete the function of pushing constants or a
 | Function:   | Push a byte array into the `EvaluationStack`, the length of which is specified by 1\|2\|4 bytes after this instruction.  |
 
 #### PUSHM1
-------
 
 | Instruction   | PUSHM1                                   |
 |----------|------------------------------------------|
@@ -235,7 +234,6 @@ The constant instructions mainly complete the function of pushing constants or a
 | Function:   | Push a BigInteger of `-1`  into the `EvaluationStack`. |
 
 #### PUSHN
------
 
 | Instruction   | PUSH1\~PUSH16                               |
 |----------|---------------------------------------------|

@@ -11,11 +11,11 @@
 - [其它](#其它)
 <!-- TOC -->
 
-## NEO3 变更部分
+## NEO3变更部分
 
-- NEO3取消了claimgas，dumpprivkey，getaccountstate，getapplicationlog，getassetstate，getbalance，getclaimable，getmetricblocktimestamp，getnep5balances，getnep5transfers，getnewaddress，gettxout，getunclaimed，getunclaimedgas，getunspents，getwalletheight，importprivkey，invoke，listaddress，sendfrom，sendtoaddress，sendmany等API指令。
-- NEO3重新定义了[getblockheader](api/getblockheader.md)，[getrawmempool](api/getrawmempool.md)等API指令的调用方式。
-- NEO3更新了[getblock](api/getblock.md)，[getblockheader](api/getblockheader.md)，[getrawtransaction](api/getrawtransaction.md)，[getversion](api/getversion.md)，[getcontractstate](api/getcontractstate.md)等API指令的返回内容。
+- 取消了claimgas，dumpprivkey，getaccountstate，getapplicationlog，getassetstate，getbalance，getclaimable，getmetricblocktimestamp，getnep5balances，getnep5transfers，getnewaddress，gettxout，getunclaimed，getunclaimedgas，getunspents，getwalletheight，importprivkey，invoke，listaddress，sendfrom，sendtoaddress，sendmany等API指令。
+- 重新定义了[getblockheader](api/getblockheader.md)，[getrawmempool](api/getrawmempool.md)等API指令的调用方式。
+- 更新了[getblock](api/getblock.md)，[getblockheader](api/getblockheader.md)，[getrawtransaction](api/getrawtransaction.md)，[getversion](api/getversion.md)，[getcontractstate](api/getcontractstate.md)等API指令的返回内容。
 
 ## API 参考
 

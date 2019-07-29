@@ -3,7 +3,7 @@
 <!-- TOC -->
 
 - [交易](#交易)
-    - [NEO3 变更部分](#neo3-变更部分)
+    - [NEO3变更部分](#neo3变更部分)
     - [交易结构](#交易结构)
         - [version](#version)
         - [sender](#sender)
@@ -26,11 +26,12 @@ Neo中的交易是带签名的数据包，是操作Neo网络的唯一方式。Ne
 ![tx flow graph](../../images/tx_flow_graph.png)
 
 
-## NEO3 变更部分
+## NEO3变更部分
 
-- NEO3弃用了UTXO模型，仅保留有账户余额模型
-- NEO3取消了每笔交易10 GAS的免费额度，[系统费](#systemfee)用总额受合约脚本的指令数量和指令类型影响
-- NEO3中的[地址脚本](#验证脚本)发生了变动，不再使用 Opcode.CheckSig, OpCode.CheckMultiSig 指令， 换成使用互操作服务调用，即SysCall "Neo.Crypto.CheckSig".hash2uint, SysCall "Neo.Crypto.CheckMultiSig".hash2unit 方式
+- 更新了[交易结构](#交易结构)，包括删除了字段inputs、outputs，新增字段validUntilBlock、witnesses等
+- 弃用了UTXO模型，仅保留有账户余额模型
+- 取消了每笔交易10 GAS的免费额度，[系统费](#systemfee)用总额受合约脚本的指令数量和指令类型影响
+- [地址脚本](#验证脚本)发生了变动，不再使用 Opcode.CheckSig, OpCode.CheckMultiSig 指令， 换成使用互操作服务调用，即SysCall "Neo.Crypto.CheckSig".hash2uint, SysCall "Neo.Crypto.CheckMultiSig".hash2unit 方式
 
 ## 交易结构
 
@@ -57,13 +58,13 @@ version属性允许对交易结构进行更新，使其具有向后兼容性。 
 
 ![system fee](../../images/system_fee.png)
 
-其中，OpcodeSet为指令集，为第i种指令的费用，为第i种指令在合约脚本中的个数。
+其中，*OpcodeSet* 为指令集，𝑂𝑝𝑐𝑜𝑑𝑒𝑃𝑟𝑖𝑐𝑒<sub>𝑖</sub>为第 *i* 种指令的费用，𝑛<sub>𝑖</sub>为第 *i* 种指令在合约脚本中的个数。
 ### networkFee
 网络费是用户向Neo网络提交交易时支付的费用，作为共识节点的出块奖励。每个交易的网络费存在一个最小值，计算公式如下所示：
 
 ![network fee](../../images/network_fee.png)
 
-其中，VerificationCost为虚拟机验证交易签名消耗的费用，tx.Length为交易数据的字节长度，FeePerByte为交易每字节的费用。用户支付的网络费需要大于或等于此最小值，否则交易无法通过验证。
+其中，*VerificationCost*为虚拟机验证交易签名消耗的费用，*tx.Length*为交易数据的字节长度，*FeePerByte*为交易每字节的费用。用户支付的网络费需要大于或等于此最小值，否则交易无法通过验证。
 ### attributes
 根据具体的交易类型允许向交易添加额外的属性。 对于每个属性，必须指定使用类型，以及外部数据和外部数据的大小。
 
@@ -127,7 +128,7 @@ witnesses属性用于验证交易的有效性和完整性。Witness即“见证�
 
 ## 交易序列化
 
-除IP地址和端口号外，Neo中所有变长的整数类型都使用小端存储。交易序列化时将按以下字段顺序执行序列化操作：
+除IP地址和端口号外，Neo中所有变长的整数类型都使用小端序存储。交易序列化时将按以下字段顺序执行序列化操作：
 
 | 字段| 说明|
 |----------|------------|
