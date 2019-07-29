@@ -6,7 +6,7 @@
 - [智能合约](#智能合约-1)
     - [NEO3变更部分](#neo3变更部分)
     - [Manifest](#manifest)
-    - [Trigger](#trigger)
+    - [触发器](#触发器)
     - [原生合约](#原生合约)
         - [介绍](#介绍)
             - [NeoToken](#neotoken)
@@ -14,10 +14,10 @@
             - [PolicyToken](#policytoken)
         - [原生合约 部署](#原生合约-部署)
         - [原生合约 调用](#原生合约-调用)
-    - [Interop Service](#interop-service)
+    - [互操作服务](#互操作服务)
         - [互操作服务原理](#互操作服务原理)
         - [互操作服务使用](#互操作服务使用)
-        - [System空间](#system空间)
+        - [System部分](#system部分)
             - [System.ExecutionEngine.GetScriptContainer](#systemexecutionenginegetscriptcontainer)
             - [System.ExecutionEngine.GetExecutingScriptHash](#systemexecutionenginegetexecutingscripthash)
             - [System.ExecutionEngine.GetCallingScriptHash](#systemexecutionenginegetcallingscripthash)
@@ -56,7 +56,7 @@
             - [System.Storage.PutEx](#systemstorageputex)
             - [System.Storage.Delete](#systemstoragedelete)
             - [System.StorageContext.AsReadOnly](#systemstoragecontextasreadonly)
-        - [Neo空间](#neo空间)
+        - [Neo部分](#neo部分)
             - [Neo.Native.Deploy](#neonativedeploy)
             - [Neo.Crypto.CheckSig](#neocryptochecksig)
             - [Neo.Crypto.CheckMultiSig](#neocryptocheckmultisig)
@@ -84,7 +84,7 @@
             - [Neo.Json.Serialize](#neojsonserialize)
             - [Neo.Json.Deserialize](#neojsondeserialize)
     - [费用](#费用)
-    - [网路资源访问 (待补充)](#网路资源访问-待补充)
+    - [网路资源访问](#网路资源访问)
     - [合约调用](#合约调用)
     - [合约升级](#合约升级)
     - [合约销毁](#合约销毁)
@@ -101,7 +101,8 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
 - 增加[原生合约](#原生合约)
 - 减少了OpCode和互操作接口的[系统费](#费用)
 - 增加合约对[网络资源访问](#网路资源访问-待补充)的支持。
-- 新增`System`触发器类型
+- 新增`System`[触发器](#Trigger)类型
+- 新增互操作服务: [System.Runtime.GetInvocationCounter](#systemruntimegetinvocationcounter), [System.Runtime.GetNotifications](#systemruntimegetnotifications), [System.Contract.Call](#systemcontractcall), [Neo.Contract.Update](#neocontractupdate)
 
 ## Manifest
 现在每个合约都需要对应的manifest文件描述其属性，其内容包括：Groups， Features， ABI，Permissions， Trusts， SafeMethods。
@@ -131,21 +132,21 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
 }
 ```
 - **Groups**：声明本合约所归属的组，可以支持多个, 每一个组由一个公钥和签名表示。
-- **Features**：声明智能合约的特性。其中属性值 storage 表明合约可以访问存储区，payable 表明合约可以接受资产的转入。
+- **Features**：声明智能合约的特性。其中属性值`storage`表明合约可以访问存储区, `payable`表明合约可以接受资产的转入。
 - **ABI**：声明智能合约的接口信息，可以参考[NEP-3](https://github.com/neo-project/proposals/blob/master/nep-3.mediawiki)。接口的基础属性包括:
   - Hash: 16进制编码的合约脚本哈希;
   - EntryPoint: 提供了合约入口方法的详细信息，包括方法名、方法参数以及方法返回值;
   - Methods: 由合约方法的详细信息构成的数组;
   - Events: 由合约事件构成的数组。基于 ABI 信息，可实现合约间的相互调用。
-- **Permissions**：声明合约可调用的其他合约和方法。执行合约调用时，会检查 Permission 中配置的权限，若没有相应权限，则调用操作会执行失败。
+- **Permissions**：声明合约可调用的其他合约和方法。执行合约调用时，会检查`Permission`中配置的权限，若没有相应权限，则调用操作会执行失败。
 - **Trusts**：声明合约可以被哪些合约或者哪些合约组安全地调用。
 - **SafeMethods**：声明哪些方法是SafeMethod，SafeMethod通常是不会修改存储区，只读取区块链数据的方法，被调用时不会给用户接口返回警告信息。
 
-## Trigger
+## 触发器
 触发器可以使合约根据不同的使用场景执行不同的逻辑。
 
 - **System** 此触发器为NEO3新增触发器类型。当节点收到新区块后触发，目前只会触发原生合约的执行。当节点收到新区块，持久化之前会调用所有原生合约的onPersist方法，触发方式为System。
-- **Application** 应用触发器的目的在于将该合约作为应用函数进行调用，应用函数可以接受多个参数，对区块链的状态进行更改，并返回任意类型的返回值。以下是一个简单的c#智能合约：
+- **Application** 应用触发器的目的在于将该合约作为应用函数进行调用，应用函数可以接受多个参数，对区块链的状态进行更改，并返回任意类型的返回值。以下是一个简单的C#智能合约：
 
 ```csharp
 public static Object Main(string operation, params object[] args)
@@ -1159,7 +1160,7 @@ private StackItem UnblockAccount(ApplicationEngine engine, VMArray args)
 |GasToken|Neo.Native.Tokens.GAS|
 |PolicyToken|NeoNeo.Native.Policy|
 
-例如在c#编写智能合约中，如果需要调用GAS转账就可以如下编写：
+例如在C#编写智能合约中，如果需要调用GAS转账就可以如下编写：
 
 ```csharp
 using Neo.SmartContract.Framework;
@@ -1192,7 +1193,7 @@ namespace MyContract
 
 具体调用细节参考[合约调用](#合约调用)
 
-## Interop Service
+## 互操作服务
 互操作服务层提供了智能合约所能访问区块链数据的一些 API，利用这些 API，可以访问区块信息、交易信息、合约信息、资产信息等。除此之外互操作服务层还为每个合约提供了一个持久化存储区的功能。Neo 的每个智能合约在创建的时候都可选地启用一个私有存储区，存储区是 key-value 形式的，Neo 智能合约由合约的被调用者决定持久化存储区的上下文，而非调用者来决定。当然，调用者需要将自己的存储上下文传给被调用者（即完成授权）后，被调用者才可以执行读写操作。互操作服务分为System部分和Neo部分。
 
 ### 互操作服务原理
@@ -1233,7 +1234,7 @@ sb.EmitSysCall(InteropService.System_Contract_Call); //根据互操作索引调�
 byte[] script = sb.ToArray();
 ```
 
-例如在c#中可以如下方式调用：
+例如在C#中可以如下方式调用：
 
 ```csharp
 using Neo.SmartContract.Framework;
@@ -1257,7 +1258,7 @@ namespace MyContract
 
 互操作服务分为System部分和Neo部分，具体接口介绍如下：
 
-### System空间
+### System部分
 
 #### System.ExecutionEngine.GetScriptContainer  
 
@@ -1495,7 +1496,7 @@ namespace MyContract
 | C#函数 | void AsReadOnly(this StorageContext context) |
 | 说明 |     将StorageContext中的IsReadOnly设置为true |
 
-### Neo空间
+### Neo部分
 
 #### Neo.Native.Deploy
 
@@ -1724,7 +1725,7 @@ namespace MyContract
 | Neo.Json.Serialize| 0.001  |
 | Neo.Json.Deserialize| 0.005  |
 
-## 网路资源访问 (待补充)
+## 网路资源访问
 ## 合约调用 
 合约中通过开发框架提供的互操作接口[System.Contract.Call](#contract-call)来调用其他合约
 例如在C#中可以如下方式调用：

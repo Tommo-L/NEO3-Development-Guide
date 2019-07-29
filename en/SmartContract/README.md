@@ -81,7 +81,7 @@
             - [Neo.Json.Serialize](#neojsonserialize)
             - [Neo.Json.Deserialize](#neojsondeserialize)
     - [Fees](#fees)
-    - [Accessing to Internet Resources (TO BE ADDED)](#accessing-to-internet-resources-to-be-added)
+    - [Accessing to Internet Resources](#accessing-to-internet-resources)
     - [Contract Invocation](#contract-invocation)
     - [Contract Upgrade](#contract-upgrade)
     - [Contract Destroying](#contract-destroying)
@@ -96,8 +96,8 @@ All transactions in NEO3 are the invocation of the smart contract. In addition t
 - Add [Native Contract](#native-contract)
 - Reduce the [system fee](#fees) for OpCode and interop services
 - Provide the contract with the support for [accessing to network resources](#accessing-to-internet-resources-to-be-added)
-- Add new trigger type of `System` 
-
+- Add new [trigger](#Trigger) type of `System` 
+- Add new interop services: [System.Runtime.GetInvocationCounter](#systemruntimegetinvocationcounter), [System.Runtime.GetNotifications](#systemruntimegetnotifications), [System.Contract.Call](#systemcontractcall), [Neo.Contract.Update](#neocontractupdate)
 ## Manifest
 Now each contract is required to provide a manifest file to describe its properties, including Groups, Features, ABI, Permissions, Trusts, SafeMethods, as shown below:
 
@@ -128,10 +128,10 @@ Now each contract is required to provide a manifest file to describe its propert
 - **Groups**：Declare the groups to which the contract belongs. Each group is identified by a public key and a signature.
 - **Features**：Declare the features of the smart contract. Where the attribute value `storage` indicates that the contract can access the storage area, and the `payable` indicates the contract can accept the transfer of assets.
 - **ABI**：Declare the interface information about the smart contract, you can refer to [NEP-3](https://github.com/neo-project/proposals/blob/master/nep-3.mediawiki) for the details. The basic properties of the interface include:
-  - Hash: the script hash of the contract. It is encoded as a hexadecimal string in big-endian;
-  - EntryPoint: a Method object which describes the details of the entry point of the contract, including name, parameters, and the value returned;
-  - Methods: an array of Method objects which describe the details of each method in the contract;
-  - Events: an array of Event objects which describe the details of each event in the contract. 
+    - Hash: the script hash of the contract. It is encoded as a hexadecimal string in big-endian;
+    - EntryPoint: a Method object which describes the details of the entry point of the contract, including name, parameters, and the value returned;
+    - Methods: an array of Method objects which describe the details of each method in the contract;
+    - Events: an array of Event objects which describe the details of each event in the contract. 
 
   Based on the ABI information, mutual invocation between contracts can be realized.
 - **Permissions**：Declare which contracts may be invoked and which methods are called. If a contract invokes a contract or method that is not declared in the manifest at runtime, the invocation will fail.
@@ -1715,7 +1715,7 @@ Interop services are divided into System part and Neo part. The specific interfa
 | Neo.Json.Deserialize| 0.005  |
 
 
-## Accessing to Internet Resources (TO BE ADDED) 
+## Accessing to Internet Resources
 ## Contract Invocation
 When writing a contract, you can invoke other contracts through the interop service provided by the development framework[System.Contract.Call](#SystemContractCall). Here is an example in C#:
 
