@@ -90,10 +90,10 @@
 # Smart Contracts
 ## Changes in NEO3
 All transactions in NEO3 are the invocation of the smart contract. In addition to some interop services and OpCode adjustments, NEO3 also features the following changes.
-* Add the [Manifest](#Manifest) file to describe the characteristics of the contract
-* Add [Native Contract](#Native-Contract)
-* Reduce the [system fee](#System-Fee) for OpCode and interop services
-* Provide the contract with the support for [accessing to network resources](#Internet-Resources-Access).
+* Add the [Manifest](#manifest) file to describe the characteristics of the contract
+* Add [Native Contract](#native-contract)
+* Reduce the [system fee](#fees) for OpCode and interop services
+* Provide the contract with the support for [accessing to network resources](#accessing-to-internet-resources-to-be-added).
 ## Manifest
 Now each contract is required to provide a manifest file to describe its properties, including Groups, Features, ABI, Permissions, Trusts, SafeMethods, as shown below:
 
@@ -1775,7 +1775,6 @@ public static ScriptBuilder EmitAppCall(this ScriptBuilder sb, UInt160 scriptHas
 ```
 
 ## Contract Upgrade
-
 You can upgrade the contract to modify the logic of the contract and keep the data in the storage area after the contract is deployed, but you need to implement the upgrade interface in the old contract through invoking the [Neo.Contract.Update](#NeoContractUpdate) method.
 
 When the upgrade interface is called in the old contract, the method will build a new smart contract based on the parameters passed in. If the old contract has a storage area, the storage area will be transferred to the new contract. After the upgrade, the old contract will be deleted, as well as its storage area (if any). The old contract will then be unavailable and instead, the hash of the new contract should be used.

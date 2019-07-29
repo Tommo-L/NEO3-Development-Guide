@@ -29,7 +29,7 @@ Neo中的交易是带签名的数据包，是操作Neo网络的唯一方式。Ne
 ## NEO3 变更部分
 
 - NEO3弃用了UTXO模型，仅保留有账户余额模型
-- NEO3取消了每笔交易10 GAS的免费额度，[系统费](#systemFee)用总额受合约脚本的指令数量和指令类型影响
+- NEO3取消了每笔交易10 GAS的免费额度，[系统费](#systemfee)用总额受合约脚本的指令数量和指令类型影响
 - NEO3中的[地址脚本](#验证脚本)发生了变动，不再使用 Opcode.CheckSig, OpCode.CheckMultiSig 指令， 换成使用互操作服务调用，即SysCall "Neo.Crypto.CheckSig".hash2uint, SysCall "Neo.Crypto.CheckMultiSig".hash2unit 方式
 
 ## 交易结构

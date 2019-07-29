@@ -14,8 +14,8 @@
 ## Changes in NEO3
 
 - NEO3 abandons the following commands: claimgas, dumpprivkey, getaccountstate, getapplicationlog, getassetstate, getbalance, getclaimable, getmetricblocktimestamp, getnep5balances, getnep5transfers, getnewaddress, gettxout, getunclaimed, getunclaimedgas, getunspents, getwalletheight, importprivkey, invoke, listaddress, sendfrom, sendtoaddress, sendmany, etc.
-- NEO3 redefines the following commands' references: [getblockheader](api/getblockheader) and [getrawmempool](api/getrawmempool).
-- NEO3 renews the following commands' returned content: [getblock](api/getblock), [getblockheader](api/getblockheader), [getrawtransaction](api/getrawtransaction), [getversion](api/getversion) and [getcontractstate](api/getcontractstate.md).
+- NEO3 redefines the following commands' references: [getblockheader](api/getblockheader.md) and [getrawmempool](api/getrawmempool.md).
+- NEO3 renews the following commands' returned content: [getblock](api/getblock.md), [getblockheader](api/getblockheader.md), [getrawtransaction](api/getrawtransaction.md), [getversion](api/getversion.md) and [getcontractstate](api/getcontractstate.md).
 
 ## API Reference
 

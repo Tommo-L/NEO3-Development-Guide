@@ -2,21 +2,21 @@
 
 <!-- TOC -->
 
-- [Transaction Structure](#Transaction-Structure)
-    - [version](#version)
-    - nonce
-    - validUntilBlock
-    - [sender](#sender)
-    - [systemFee](#systemFee)
-    - [networkFee](#networkFee)
-    - [attributes](#attributes)
-        - [usage types](#usage-types)
+- [Transactions](#transactions)
+    - [Changes in NEO3](#changes-in-neo3)
+    - [Transaction Structure](#transaction-structure)
+        - [version](#version)
+        - [sender](#sender)
+        - [systemFee](#systemfee)
+        - [networkFee](#networkfee)
+        - [attributes](#attributes)
+            - [Attribute usage types](#attribute-usage-types)
     - [script](#script)
     - [witnesses](#witnesses)
-        - [Invocation Script](#Invocation-Script)
-        - [Verification Script](#Verification-Script)
-- [Transaction Serialization](#Transaction-Serialization)
-- [Transaction Signature](#Transaction-Signature)
+        - [Invocation Script](#invocation-script)
+        - [Verification Script](#verification-script)
+    - [Transaction Serialization](#transaction-serialization)
+    - [Transaction Signature](#transaction-signature)
 
 <!-- /TOC -->
 
@@ -27,8 +27,8 @@ A Neo Transaction is a signed data package with an instruction for the network a
 ## Changes in NEO3
 
 - NEO3 abandoned UTXO model with only account balance model retained
--  NEO3 cancels the free discount of 10 GAS for each transaction. The total fee is subject to the quantity and type of instructions in the contract script
-- The address script in NEO3 has changed not using the Opcode.CheckSig and OpCode.CheckMultiSig but the interoperable service call `SysCall "Neo.Crypto.CheckSig".hash2uint`, `SysCall "Neo.Crypto .CheckMultiSig".hash2unit` instead.
+-  NEO3 cancels the free discount of 10 GAS for each transaction. The [total fee](#systemfee) is subject to the quantity and type of instructions in the contract script
+- The [address script](#verification-script) in NEO3 has changed not using the Opcode.CheckSig and OpCode.CheckMultiSig but the interoperable service call `SysCall "Neo.Crypto.CheckSig".hash2uint`, `SysCall "Neo.Crypto .CheckMultiSig".hash2unit` instead.
 
 ## Transaction Structure
 
