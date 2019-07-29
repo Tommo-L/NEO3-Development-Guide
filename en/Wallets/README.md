@@ -1,16 +1,23 @@
 # Wallets
 
-   - [Accounts](#accounts)
-      - [Private Key](#private-key)
-      - [Public Key](#public-key)
-      - [Address](#address)
-   - [Wallet File](#wallet-file)
-      - [DB3 File](#db3-file)
-      - [NEP6 File](#nep6-file)
-        - [Encryption Steps](#encryption-steps)
-        - [Decryption Steps](#decryption-steps)
-   - [Signature](#Signature)
+<!-- TOC -->
 
+- [Wallets](#wallets)
+  - [Changes in NEO3](#changes-in-neo3)
+  - [Accounts](#accounts)
+    - [Private Key](#private-key)
+    - [Public Key](#public-key)
+    - [Address](#address)
+      - [Normal Address](#normal-address)
+      - [Multi-Signature Address](#multi-signature-address)
+  - [Wallet File](#wallet-file)
+    - [DB3 File](#db3-file)
+    - [NEP6 File](#nep6-file)
+      - [Encryption Steps](#encryption-steps)
+      - [Decryption Steps](#decryption-steps)
+  - [Signature](#signature)
+
+<!-- /TOC -->
 
 The wallet is a basic component of Neo and the bridge for users to access the Neo network. It's responsible for transaction operations such as transfer, contract deployment, asset registration, etc.
 
@@ -70,7 +77,7 @@ Example:
 
 ### Address
 
-- Normal Address
+#### Normal Address
 
 1. Build a `CheckSig` script with the public key, and the format is as follows:
 
@@ -95,10 +102,9 @@ Example
 
 
 
+#### Multi-Signature Address
 
-- Multi-Signature Address
-
-  1. Construct an N-of-M `CheckMultiSig` script with multiple addresses. The script format is as follows:
+1. Construct an N-of-M `CheckMultiSig` script with multiple addresses. The script format is as follows:
 
 
 ```bash
