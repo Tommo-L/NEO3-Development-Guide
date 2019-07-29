@@ -1,8 +1,9 @@
 <div align="center">  
-<h1>NEO3 Development Guide</h1>
+<h1>NEO3 开发指南</h1>
 <img src="images/neo-rebranding.png" alt="NEO3 Development Guide" height="150">
 <p>NEO3 开发指南， 协助NEO3早期基础工具开发者完成NEO3底层建设</p>
 </div>
+
 
 ## 目录 
 - [钱包](cn/钱包)
