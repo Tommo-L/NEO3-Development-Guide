@@ -27,7 +27,7 @@ A Neo Transaction is a signed data package with an instruction for the network a
 ## Changes in NEO3
 
 - Update the [transaction structure](cn/交易#transaction-structure), including the removal of fields `inputs`, `outputs` and adding fields `validUntilBlock`, `witnesses`, etc.
-- Abandone UTXO model with only account balance model retained
+- Abandon UTXO model with only account balance model retained
 - Cancel the free discount of 10 GAS for each transaction. The [total fee](#systemfee) is subject to the quantity and type of instructions in the contract script
 - The [address script](#verification-script) in NEO3 has changed not using the Opcode.CheckSig and OpCode.CheckMultiSig but the interoperable service call `SysCall "Neo.Crypto.CheckSig".hash2uint`, `SysCall "Neo.Crypto .CheckMultiSig".hash2unit` instead.
 
