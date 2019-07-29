@@ -96,9 +96,9 @@
 
 NEO3中所有交易都是智能合约的调用，除了一些互操作指令和OpCode的调整，NEO3中比较大的特性包括：
 * 增加[Manifest](#Manifest)文件来描述合约的特性
-* 增加[原生合约](#原生合约)
-* 减少了OpCode和互操作接口的[系统费](#系统费)
-* 增加合约对[网络资源访问](#网络资源访问)的支持。
+* 增加[原生合约](#native-contract)
+* 减少了OpCode和互操作接口的[系统费](#费用)
+* 增加合约对[网络资源访问](#网路资源访问-待补充)的支持。
 
 ## Manifest
 现在每个合约都需要对应的manifest文件描述其属性，其内容包括：Groups， Features， ABI，Permissions， Trusts， SafeMethods。

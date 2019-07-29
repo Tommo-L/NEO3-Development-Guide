@@ -14,8 +14,8 @@
 ## NEO3 变更部分
 
 - NEO3取消了claimgas，dumpprivkey，getaccountstate，getapplicationlog，getassetstate，getbalance，getclaimable，getmetricblocktimestamp，getnep5balances，getnep5transfers，getnewaddress，gettxout，getunclaimed，getunclaimedgas，getunspents，getwalletheight，importprivkey，invoke，listaddress，sendfrom，sendtoaddress，sendmany等API指令。
-- NEO3重新定义了getblockheader，getrawmempool等API指令的调用方式。
-- NEO3更新了getblock，getblockheader，getrawtransaction，getversion，getcontractstate等API指令的返回内容。
+- NEO3重新定义了[getblockheader](api/getblockheader)，[getrawmempool](api/getrawmempool)等API指令的调用方式。
+- NEO3更新了[getblock](api/getblock)，[getblockheader](api/getblockheader)，[getrawtransaction](api/getrawtransaction)，[getversion](api/getversion)，[getcontractstate](api/getcontractstate)等API指令的返回内容。
 
 ## API 参考
 

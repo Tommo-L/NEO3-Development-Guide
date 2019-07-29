@@ -2,21 +2,22 @@
 
 <!-- TOC -->
 
-- [交易结构](#交易结构)
-    - [version](#version)
-    - nonce
-    - validUntilBlock
-    - [sender](#sender)
-    - [systemFee](#systemFee)
-    - [networkFee](#networkFee)
-    - [attributes](#attributes)
-        - [属性使用类型](#属性使用类型)
-    - [script](#script)
-    - [witnesses](#witnesses)
-        - [调用脚本](#调用脚本)
-        - [验证脚本](#验证脚本)
-- [交易序列化](#交易序列化)
-- [交易签名](#交易签名)
+- [交易](#交易)
+    - [NEO3 变更部分](#neo3-变更部分)
+    - [交易结构](#交易结构)
+        - [version](#version)
+        - [sender](#sender)
+        - [systemFee](#systemfee)
+        - [networkFee](#networkfee)
+        - [attributes](#attributes)
+            - [属性使用类型](#属性使用类型)
+        - [script](#script)
+        - [witnesses](#witnesses)
+            - [调用脚本](#调用脚本)
+            - [验证脚本](#验证脚本)
+    - [交易序列化](#交易序列化)
+    - [交易签名](#交易签名)
+
 <!-- /TOC -->
 
 
@@ -28,8 +29,8 @@ Neo中的交易是带签名的数据包，是操作Neo网络的唯一方式。Ne
 ## NEO3 变更部分
 
 - NEO3弃用了UTXO模型，仅保留有账户余额模型
-- NEO3取消了每笔交易10 GAS的免费额度，系统费用总额受合约脚本的指令数量和指令类型影响
-- NEO3中的地址脚本发生了变动，不再使用 Opcode.CheckSig, OpCode.CheckMultiSig 指令， 换成使用互操作服务调用，即SysCall "Neo.Crypto.CheckSig".hash2uint, SysCall "Neo.Crypto.CheckMultiSig".hash2unit 方式
+- NEO3取消了每笔交易10 GAS的免费额度，[系统费](#systemFee)用总额受合约脚本的指令数量和指令类型影响
+- NEO3中的[地址脚本](#验证脚本)发生了变动，不再使用 Opcode.CheckSig, OpCode.CheckMultiSig 指令， 换成使用互操作服务调用，即SysCall "Neo.Crypto.CheckSig".hash2uint, SysCall "Neo.Crypto.CheckMultiSig".hash2unit 方式
 
 ## 交易结构
 
