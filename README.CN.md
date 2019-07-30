@@ -21,7 +21,7 @@
 
 ### 交易
 
-- 更新了[交易结构](#交易结构)，包括删除了字段inputs、outputs，新增字段validUntilBlock、witnesses等
+- 更新了[交易结构](cn/交易#交易结构)，包括删除了字段inputs、outputs，新增字段validUntilBlock、witnesses等
 - 弃用了UTXO模型，仅保留有账户余额模型
 - 取消了每笔交易10 GAS的免费额度，[系统费](cn/交易#systemfee)用总额受合约脚本的指令数量和指令类型影响
 - [地址脚本](cn/交易#验证脚本)发生了变动，不再使用 `Opcode.CheckSig`, `OpCode.CheckMultiSig` 指令， 换成使用互操作服务调用，即`SysCall "Neo.Crypto.CheckSig".hash2uint`, `SysCall "Neo.Crypto.CheckMultiSig".hash2unit` 方式

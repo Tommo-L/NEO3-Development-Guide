@@ -22,7 +22,7 @@
 
 ### Transactions
 
-- Update the [transaction structure](cn/交易#transaction-structure), including the removal of fields `inputs`, `outputs` and adding fields `validUntilBlock`, `witnesses`, etc.
+- Update the [transaction structure](en/Transactions#transaction-structure), including the removal of fields `inputs`, `outputs` and adding fields `validUntilBlock`, `witnesses`, etc.
 - The [address script](en/Transactions#verification-script) in NEO3 has changed not using the `Opcode.CheckSig` and `OpCode.CheckMultiSig` but the interoperable service call `SysCall "Neo.Crypto.CheckSig".hash2uint`, `SysCall "Neo.Crypto .CheckMultiSig".hash2unit` instead
 - Abandon UTXO model with only account balance model retained
 - Cancel the free discount of 10 GAS for each transaction. The [total fee](en/Transactions#systemFee) is subject to the quantity and type of instructions in the contract script
@@ -42,8 +42,8 @@
 
 ### NeoVM
 
-- Add the following opcode: [DUPFROMALTSTACKBOTTOM](en/NeoVM#stack-operation)
 - Abandon the following opcodes: `APPCALL`, `TAILCALL`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `CALL_I`, `CALL_E`, `CALL_ED, `CALL_ET, `CALL_EDT`, etc.
+- Add the following opcode: [DUPFROMALTSTACKBOTTOM](en/NeoVM#stack-operation)
 
 
 
