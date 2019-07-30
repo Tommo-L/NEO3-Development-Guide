@@ -6,7 +6,7 @@
 </div>
 
 ## Table 
-- [Wallet](en/Wallet)
+- [Wallet](en/Wallets)
 - [Transactions](en/Transactions)
 - [RPC](en/RPC)
 - [Smart contracts](en/SmartContract)
