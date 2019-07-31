@@ -13,9 +13,12 @@
 
 ## Changes in NEO3
 
-- Abandon the following commands: claimgas, dumpprivkey, getaccountstate, getapplicationlog, getassetstate, getbalance, getclaimable, getmetricblocktimestamp, getnep5balances, getnep5transfers, getnewaddress, gettxout, getunclaimed, getunclaimedgas, getunspents, getwalletheight, importprivkey, invoke, listaddress, sendfrom, sendtoaddress, sendmany, etc.
-- Update the following commands' references: [getblockheader](api/getblockheader.md) and [getrawmempool](api/getrawmempool.md).
-- Update the following commands' returned content: [getblock](api/getblock.md), [getblockheader](api/getblockheader.md), [getrawtransaction](api/getrawtransaction.md), [getversion](api/getversion.md) and [getcontractstate](api/getcontractstate.md).
+- UPDATE
+    - Invocation Style: [getblockheader](api/getblockheader.md)，[getrawmempool](api/getrawmempool.md)
+    - Returns: [getblock](api/getblock.md)，[getblockheader](api/getblockheader.md)，[getrawtransaction](api/getrawtransaction.md)，[getversion](api/getversion.md)，[getcontractstate](api/getcontractstate.md)
+
+- DELETE
+    - Discard the following commands: `claimgas`, `dumpprivkey`, `getaccountstate`, `getapplicationlog`, `getassetstate`, `getbalance`, `getclaimable`, `getmetricblocktimestamp`, `getnep5balances`, `getnep5transfers`, `getnewaddress`, `gettxout`, `getunclaimed`, `getunclaimedgas`, `getunspents`, `getwalletheight`, `importprivkey`, `invoke`, `listaddress`, `sendfrom`, `sendtoaddress`, `sendmany`, etc.
 
 ## API Reference
 

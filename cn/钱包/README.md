@@ -24,7 +24,20 @@
 
 ## NEO3变更部分
 
-- [脚本地址](#地址)由Neo2.x中的 `0x21 + publicKey(compressed, 33 bytess) + 0xac` 变成NEO3中的 `0x21 + publicKey(compressed, 33 bytes)+ 0x68 + 0x747476aa` 
+- 更新
+    - [地址脚本](#地址)：调整通过公钥构建地址脚本的方式。
+        - 普通地址：
+
+        ```
+        NEO2: 0x21 + publicKey(压缩型 33字节) + 0xac()
+        NEO3: 0x21 + publicKey(压缩型 33字节) + 0x68 + 0x747476aa
+        ```
+        - 多方签名地址：
+
+        ```
+        NEO2: emitPush(N) + 0x21 + publicKey1(压缩型 33字节) + .... + 0x21 + publicKeym(压缩型 33字节)  + emitPush(M) + 0xae()
+        NEO3: emitPush(N) + 0x21 + publicKey1(压缩型 33字节) + .... + 0x21 + publicKeym(压缩型 33字节)  + emitPush(M) + 0x68 + 0xc7c34cba
+        ```
 
 ## 账户
 
