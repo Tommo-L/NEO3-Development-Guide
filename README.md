@@ -6,7 +6,7 @@
 </div>
 
 ## Table 
-- [Wallet](en/Wallets)
+- [Wallets](en/Wallets)
 - [Transactions](en/Transactions)
 - [RPC](en/RPC)
 - [Smart contracts](en/SmartContract)
@@ -18,7 +18,8 @@
 
 ### Wallet
 
-- [Address script](en/Wallet#Address) changes from the format of `0x21 + publicKey(compressed, 33 bytess) + 0xac` (Neo2.x) to `0x21 + publicKey(compressed, 33 bytes)+ 0x68 + 0x747476aa` (NEO3)
+- [Address script](en/Wallets#Address) format is changed from
+`0x21 + publicKey(compressed, 33 bytess) + 0xac` (Neo2.x) to `0x21 + publicKey(compressed, 33 bytes)+ 0x68 + 0x747476aa` (NEO3)
 
 ### Transactions
 
