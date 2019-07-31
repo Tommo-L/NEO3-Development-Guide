@@ -1833,3 +1833,5 @@ void destroy(){
 Contract.Destroy();
 }
 ```
+
+*Click [here](../../cn/合约) to see the Chinese edition of the Smart Contract*

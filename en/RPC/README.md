@@ -169,3 +169,5 @@ You can use the Chrome extension `Postman` to facilitate the test (VPN required 
 ## Others
 
 [C# JSON-RPC Command List](https://github.com/chenzhitong/CSharp-JSON-RPC/blob/master/json_rpc/Program.cs)
+
+*Click [here](../../cn/RPC) to see the Chinese edition of the RPC*

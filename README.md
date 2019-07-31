@@ -45,5 +45,7 @@
 - Abandon the following opcodes: `APPCALL`, `TAILCALL`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `CALL_I`, `CALL_E`, `CALL_ED, `CALL_ET, `CALL_EDT`, etc.
 - Add the following opcode: [DUPFROMALTSTACKBOTTOM](en/NeoVM#stack-operation)
 
+*Click [here](README.CN.md) to see the Chinese edition of the README*
+
 
 

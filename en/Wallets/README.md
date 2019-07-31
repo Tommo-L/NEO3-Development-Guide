@@ -3,19 +3,19 @@
 <!-- TOC -->
 
 - [Wallets](#wallets)
-  - [Changes in NEO3](#changes-in-neo3)
-  - [Accounts](#accounts)
-    - [Private Key](#private-key)
-    - [Public Key](#public-key)
-    - [Address](#address)
-      - [Normal Address](#normal-address)
-      - [Multi-Signature Address](#multi-signature-address)
-  - [Wallet File](#wallet-file)
-    - [DB3 File](#db3-file)
-    - [NEP6 File](#nep6-file)
-      - [Encryption Steps](#encryption-steps)
-      - [Decryption Steps](#decryption-steps)
-  - [Signature](#signature)
+    - [Changes in NEO3](#changes-in-neo3)
+    - [Accounts](#accounts)
+        - [Private Key](#private-key)
+        - [Public Key](#public-key)
+        - [Address](#address)
+            - [Normal Address](#normal-address)
+            - [Multi-Signature Address](#multi-signature-address)
+    - [Wallet File](#wallet-file)
+        - [DB3 File](#db3-file)
+        - [NEP6 File](#nep6-file)
+            - [Encryption Steps](#encryption-steps)
+            - [Decryption Steps](#decryption-steps)
+    - [Signature](#signature)
 
 <!-- /TOC -->
 
@@ -342,3 +342,5 @@ Example
 | Private Key | f72b8fab85fdcc1bdd20b107e5da1ab4713487bc88fc53b5b134f5eddeaa1a19 |
 | Public Key  | 031f64da8a38e6c1e5423a72ddd6d4fc4a777abe537e5cb5aa0425685cda8e063b |
 | signature   | 261e894dd456a190f9e99e39cea9f64ca4f939b24cf47ee3498bf883967035b446f554753d5f76219397bc2abb281a13a3c3acce43978c02c510ccb91cb03f87 |
+
+*Click [here](../../cn/钱包) to see the Chinese edition of the Wallets*

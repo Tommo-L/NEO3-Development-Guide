@@ -165,3 +165,5 @@ http://somewebsite.com:10332
 ## 其它
 
 [C# JSON-RPC 使用方法](https://github.com/chenzhitong/CSharp-JSON-RPC/blob/master/json_rpc/Program.cs)
+
+*点击[此处](../../en/RPC)查看RPC英文版*

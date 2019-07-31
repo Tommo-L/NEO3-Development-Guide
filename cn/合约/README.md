@@ -1843,3 +1843,5 @@ void destroy(){
   Contract.Destroy();
 }
 ```
+
+*点击[此处](../../en/SmartContract)查看智能合约英文版*

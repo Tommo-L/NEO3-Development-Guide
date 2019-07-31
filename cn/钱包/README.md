@@ -331,7 +331,7 @@ Java示例代码：
 | PublicKey  | 031f64da8a38e6c1e5423a72ddd6d4fc4a777abe537e5cb5aa0425685cda8e063b |
 | signature  | 261e894dd456a190f9e99e39cea9f64ca4f939b24cf47ee3498bf883967035b446f554753d5f76219397bc2abb281a13a3c3acce43978c02c510ccb91cb03f87 |
 
-
+*点击[此处](../../en/Wallets)查看钱包英文版*
 
 
 

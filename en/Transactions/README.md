@@ -159,3 +159,5 @@ A transaction is initiated by the client, encapsulated by the wallet module and 
 The witness is an executable verification script. The InvocationScript provides the parameters for the VerificationScript to execute. Verification succeeds only when the script execution returns true. Invocation script performs stack operation instructions, provides parameters for verification script (eg, signatures). The script interpreter executes the invocation script code first, and then the verification script code.
 
 > Note: Transaction signature is to sign the data of the transaction itself (not including signature-attached data, namely witness).
+
+*Click [here](../../cn/交易) to see the Chinese edition of the Transactions*

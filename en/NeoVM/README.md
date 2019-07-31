@@ -1074,3 +1074,5 @@ Note: The operation code with \* indicates that the result of the operation is n
 | VALUES     | 0.00007 |
 | THROW     | 0.0000003 |
 | THROWIFNOT     | 0.0000003 |
+
+*Click [here](../../cn/虚拟机) to see the Chinese edition of the NeoVM*

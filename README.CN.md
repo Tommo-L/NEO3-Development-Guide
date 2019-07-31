@@ -45,5 +45,7 @@
 - 取消了`APPCALL`, `TAILCALL`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `CALL_I`, `CALL_E`, `CALL_ED, `CALL_ET, `CALL_EDT` 等Opcode。
 - 新增了 [DUPFROMALTSTACKBOTTOM](cn/虚拟机#栈操作) 等Opcode。
 
+*点击[此处](README.md)查看README英文版*
+
 
 
