@@ -1056,8 +1056,6 @@ Note: The operation code with \* indicates that the result of the operation is n
 | MIN     | 0.000002 |
 | MAX     | 0.000002 |
 | WITHIN     | 0.000002 |
-| SHA1     | 0.003 |
-| SHA256     | 0.01 |
 | ARRAYSIZE     | 0.0000015 |
 | PACK     | 0.00007 |
 | UNPACK     | 0.00007 |

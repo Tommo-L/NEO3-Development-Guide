@@ -42,8 +42,12 @@
 
 ### NeoVM
 
-- Add the following opcode: [DUPFROMALTSTACKBOTTOM](en/NeoVM#stack-operation)
-- Abandon the following opcodes: `APPCALL`, `TAILCALL`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `CALL_I`, `CALL_E`, `CALL_ED, `CALL_ET, `CALL_EDT`, etc.
+- Add the following stack operation opcode: [DUPFROMALTSTACKBOTTOM](en/NeoVM#stack-operation)
+- Abandon the following opcodes:
+   flow control opcode: `APPCALL`, `TAILCALL`,
+   cryptography opcodes including `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`,
+   stack Isolation opcodes including `CALL_I`, `CALL_E`, `CALL_ED, `CALL_ET, `CALL_EDT`.
+- Define opcodes' system fee respectively.
 
 
 

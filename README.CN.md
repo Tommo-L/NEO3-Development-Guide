@@ -1,4 +1,4 @@
-<div align="center">  
+﻿<div align="center">  
 <h1>NEO3 开发指南</h1>
 <img src="images/neo-rebranding.png" alt="NEO3 Development Guide" height="150">
 <p>NEO3 开发指南， 协助NEO3早期基础工具开发者完成NEO3底层建设</p>
@@ -42,8 +42,9 @@
 
 ### 虚拟机
 
-- 取消了`APPCALL`, `TAILCALL`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `CALL_I`, `CALL_E`, `CALL_ED, `CALL_ET, `CALL_EDT` 等Opcode。
-- 新增了 [DUPFROMALTSTACKBOTTOM](cn/虚拟机#栈操作) 等Opcode。
+- 取消了`APPCALL`, `TAILCALL`等流程控制Opcode, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`等密码学Opcode, `CALL_I`, `CALL_E`, `CALL_ED, `CALL_ET, `CALL_EDT` 等栈隔离Opcode。
+- 新增了 [DUPFROMALTSTACKBOTTOM](cn/虚拟机#栈操作) 等栈操作Opcode。
+- 定义了各Opcode的系统费。
 
 
 
