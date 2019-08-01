@@ -28,10 +28,13 @@ Neo中的交易是带签名的数据包，是操作Neo网络的唯一方式。Ne
 
 ## NEO3变更部分
 
-- 更新了[交易结构](#交易结构)，包括删除了字段inputs、outputs，新增字段validUntilBlock、witnesses等
-- 弃用了UTXO模型，仅保留有账户余额模型
-- 取消了每笔交易10 GAS的免费额度，[系统费](#systemfee)用总额受合约脚本的指令数量和指令类型影响
-- [地址脚本](#验证脚本)发生了变动，不再使用 Opcode.CheckSig, OpCode.CheckMultiSig 指令， 换成使用互操作服务调用，即SysCall "Neo.Crypto.CheckSig".hash2uint, SysCall "Neo.Crypto.CheckMultiSig".hash2unit 方式
+- 删除
+    - 交易类型：弃用NEO2中使用的9种交易类型，统一使用transaction类型，并重新定义其[交易结构](#交易结构)。
+    - [资产](../合约#原生合约)：NEO和GAS代币弃用UTXO模型，使用原生合约实现的账户模型。
+
+- 更新
+    - [系统手续费](#systemfee)：取消了每笔交易10 GAS的免费额度，并重新定义每种虚拟机指令集所对应的执行[费用](../虚拟机#费用)。
+    - [网络手续费](#networkfee)：重新定义网络手续费的计算公式。
 
 ## 交易结构
 
@@ -161,7 +164,7 @@ witnesses属性用于验证交易的有效性和完整性。Witness即“见证�
 
 > 注意：交易签名是对交易本身的数据（不包含签名数据，即witness部分）进行签名。
 
-
+*点击[此处](../../en/Transactions)查看交易英文版*
 
 
 

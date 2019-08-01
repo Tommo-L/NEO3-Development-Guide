@@ -92,12 +92,16 @@
 ## Changes in NEO3
 
 All transactions in NEO3 are the invocation of the smart contract. In addition to some interop services and OpCode adjustments, NEO3 also features the following changes.
-- Add the [Manifest](#manifest) file to describe the characteristics of the contract
-- Add [Native Contract](#native-contract)
-- Reduce the [system fee](#fees) for OpCode and interop services
-- Provide the contract with the support for [accessing to network resources](#accessing-to-internet-resources-to-be-added)
-- Add new [trigger](#Trigger) type of `System` 
-- Add new interop services: [System.Runtime.GetInvocationCounter](#systemruntimegetinvocationcounter), [System.Runtime.GetNotifications](#systemruntimegetnotifications), [System.Contract.Call](#systemcontractcall), [Neo.Contract.Update](#neocontractupdate)
+
+- ADD 
+    - [Manifest](#manifest): used to describe the features of the contract and deployed with AVM files
+    - [native contracts](#native-contract): running in the native code rather than in the virtual machine, including NeoToken, GasToken and PolicyToken
+    - [Accessing to network resources](#accessing-to-internet-resources): to be added
+    - [System Trigger](#trigger): triggered when the node receives a new block and currently only triggers the execution of the native contract
+    
+- UPDATE
+    - Reduce the [system fee](en/SmartContract#fees) for OpCode and interop services
+
 ## Manifest
 Now each contract is required to provide a manifest file to describe its properties, including Groups, Features, ABI, Permissions, Trusts, SafeMethods, as shown below:
 
@@ -1833,3 +1837,5 @@ void destroy(){
 Contract.Destroy();
 }
 ```
+
+*Click [here](../../cn/合约) to see the Chinese edition of the Smart Contract*

@@ -97,13 +97,14 @@
 
 NEO3中所有交易都是智能合约的调用，除了一些互操作指令和OpCode的调整，NEO3中比较大的特性包括：
 
-- 增加[Manifest](#manifest)文件来描述合约的特性
-- 增加[原生合约](#原生合约)
-- 减少了OpCode和互操作接口的[系统费](#费用)
-- 增加合约对[网络资源访问](#网路资源访问-待补充)的支持。
-- 新增`System`[触发器](#Trigger)类型
-- 新增互操作服务: [System.Runtime.GetInvocationCounter](#systemruntimegetinvocationcounter), [System.Runtime.GetNotifications](#systemruntimegetnotifications), [System.Contract.Call](#systemcontractcall), [Neo.Contract.Update](#neocontractupdate)
+- 新增
+    - [Manifest文件](#manifest)：用于描述合约的特征，随avm文件一起部署到Neo区块链。
+    - [原生合约](#原生合约)：不通过虚拟机执行，而直接运行在Neo原生代码中，目前包括：NeoToken，GasToken，以及PolicyToken。
+    - [网络资源访问](#网路资源访问)： 待补充。
+    - [system 触发器](#触发器)：用于节点收到新区块后，触发原生合约的执行。
 
+- 更新
+    - 降低了合约执行互操作接口所对应的[系统费用](cn/合约#费用)。
 ## Manifest
 现在每个合约都需要对应的manifest文件描述其属性，其内容包括：Groups， Features， ABI，Permissions， Trusts， SafeMethods。
 
@@ -1843,3 +1844,5 @@ void destroy(){
   Contract.Destroy();
 }
 ```
+
+*点击[此处](../../en/SmartContract)查看智能合约英文版*

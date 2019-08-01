@@ -6,7 +6,7 @@
 </div>
 
 ## Table 
-- [Wallet](en/Wallet)
+- [Wallets](en/Wallets)
 - [Transactions](en/Transactions)
 - [RPC](en/RPC)
 - [Smart contracts](en/SmartContract)
@@ -18,36 +18,62 @@
 
 ### Wallet
 
-- [Address script](en/Wallet#Address) changes from the format of `0x21 + publicKey(compressed, 33 bytess) + 0xac` (Neo2.x) to `0x21 + publicKey(compressed, 33 bytes)+ 0x68 + 0x747476aa` (NEO3)
+- UPDATE
+    - [Address Script](en/Wallets#Address): change the way to construct the address script with the public key
+        - Ordinary Address
+
+        ```
+        NEO2: 0x21 + publicKey(compressed 33bytes) + 0xac()
+        NEO3: 0x21 + publicKey(compressed 33bytes) + 0x68 + 0x747476aa
+        ```
+
+        - Multi-Signature Address
+
+        ```
+        NEO2: emitPush(N) + 0x21 + publicKey1(compressed 33bytes) + .... + 0x21 + publicKeym(compressed 33bytes)  + emitPush(M) + 0xae()
+        NEO3: emitPush(N) + 0x21 + publicKey1(compressed 33bytes) + .... + 0x21 + publicKeym(compressed 33bytes)  + emitPush(M) + 0x68 + 0xc7c34cba
+        ```
 
 ### Transactions
 
-- Update the [transaction structure](cn/交易#transaction-structure), including the removal of fields `inputs`, `outputs` and adding fields `validUntilBlock`, `witnesses`, etc.
-- The [address script](en/Transactions#verification-script) in NEO3 has changed not using the `Opcode.CheckSig` and `OpCode.CheckMultiSig` but the interoperable service call `SysCall "Neo.Crypto.CheckSig".hash2uint`, `SysCall "Neo.Crypto .CheckMultiSig".hash2unit` instead
-- Abandon UTXO model with only account balance model retained
-- Cancel the free discount of 10 GAS for each transaction. The [total fee](en/Transactions#systemFee) is subject to the quantity and type of instructions in the contract script
+- DELETE
+
+    - Transaction Type: discard the previous 9 types of the transaction in NEO2 and use the unified `transaction` instead, as well as the redefinition of the [transaction structure](en/Transactions#transaction-structure)
+    - [Assets](en/SmartContract#native-contract): discard the UTXO model for the NEO and GAS token, using the account model implemented by the native contract instead
+
+- UPDATE
+    - [System Fee](en/Transactions#systemfee): cancel the free discount of 10 GAS for each transaction and redefine the [fee](en/NeoVM#fee) of each OpCode
+    - [Network Fee](en/Transactions#networkfee): redefine the calculation formula for the network fee
+    
 ### RPC
 
-- Redefine the following commands' references: [getblockheader](en/RPC/api/getblockheader.md) and [getrawmempool](en/RPC/api/getrawmempool.md).
-- Update the following commands' returned content: [getblock](en/RPC/api/getblock.md), [getblockheader](en/RPC/api/getblockheader.md), [getrawtransaction](en/RPC/api/getrawtransaction.md), [getversion](en/RPC/api/getversion.md) and [getcontractstate](en/RPC/api/getcontractstate.md).
-- Abandon the following commands: `claimgas`, `dumpprivkey`, `getaccountstate`, `getapplicationlog`, `getassetstate`, `getbalance`, `getclaimable`, `getmetricblocktimestamp`, `getnep5balances`, `getnep5transfers`, `getnewaddress`, `gettxout`, `getunclaimed`, `getunclaimedgas`, `getunspents`, `getwalletheight`, `importprivkey`, `invoke`, `listaddress`, `sendfrom`, `sendtoaddress`, `sendmany`, etc.
+- UPDATE
+    - Invocation Style: [getblockheader](en/RPC/api/getblockheader.md)，[getrawmempool](en/RPC/api/getrawmempool.md)
+    - Returns: [getblock](en/RPC/api/getblock.md)，[getblockheader](en/RPC/api/getblockheader.md)，[getrawtransaction](en/RPC/api/getrawtransaction.md)，[getversion](en/RPC/api/getversion.md)，[getcontractstate](en/RPC/api/getcontractstate.md)
 
-### Smart contracts
+- DELETE
+    - Discard the following commands: `claimgas`, `dumpprivkey`, `getaccountstate`, `getapplicationlog`, `getassetstate`, `getbalance`, `getclaimable`, `getmetricblocktimestamp`, `getnep5balances`, `getnep5transfers`, `getnewaddress`, `gettxout`, `getunclaimed`, `getunclaimedgas`, `getunspents`, `getwalletheight`, `importprivkey`, `invoke`, `listaddress`, `sendfrom`, `sendtoaddress`, `sendmany`, etc.
 
-- Add the [Manifest](en/SmartContract#Manifest) file to describe the characteristics of the contract
-- Add [native contracts](en/SmartContract#Native-Contract)
-- Provide the contract with the support for [accessing to network resources](en/SmartContract#accessing-to-internet-resources-to-be-added)
-- Reduce the [system fee](en/SmartContract#fees) for OpCode and interop services
-- Add new trigger type of `System` 
+### Smart Contracts
+
+- ADD 
+    - [Manifest](en/SmartContract#manifest): used to describe the features of the contract and deployed with AVM files
+    - [native contracts](en/SmartContract#native-contract): running in the native code rather than in the virtual machine, including NeoToken, GasToken and PolicyToken
+    - [Accessing to network resources](en/SmartContract#accessing-to-internet-resources): to be added
+    - [System Trigger](en/SmartContract#trigger): triggered when the node receives a new block and currently only triggers the execution of the native contract
+
+- UPDATE
+    - Reduce the [system fee](en/SmartContract#fees) for OpCode and interop services
 
 ### NeoVM
 
-- Add the following stack operation opcode: [DUPFROMALTSTACKBOTTOM](en/NeoVM#stack-operation)
-- Abandon the following opcodes:
-   flow control opcode: `APPCALL`, `TAILCALL`,
-   cryptography opcodes including `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`,
-   stack Isolation opcodes including `CALL_I`, `CALL_E`, `CALL_ED, `CALL_ET, `CALL_EDT`.
-- Define opcodes' system fee respectively.
+- ADD
+    -  OpCode [DUPFROMALTSTACKBOTTOM](en/NeoVM#stack-operation)
+
+- DELETE
+    - Discard the following opcodes: `APPCALL`, `TAILCALL`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `CALL_I`, `CALL_E`, `CALL_ED, `CALL_ET, `CALL_EDT`, etc.
+
+*Click [here](README.CN.md) to see the Chinese edition of the README*
 
 
 
