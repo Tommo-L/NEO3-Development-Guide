@@ -170,7 +170,7 @@ NeoVM内置的数据类型一共有7种：
 | Boolean |  布尔类型，实现为一个bool值和两个字节数组TRUE和FALSE。|
 | Integer | 整型，实现为一个BigInteger值。 |
 | ByteArray | 字节数组，实现为一个byte[]。  |
-| Array |  数组，实现为一个List<StackItem>，StackItem是一个抽象类，NeoVM内置的数据类型均继承自StackItem。 |
+| Array |  数组，实现为一个List<StackItem\>，StackItem是一个抽象类，NeoVM内置的数据类型均继承自StackItem。 |
 | Struct | 结构体，继承自Array。结构与Array相同，只是添加了Clone方法和重写了Equals方法。 |
 | Map |  实现为一个键值对为StackItem的字典类型Dictionary<StackItem, StackItem> 。 |
 | InteropInterface |  互操作接口 |
