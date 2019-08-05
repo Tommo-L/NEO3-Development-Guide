@@ -67,7 +67,7 @@ The network fee is the fee paid by users when they submit transactions to the Ne
 
 ![network fee](../../images/network_fee.png)
 
-where *VerificationCost* is the costs for transaction signature verification in NeoVM, *tx.Length* is the byte length of transaction data, *FeePerByte* is the fee per byte. The network fee paid by users must be greater than or equal to NetworkFee, otherwise, the verification of the transaction will fail.
+where *VerificationCost* is the costs for transaction signature verification in NeoVM, *tx.Length* is the byte length of transaction data, *FeePerByte* is the fee per byte， currently is 0.00001GAS. The network fee paid by users must be greater than or equal to NetworkFee, otherwise, the verification of the transaction will fail.
 ### attributes
 Depending on the transaction type, it is allowed to add attributes to the transaction. For each attribute, a usage type has to be specified, together with the external data and the size of the external data.
 
