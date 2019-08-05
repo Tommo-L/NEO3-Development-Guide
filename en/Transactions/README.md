@@ -109,27 +109,9 @@ The invocation script can push multiple signatures for a multi-signature contrac
 
 ### Verification Script
 
-The verification script with a single signature is constructed with the following steps:
+Verification scripts, including ordinary address scripts, and multi-signature address scripts.  And also includes custom authentication contract scripts.
 
-1. `0x21`（PUSHBYTES33）followed by the 33-byte public key that corresponds to the signature
-2. `0x68`（SysCall）System call
-3. `0xaa767474` invoke the interop service `Neo.Crypto.CheckSig` to verify the signature with the provided public key
 
-The single signature script is shown in the following figure:
-
-![](../../images/checksig_script.png)
-
-The verification script with a multi-signature contract is constructed with the following steps:
-
-1. `0x52`（PUSH2）to `0x60`（PUSH16）to indicate the required amount of signatures
-2. `0x21`（PUSHBYTES33）followed by the first 33 byte public key for the multi-signature contract, repeated for each public key in the multi-signature contract
-3. `0x52`（PUSH2）to `0x60`（PUSH16）to indicate the total amount of public keys for the signature
-4. `0x68`（SysCall）System call
-5. `0xba4cc3c7` invoke the interop service `Neo.Crypto.CheckMultiSig` to verify the signatures with the provided public keys
-
-To maintain performance it is required to have the same order for public keys and signatures during the verification of a multi-signature contract. The multi-signature script is shown in the following figure: 
-
-![](../../images/checkmultisig_script.jpg)
 
 ##  Transaction Serialization
 
@@ -158,10 +140,8 @@ Except for IP addresses and ports, all variable-length integer types in Neo are 
 > | value > 0xFFFFFFFF  | 0xFF + value         |
 
 ## Transaction Signature
-A transaction is initiated by the client, encapsulated by the wallet module and attached with a digital signature to ensure that the transaction can be verified at any time in the later transmission and processing. Neo employs the ECDSA digital signature method. The script hash of the transaction output is a public key used for ECDSA signature. Neo does not use SegWit in Bitcoin. Each transaction contains its own Script.Witness, while the Script.Witness is a smart contract.
+Transaction signature is to sign the data of the transaction itself (not including signature-attached data, namely witness) by using ECDSA digital signature algorithm.
 
-The witness is an executable verification script. The InvocationScript provides the parameters for the VerificationScript to execute. Verification succeeds only when the script execution returns true. Invocation script performs stack operation instructions, provides parameters for verification script (eg, signatures). The script interpreter executes the invocation script code first, and then the verification script code.
 
-> Note: Transaction signature is to sign the data of the transaction itself (not including signature-attached data, namely witness).
 
 *Click [here](../../cn/交易) to see the Chinese edition of the Transactions*
