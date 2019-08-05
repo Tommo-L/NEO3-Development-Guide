@@ -22,26 +22,26 @@
         - 普通地址：
 
         ```
-        NEO2: 0x21 + publicKey(压缩型 33字节) + 0xac()
+        NEO2: 0x21 + publicKey(压缩型 33字节) + 0xac
         NEO3: 0x21 + publicKey(压缩型 33字节) + 0x68 + 0x747476aa
         ```
         - 多方签名地址：
 
         ```
-        NEO2: emitPush(N) + 0x21 + publicKey1(压缩型 33字节) + .... + 0x21 + publicKeym(压缩型 33字节)  + emitPush(M) + 0xae()
+        NEO2: emitPush(N) + 0x21 + publicKey1(压缩型 33字节) + .... + 0x21 + publicKeym(压缩型 33字节)  + emitPush(M) + 0xae
         NEO3: emitPush(N) + 0x21 + publicKey1(压缩型 33字节) + .... + 0x21 + publicKeym(压缩型 33字节)  + emitPush(M) + 0x68 + 0xc7c34cba
         ```
 
 ### 交易
 
-- 删除
-    - 交易类型：弃用NEO2中使用的9种交易类型，统一使用transaction类型，并重新定义其[交易结构](cn/交易#交易结构)。
-    - [资产](cn/合约#原生合约)：NEO和GAS代币弃用UTXO模型，使用原生合约实现的账户模型。
-
 - 更新
     - [系统手续费](cn/交易#systemfee)：取消了每笔交易10 GAS的免费额度，并重新定义每种虚拟机指令集所对应的执行[费用](cn/虚拟机#费用)。
     - [网络手续费](cn/交易#networkfee)：重新定义网络手续费的计算公式。
 
+- 删除
+    - 交易类型：弃用NEO2中使用的9种交易类型，统一使用transaction类型，并重新定义其[交易结构](cn/交易#交易结构)。
+    - [资产](cn/合约#原生合约)：NEO和GAS代币弃用UTXO模型，使用原生合约实现的账户模型。
+    
 ### RPC
 
 - 更新
