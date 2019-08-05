@@ -26,10 +26,14 @@ A Neo Transaction is a signed data package with an instruction for the network a
 
 ## Changes in NEO3
 
-- Update the [transaction structure](#transaction-structure), including the removal of fields `inputs`, `outputs` and adding fields `validUntilBlock`, `witnesses`, etc.
-- Abandone UTXO model with only account balance model retained
-- Cancel the free discount of 10 GAS for each transaction. The [total fee](#systemfee) is subject to the quantity and type of instructions in the contract script
-- The [address script](#verification-script) in NEO3 has changed not using the Opcode.CheckSig and OpCode.CheckMultiSig but the interoperable service call `SysCall "Neo.Crypto.CheckSig".hash2uint`, `SysCall "Neo.Crypto .CheckMultiSig".hash2unit` instead.
+- DELETE
+
+    - Transaction Type: discard the previous 9 types of the transaction in NEO2 and use the unified `transaction` instead, as well as the redefinition of the [transaction structure](#transaction-structure)
+    - [Assets](../SmartContract#native-contract): discard the UTXO model for the NEO and GAS token, using the account model implemented by the native contract instead
+
+- UPDATE
+    - [System Fee](#systemfee): cancel the free discount of 10 GAS for each transaction and redefine the [fee](../NeoVM#fee) of each OpCode
+    - [Network Fee](#networkfee): redefine the calculation formula for the network fee
 
 ## Transaction Structure
 
@@ -159,3 +163,5 @@ A transaction is initiated by the client, encapsulated by the wallet module and 
 The witness is an executable verification script. The InvocationScript provides the parameters for the VerificationScript to execute. Verification succeeds only when the script execution returns true. Invocation script performs stack operation instructions, provides parameters for verification script (eg, signatures). The script interpreter executes the invocation script code first, and then the verification script code.
 
 > Note: Transaction signature is to sign the data of the transaction itself (not including signature-attached data, namely witness).
+
+*Click [here](../../cn/交易) to see the Chinese edition of the Transactions*

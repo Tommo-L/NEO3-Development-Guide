@@ -3,19 +3,19 @@
 <!-- TOC -->
 
 - [Wallets](#wallets)
-  - [Changes in NEO3](#changes-in-neo3)
-  - [Accounts](#accounts)
-    - [Private Key](#private-key)
-    - [Public Key](#public-key)
-    - [Address](#address)
-      - [Normal Address](#normal-address)
-      - [Multi-Signature Address](#multi-signature-address)
-  - [Wallet File](#wallet-file)
-    - [DB3 File](#db3-file)
-    - [NEP6 File](#nep6-file)
-      - [Encryption Steps](#encryption-steps)
-      - [Decryption Steps](#decryption-steps)
-  - [Signature](#signature)
+    - [Changes in NEO3](#changes-in-neo3)
+    - [Accounts](#accounts)
+        - [Private Key](#private-key)
+        - [Public Key](#public-key)
+        - [Address](#address)
+            - [Ordinary Address](#ordinary-address)
+            - [Multi-Signature Address](#multi-signature-address)
+    - [Wallet File](#wallet-file)
+        - [DB3 File](#db3-file)
+        - [NEP6 File](#nep6-file)
+            - [Encryption Steps](#encryption-steps)
+            - [Decryption Steps](#decryption-steps)
+    - [Signature](#signature)
 
 <!-- /TOC -->
 
@@ -25,9 +25,21 @@ Developers are allowed to redesign and modify the Neo wallet under the following
 
 ## Changes in NEO3
 
-- [Address script](#address) changes from the format of `0x21 + publicKey(compressed, 33 bytess) + 0xac` (Neo2.x) to `0x21 + publicKey(compressed, 33 bytes)+ 0x68 + 0x747476aa` (NEO3)
+- UPDATE
+    - [Address Script](#address): change the way to construct the address script with the public key
+        - Ordinary Address
 
+        ```
+        NEO2: 0x21 + publicKey(compressed 33bytes) + 0xac()
+        NEO3: 0x21 + publicKey(compressed 33bytes) + 0x68 + 0x747476aa
+        ```
 
+        - Multi-Signature Address
+
+        ```
+        NEO2: emitPush(N) + 0x21 + publicKey1(compressed 33bytes) + .... + 0x21 + publicKeym(compressed 33bytes)  + emitPush(M) + 0xae()
+        NEO3: emitPush(N) + 0x21 + publicKey1(compressed 33bytes) + .... + 0x21 + publicKeym(compressed 33bytes)  + emitPush(M) + 0x68 + 0xc7c34cba
+        ```
 
 ## Accounts
 In Neo, the account is the smart contract and the address represents a contract script. The below flow diagram shows how to derive the public key from the private key and then to the address:
@@ -77,7 +89,7 @@ Example:
 
 ### Address
 
-#### Normal Address
+#### Ordinary Address
 
 1. Build a `CheckSig` script with the public key, and the format is as follows:
 
@@ -342,3 +354,5 @@ Example
 | Private Key | f72b8fab85fdcc1bdd20b107e5da1ab4713487bc88fc53b5b134f5eddeaa1a19 |
 | Public Key  | 031f64da8a38e6c1e5423a72ddd6d4fc4a777abe537e5cb5aa0425685cda8e063b |
 | signature   | 261e894dd456a190f9e99e39cea9f64ca4f939b24cf47ee3498bf883967035b446f554753d5f76219397bc2abb281a13a3c3acce43978c02c510ccb91cb03f87 |
+
+*Click [here](../../cn/钱包) to see the Chinese edition of the Wallets*
