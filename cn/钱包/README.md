@@ -61,7 +61,7 @@
 
     ![wif format](../../images/wif_format.png)
 
-*示例:*
+示例:
 
 | 格式 |   值  |
 |------|------|

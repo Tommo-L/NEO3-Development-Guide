@@ -30,14 +30,14 @@ Developers are allowed to redesign and modify the Neo wallet under the following
         - Ordinary Address
 
         ```
-        NEO2: 0x21 + publicKey(compressed 33bytes) + 0xac()
+        NEO2: 0x21 + publicKey(compressed 33bytes) + 0xac
         NEO3: 0x21 + publicKey(compressed 33bytes) + 0x68 + 0x747476aa
         ```
 
         - Multi-Signature Address
 
         ```
-        NEO2: emitPush(N) + 0x21 + publicKey1(compressed 33bytes) + .... + 0x21 + publicKeym(compressed 33bytes)  + emitPush(M) + 0xae()
+        NEO2: emitPush(N) + 0x21 + publicKey1(compressed 33bytes) + .... + 0x21 + publicKeym(compressed 33bytes)  + emitPush(M) + 0xae
         NEO3: emitPush(N) + 0x21 + publicKey1(compressed 33bytes) + .... + 0x21 + publicKeym(compressed 33bytes)  + emitPush(M) + 0x68 + 0xc7c34cba
         ```
 
@@ -60,6 +60,7 @@ There are two main encoding formats for private keys in Neo.
 - **WIF Format**：
 
    The WIF format is to add prefix `0x80` and suffix `0x01` in the original 32-bit data and get a string of Base58Check encoding.
+
    ![WIF format](../../images/wif_format.png)
 
 Example:
@@ -156,17 +157,20 @@ Example:
 db3 wallet file uses SQLite to store data, and the file suffix is `.db3`. There are four tables created in db3 file：
 
 - **Account**
+
     | Field               | Type          | isRequired | Note             |
     | ------------------- | ------------- | ---------- | ---------------- |
     | PrivateKeyEncrypted | VarBinary(96) | Yes        | AES256 encrypted |
     | PublicKeyHash       | Binary(20)    | Yes        | Primary Key      |
 
 - **Address**
+
     | Field      | Type       | isRequired | Note        |
     | ---------- | ---------- | ---------- | ----------- |
     | ScriptHash | Binary(20) | Yes        | Primary Key |
 
 - **Contract**
+
     | Field         | Type       | isRequired | Note                                               |
     | ------------- | ---------- | ---------- | -------------------------------------------------- |
     | RawData       | VarBinary  | Yes        |                                                    |
@@ -174,6 +178,7 @@ db3 wallet file uses SQLite to store data, and the file suffix is `.db3`. There 
     | PublicKeyHash | Binary(20) | Yes        | Index，Foreign Key，associated Account table       |
 
 - **Key**
+
     | Field | Type        | isRequired | Note        |
     | ----- | ----------- | ---------- | ----------- |
     | Name  | VarChar(20) | Yes        | Primary Key |
