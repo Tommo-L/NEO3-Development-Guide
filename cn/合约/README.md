@@ -111,25 +111,25 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
 一个manifest内容示例如下：
 ```json
 {
-"groups": [
-  {
-    "pubKey": "",
-    "signature": ""
-  }
-],
-"features": {
-  "storage": false,
-  "payable": false
-},
-"abi": null,
-"permissions": [
-  {
-    "contract": "*",
-    "methods": "*"
-  }
-],
-"trusts": "*",
-"safemethods": "*"
+    "groups": [
+        {
+            "pubKey": "",
+            "signature": ""
+        }
+    ],
+    "features": {
+        "storage": false,
+        "payable": false
+    },
+    "abi": null,
+    "permissions": [
+        {
+            "contract": "*",
+            "methods": "*"
+        }
+    ],
+    "trusts": "*",
+    "safemethods": "*"
 }
 ```
 - **Groups**：声明本合约所归属的组，可以支持多个, 每一个组由一个公钥和签名表示。
@@ -216,11 +216,8 @@ public static bool Main(byte[] signature)
 
 ```csharp
 [ContractMethod(0_03000000, 
-  ContractParameterType.Integer, 
-  ParameterTypes = new[] { 
-  ContractParameterType.Hash160, 
-  ContractParameterType.Integer 
-}, 
+ContractParameterType.Integer, 
+ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Integer },
 ParameterNames = new[] { "account", "end" }, 
 SafeMethod = true)]
 private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
