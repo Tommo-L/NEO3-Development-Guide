@@ -151,11 +151,10 @@ Each time before the virtual machine starts, the execution engine will detect th
 
 NeoVM uses stacks as its temporary storage. NeoVM has four types of stacks: `InvocationStack`, `EvaluationStack`, `AltStack` and `ResultStack`.
 
-- `InvocationStack` is mainly used to store the running context data. Each running context has its own scripts, `EvaluationStack` and `AltStack`. Stacks are isolated from each other between different running contexts. Context switching is completed by relying on the `CurrentContext`, `CallingContext` and `EntryContext`. The `CurrentContext` points to the top element of the `InvocationStack`, which is `ExecutionContext_1` in the system architecture diagram. The `CallingContext` points to the second element of the `InvocationStack`, which is `ExecutionContext_2`. And the `EntryContext` points to the tail element of the `InvocationStack`, which is `ExecutionContext_3`.
-
-- Each running context has its own `EvaluationStack` and `AltStack`. `EvaluationStack` is mainly used to execute corresponding operations according to instructions, and `AltStack` is used to save temporary data in computing process.
-
-- After all scripts executed, the results will be saved in the `ResultStack`.
+- `InvocationStack`: *is used to store all execution contexts of current NeoVM, which are isolated from each other in the stack. Context switching is performed based on the current context and entry context. The current context points to the top element of invocation stack, which is ExecutionContext0 in the architecture figure. And the entry context points to the tail element of the invocation stack, which is ExecutionContextN in the architecture figure*
+- *`EvaluationStack` is for storing the data used by the instruction in the execution process. Each execution context has its evaluation stack*
+- *`AltStack` is for storing the temporary data used by the instruction in the execution process. Each execution context has its alt stack*
+- *`ResultStack` is used to store execution results after all scripts are executed.*
 
 
 ## Interoperable service layer
