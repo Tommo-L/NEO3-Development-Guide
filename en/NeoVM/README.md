@@ -109,8 +109,11 @@ For example, in JVM or CLR of .Net, source code will be compiled into relevant b
 
 ## Changes in NEO3
 
-- Abandon the following opcodes: APPCALL, TAILCALL, SHA1, SHA256, HASH160, HASH256, CHECKSIG, VERIFY, CHECKMULTISIG, CALL_I, CALL_E, CALL_ED, CALL_ET, CALL_EDT, etc.
-- Add the following opcode: [DUPFROMALTSTACKBOTTOM](#stack-operation).
+- ADD
+    -  OpCode [DUPFROMALTSTACKBOTTOM](#stack-operation)
+
+- DELETE
+    - Discard the following opcodes: `APPCALL`, `TAILCALL`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `CALL_I`, `CALL_E`, `CALL_ED, `CALL_ET, `CALL_EDT`, etc.
 
 ## NeoVM Architecture
 ![nvm](../../images/nvm.jpg)
@@ -1056,8 +1059,6 @@ Note: The operation code with \* indicates that the result of the operation is n
 | MIN     | 0.000002 |
 | MAX     | 0.000002 |
 | WITHIN     | 0.000002 |
-| SHA1     | 0.003 |
-| SHA256     | 0.01 |
 | ARRAYSIZE     | 0.0000015 |
 | PACK     | 0.00007 |
 | UNPACK     | 0.00007 |
@@ -1074,3 +1075,5 @@ Note: The operation code with \* indicates that the result of the operation is n
 | VALUES     | 0.00007 |
 | THROW     | 0.0000003 |
 | THROWIFNOT     | 0.0000003 |
+
+*Click [here](../../cn/虚拟机) to see the Chinese edition of the NeoVM*

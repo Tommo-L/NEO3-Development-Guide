@@ -107,8 +107,10 @@ NeoVM 是执行 Neo 智能合约代码的虚拟机。本文所讲述的虚拟机
 
 ## NEO3变更部分
 
-- 弃用了APPCALL，TAILCALL，SHA1，SHA256，HASH160，HASH256，CHECKSIG，VERIFY，CHECKMULTISIG，CALL_I，CALL_E，CALL_ED，CALL_ET，CALL_EDT 等Opcode。
-- 新增[DUPFROMALTSTACKBOTTOM](#栈操作) 等Opcode。
+- 新增
+    - [DUPFROMALTSTACKBOTTOM](#栈操作)
+- 删除
+    - `APPCALL`, `TAILCALL`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `CALL_I`, `CALL_E`, `CALL_ED, `CALL_ET`, `CALL_EDT` 等OpCodes。
 
 ## NeoVM 架构原理
 ![nvm](../../images/nvm.jpg)
@@ -1044,8 +1046,6 @@ NeoVM虚拟机一共实现了173个指令，类别如下：
 | MIN     | 0.000002 |
 | MAX     | 0.000002 |
 | WITHIN     | 0.000002 |
-| SHA1     | 0.003 |
-| SHA256     | 0.01 |
 | ARRAYSIZE     | 0.0000015 |
 | PACK     | 0.00007 |
 | UNPACK     | 0.00007 |
@@ -1062,3 +1062,5 @@ NeoVM虚拟机一共实现了173个指令，类别如下：
 | VALUES     | 0.00007 |
 | THROW     | 0.0000003 |
 | THROWIFNOT     | 0.0000003 |
+
+*点击[此处](../../en/NeoVM)查看NeoVM英文版*
