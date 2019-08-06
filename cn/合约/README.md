@@ -223,9 +223,6 @@ public static bool Main(byte[] signature)
 private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
 ```
 
-
-
-
 <table class="mytable">
 <tr >
 <th rowspan="3">参数列表</th>
@@ -312,12 +309,12 @@ private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args
       <th colspan="2" >无参数</th>
   </tr>
   <tr >
-      <th  rowspan="2">返回值</th>
-      <th colspan="2">返回值类型</th>
+      <th rowspan="2">返回值</th>
+      <th >返回值类型</th>
       <th >描述</th>
   </tr>
   <tr >
-      <td colspan="2">Array</td>
+      <td >Array</td>
       <td >所有验证人和备选节点信息 </td>
   </tr>
   <tr >
@@ -345,11 +342,11 @@ private StackItem GetValidators(ApplicationEngine engine, VMArray args)
 <tr >
 <th  rowspan="2">返回值</th>
 <th  >返回值类型</th>
-<th  colspan="2">描述</th>
+<th  >描述</th>
 </tr>
 <tr >
 <td >Array</td>
-<td colspan="2"  >所有验证人信息 </td>
+<td >所有验证人信息 </td>
 </tr>
 <tr >
 <th >费用（GAS）</th>
@@ -416,12 +413,12 @@ private StackItem Vote(ApplicationEngine engine, VMArray args)
   </tr>
 <tr >
   <th  rowspan="2">返回值</th>
-  <th >返回值类型</th>
-  <th   colspan="2">描述</th>
+  <th  colspan="2">返回值类型</th>
+  <th  >描述</th>
   </tr>
   <tr >
-  <td  >Boolean</td>
-  <td colspan="2"  >投票结果，true：成功， false：失败 </td>
+  <td  colspan="2">Boolean</td>
+  <td  >投票结果，true：成功， false：失败 </td>
   </tr>
   <tr >
   <th >费用（GAS）</th>
@@ -573,12 +570,12 @@ protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
   </tr>
   <tr >
   <th  rowspan="2">返回值</th>
-  <th  >返回值类型</th>
-  <th   colspan="2">描述</th>
+  <th  colspan="2">返回值类型</th>
+  <th  >描述</th>
   </tr>
   <tr >
-  <td  >BigInteger</td>
-  <td colspan="2" >余额数值</td>
+  <td colspan="2">BigInteger</td>
+  <td >余额数值</td>
   </tr>
   <tr >
   <th >费用（GAS）</th>
@@ -620,12 +617,12 @@ protected StackItem Transfer(ApplicationEngine engine, VMArray args)
   </tr>
   <tr >
   <th  rowspan="2">返回值</th>
-  <th  >返回值类型</th>
-  <th   colspan="2">描述</th>
+  <th  colspan="2">返回值类型</th>
+  <th  >描述</th>
   </tr>
   <tr >
-  <td  >Boolean</td>
-  <td colspan="2" >转账结果，true：成功，false：失败</td>
+  <td colspan="2">Boolean</td>
+  <td >转账结果，true：成功，false：失败</td>
   </tr>
   <tr >
   <th >费用（GAS）</th>
@@ -671,12 +668,12 @@ private StackItem GetSysFeeAmount(ApplicationEngine engine, VMArray args)
   </tr>
   <tr >
   <th  rowspan="2">返回值</th>
-  <th  >返回值类型</th>
-  <th   colspan="2">描述</th>
+  <th  colspan="2">返回值类型</th>
+  <th  >描述</th>
   </tr>
   <tr >
-  <td  >Integer</td>
-  <td colspan="2"  >系统费总值 </td>
+  <td colspan="2">Integer</td>
+  <td >系统费总值 </td>
   </tr>
   <tr >
   <th >费用（GAS）</th>
@@ -825,12 +822,12 @@ protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
   </tr>
   <tr >
   <th  rowspan="2">返回值</th>
-  <th  >返回值类型</th>
-  <th   colspan="2">描述</th>
+  <th  colspan="2">返回值类型</th>
+  <th  >描述</th>
   </tr>
   <tr >
-  <td  >Integer</td>
-  <td colspan="2"  >余额数值</td>
+  <td colspan="2">Integer</td>
+  <td >余额数值</td>
   </tr>
   <tr >
   <th >费用（GAS）</th>
@@ -875,12 +872,12 @@ protected StackItem Transfer(ApplicationEngine engine, VMArray args)
   </tr>
   <tr >
   <th  rowspan="2">返回值</th>
-  <th  >返回值类型</th>
-  <th   colspan="2">描述</th>
+  <th  colspan="2">返回值类型</th>
+  <th  >描述</th>
   </tr>
   <tr >
-  <td  >Boolean</td>
-  <td colspan="2" >转账结果，true：成功，false：失败</td>
+  <td colspan="2">Boolean</td>
+  <td >转账结果，true：成功，false：失败</td>
   </tr>
   <tr >
   <th >费用（GAS）</th>
