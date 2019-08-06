@@ -839,13 +839,9 @@ protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
 
 ```csharp
 [ContractMethod(0_08000000, 
-  ContractParameterType.Boolean, 
-  ParameterTypes = new[] { 
-  ContractParameterType.Hash160, 
-  ContractParameterType.Hash160, 
-  ContractParameterType.Integer 
-}, 
-ParameterNames = new[] { "from", "to", "amount" })]
+    ContractParameterType.Boolean, 
+    ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Hash160, ContractParameterType.Integer }, 
+    ParameterNames = new[] { "from", "to", "amount" })]
 protected StackItem Transfer(ApplicationEngine engine, VMArray args)
 ```
 <table style="width:65%; text-align:center">
@@ -1002,12 +998,12 @@ private StackItem SetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray a
 
   <tr >
   <th  rowspan="2">返回值</th>
-  <th  >返回值类型</th>
-  <th   colspan="2">描述</th>
+  <th  colspan="2">返回值类型</th>
+  <th  >描述</th>
   </tr>
   <tr >
-  <td  >Boolean</td>
-  <td colspan="2"  >结果，true：设置成功， false：设置失败 </td>
+  <td  colspan="2">Boolean</td>
+  <td >结果，true：设置成功， false：设置失败 </td>
   </tr>
   <tr >
   <th >费用（GAS）</th>
@@ -1039,12 +1035,12 @@ private StackItem SetFeePerByte(ApplicationEngine engine, VMArray args)
 
   <tr >
   <th  rowspan="2">返回值</th>
-  <th  >返回值类型</th>
-  <th   colspan="2">描述</th>
+  <th  colspan="2">返回值类型</th>
+  <th  >描述</th>
   </tr>
   <tr >
-  <td  >Boolean</td>
-  <td colspan="2"  >结果，true：设置成功，false：设置失败 </td>
+  <td colspan="2">Boolean</td>
+  <td >结果，true：设置成功，false：设置失败 </td>
   </tr>
   <tr >
   <th >费用（GAS）</th>
@@ -1076,12 +1072,12 @@ private StackItem BlockAccount(ApplicationEngine engine, VMArray args)
 
   <tr >
   <th  rowspan="2">返回值</th>
-  <th  >返回值类型</th>
-  <th   colspan="2">描述</th>
+  <th  colspan="2">返回值类型</th>
+  <th   >描述</th>
   </tr>
   <tr >
-  <td  >Boolean</td>
-  <td colspan="2"  > 结果，true：设置成功，false：设置失败 </td>
+  <td  colspan="2">Boolean</td>
+  <td > 结果，true：设置成功，false：设置失败 </td>
   </tr>
   <tr >
   <th >费用（GAS）</th>
@@ -1113,12 +1109,12 @@ private StackItem UnblockAccount(ApplicationEngine engine, VMArray args)
 
   <tr >
   <th  rowspan="2">返回值</th>
-  <th  >返回值类型</th>
-  <th   colspan="2">描述</th>
+  <th  colspan="2">返回值类型</th>
+  <th  >描述</th>
   </tr>
   <tr >
-  <td  >Boolean</td>
-  <td colspan="2"  > true：设置成功，false：设置失败 </td>
+  <td  colspan="2">Boolean</td>
+  <td > true：设置成功，false：设置失败 </td>
   </tr>
   <tr >
   <th >费用（GAS）</th>
