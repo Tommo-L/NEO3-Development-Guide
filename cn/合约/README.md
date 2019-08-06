@@ -216,10 +216,10 @@ public static bool Main(byte[] signature)
 
 ```csharp
 [ContractMethod(0_03000000, 
-ContractParameterType.Integer, 
-ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Integer },
-ParameterNames = new[] { "account", "end" }, 
-SafeMethod = true)]
+    ContractParameterType.Integer, 
+    ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Integer },
+    ParameterNames = new[] { "account", "end" }, 
+    SafeMethod = true)]
 private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
 ```
 
@@ -235,7 +235,7 @@ private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
 </tr>
 <tr >
 <td>account</td>
-<td >Hash60</td>
+<td >Hash160</td>
 <td>要查询账户的ScriptHash</td>
 </tr>
 <tr >
@@ -245,12 +245,12 @@ private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
 </tr>
 <tr >
 <th  rowspan="2">返回值</th>
-<th>返回值类型</th>
-<th colspan="2">描述</th>
+<th colspan="2">返回值类型</th>
+<th >描述</th>
 </tr>
 <tr >
-<td  >registerValidator</td>
-<td colspan="2" >未claimGAS数量 </td>
+<td colspan="2">registerValidator</td>
+<td >未claimGAS数量 </td>
 </tr>
 <tr >
 <th >费用（GAS）</th>
@@ -264,11 +264,9 @@ private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
 
 ```csharp
 [ContractMethod(0_05000000, 
-  ContractParameterType.Boolean, 
-  ParameterTypes = new[] { 
-  ContractParameterType.PublicKey 
-}, 
-ParameterNames = new[] { "pubkey" })]
+    ContractParameterType.Boolean, 
+    ParameterTypes = new[] { ContractParameterType.PublicKey }, 
+    ParameterNames = new[] { "pubkey" })]
 private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
 ```
 <table class="mytable">
@@ -285,12 +283,12 @@ private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
 </tr>
 <tr >
 <th  rowspan="2">返回值</th>
-<th  >返回值类型</th>
-<th colspan="2">描述</th>
+<th colspan="2">返回值类型</th>
+<th >描述</th>
 </tr>
 <tr >
-<td >Boolean</td>
-<td colspan="2" >注册结果，true：成功， false：失败 </td>
+<td colspan="2">Boolean</td>
+<td >注册结果，true：成功， false：失败 </td>
 </tr>
 <tr >
 <th >费用（GAS）</th>
@@ -303,8 +301,8 @@ private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
 
 ```csharp
 [ContractMethod(1_00000000, 
-  ContractParameterType.Array,
-  SafeMethod = true)]
+    ContractParameterType.Array,
+    SafeMethod = true)]
 private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args)
 ```
 
@@ -315,12 +313,12 @@ private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args
   </tr>
   <tr >
       <th  rowspan="2">返回值</th>
-      <th >返回值类型</th>
-      <th   colspan="2">描述</th>
+      <th colspan="2">返回值类型</th>
+      <th >描述</th>
   </tr>
   <tr >
-      <td  >Array</td>
-      <td colspan="2" >所有验证人和备选节点信息 </td>
+      <td colspan="2">Array</td>
+      <td >所有验证人和备选节点信息 </td>
   </tr>
   <tr >
       <th >费用（GAS）</th>
@@ -334,8 +332,8 @@ private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args
 
 ```csharp
 [ContractMethod(1_00000000, 
-  ContractParameterType.Array, 
-  SafeMethod = true)]
+    ContractParameterType.Array, 
+    SafeMethod = true)]
 private StackItem GetValidators(ApplicationEngine engine, VMArray args)
 ```
 
@@ -364,8 +362,8 @@ private StackItem GetValidators(ApplicationEngine engine, VMArray args)
 
 ```csharp
 [ContractMethod(1_00000000, 
-  ContractParameterType.Array, 
-  SafeMethod = true)]
+    ContractParameterType.Array, 
+    SafeMethod = true)]
 private StackItem GetNextBlockValidators(ApplicationEngine engine, VMArray args)
 ```
 <table class="mytable">
@@ -393,11 +391,9 @@ private StackItem GetNextBlockValidators(ApplicationEngine engine, VMArray args)
 
 ```csharp
 [ContractMethod(5_00000000, 
-  ContractParameterType.Boolean, 
-  ParameterTypes = new[] {         
-  ContractParameterType.Hash160, 
-  ContractParameterType.Array }, 
-  ParameterNames = new[] { "account", "pubkeys" })]
+    ContractParameterType.Boolean, 
+    ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Array }, 
+    ParameterNames = new[] { "account", "pubkeys" })]
 private StackItem Vote(ApplicationEngine engine, VMArray args)
 ```
 
@@ -439,9 +435,9 @@ private StackItem Vote(ApplicationEngine engine, VMArray args)
 
 ```csharp
 [ContractMethod(0, 
-  ContractParameterType.String, 
-  Name = "name", 
-  SafeMethod = true)]
+    ContractParameterType.String, 
+    Name = "name", 
+    SafeMethod = true)]
 protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
 ```
 
@@ -469,9 +465,9 @@ protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
 
 ```csharp
 [ContractMethod(0, 
-  ContractParameterType.String, 
-  Name = "symbol", 
-  SafeMethod = true)]
+    ContractParameterType.String, 
+    Name = "symbol", 
+    SafeMethod = true)]
 protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
 ```
 <table style="width:65%; text-align:center">
@@ -498,9 +494,9 @@ protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
 
 ```csharp
 [ContractMethod(0, 
-  ContractParameterType.Integer, 
-  Name = "decimals", 
-  SafeMethod = true)]
+    ContractParameterType.Integer, 
+    Name = "decimals", 
+    SafeMethod = true)]
 protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
 ```
 <table style="width:65%; text-align:center">
@@ -527,8 +523,8 @@ protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
 
 ```csharp
 [ContractMethod(0_01000000, 
-  ContractParameterType.Integer, 
-  SafeMethod = true)]
+    ContractParameterType.Integer, 
+    SafeMethod = true)]
 protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
 ```
 <table style="width:65%; text-align:center">
@@ -556,10 +552,10 @@ protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
 
 ```csharp
 [ContractMethod(0_01000000, 
-  ContractParameterType.Integer, 
-  ParameterTypes = new[] { ContractParameterType.Hash160 }, 
-  ParameterNames = new[] { "account" }, 
-  SafeMethod = true)]
+    ContractParameterType.Integer, 
+    ParameterTypes = new[] { ContractParameterType.Hash160 }, 
+    ParameterNames = new[] { "account" }, 
+    SafeMethod = true)]
 protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
 ```
 
@@ -594,13 +590,9 @@ protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
 
 ```csharp
 [ContractMethod(0_08000000, 
-  ContractParameterType.Boolean, 
-  ParameterTypes = new[] { 
-  ContractParameterType.Hash160, 
-  ContractParameterType.Hash160, 
-  ContractParameterType.Integer 
-}, 
-ParameterNames = new[] { "from", "to", "amount" })]
+    ContractParameterType.Boolean, 
+    ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Hash160, ContractParameterType.Integer }, 
+    ParameterNames = new[] { "from", "to", "amount" })]
 protected StackItem Transfer(ApplicationEngine engine, VMArray args)
 ```
 
