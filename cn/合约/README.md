@@ -403,7 +403,7 @@ private StackItem Vote(ApplicationEngine engine, VMArray args)
   </tr>
   <tr >
   <td>account</td>
-  <td >Hash60</td>
+  <td >Hash160</td>
   <td>投票人的ScriptHash</td>
   </tr>
   <tr >
@@ -565,7 +565,7 @@ protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
   </tr>
   <tr >
   <td>account</td>
-  <td >Hash60</td>
+  <td >Hash160</td>
   <td>要查询账户的ScriptHash</td>
   </tr>
   <tr >
@@ -817,7 +817,7 @@ protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
   </tr>
   <tr >
   <td>account</td>
-  <td >Hash60</td>
+  <td >Hash160</td>
   <td>要查询账户的ScriptHash</td>
   </tr>
   <tr >
