@@ -110,7 +110,7 @@ NeoVM 是执行 Neo 智能合约代码的虚拟机。本文所讲述的虚拟机
 - 新增
     - [DUPFROMALTSTACKBOTTOM](#栈操作)
 - 删除
-    - `APPCALL`, `TAILCALL`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `CALL_I`, `CALL_E`, `CALL_ED, `CALL_ET`, `CALL_EDT` 等OpCodes。
+    - `APPCALL`, `TAILCALL`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `CALL_I`, `CALL_E`, `CALL_ED`, `CALL_ET`, `CALL_EDT`
 
 ## NeoVM 架构原理
 ![nvm](../../images/nvm.jpg)
@@ -301,6 +301,7 @@ NeoVM虚拟机一共实现了173个指令，类别如下：
 实现对栈的元素做复制、移除、交换等功能。
 
 #### DUPFROMALTSTACKBOTTOM
+>**NEO3** 中新添加的指令
 
 | 指令   | DUPFROMALTSTACKBOTTOM                          |
 |----------|------------------------------------------|

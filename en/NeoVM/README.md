@@ -110,10 +110,10 @@ For example, in JVM or CLR of .Net, source code will be compiled into relevant b
 ## Changes in NEO3
 
 - ADD
-    -  OpCode [DUPFROMALTSTACKBOTTOM](#stack-operation)
+    -  OpCode: [DUPFROMALTSTACKBOTTOM](#stack-operation)
 
 - DELETE
-    - Discard the following opcodes: `APPCALL`, `TAILCALL`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `CALL_I`, `CALL_E`, `CALL_ED, `CALL_ET, `CALL_EDT`, etc.
+    - `APPCALL`, `TAILCALL`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `CALL_I`, `CALL_E`, `CALL_ED`, `CALL_ET`, `CALL_EDT`
 
 ## NeoVM Architecture
 ![nvm](../../images/nvm.jpg)
@@ -309,6 +309,7 @@ It's used to control the running process of NeoVM, including jump, call and othe
 Copy, remove and swap the elements of the stack.
 
 #### DUPFROMALTSTACKBOTTOM 
+>  **added in NEO3**
 
 | Instruction   | DUPFROMALTSTACKBOTTOM            |
 |--------|------------------------------------------|
