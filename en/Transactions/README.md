@@ -22,20 +22,21 @@
 
 A Neo Transaction is a signed data package with an instruction for the network and the only way to operate the Neo network. Each block in the Neo blockchain ledger contains one or more transactions, making each block a transaction batch. After transaction attributes encapsulated and signed by the client wallet, the transaction is sent to the node to which the wallet belongs. Any node in the network can verify the received transaction and forward it to the consensus node. The consensus node selectively packages transactions into a proposal block and broadcast it to reach an agreement. Once the validators agree on the new block, they will broadcast the new block to the entire network. For the new block received, the node will process all individual transactions in the block and then update the ledger.
 
-![tx flow graph](../../images/tx_flow_graph.png)
+<img src="../../images/tx_flow_graph.png" alt="tx flow graph" height="600">
 
 ## Changes in NEO3
-
-- DELETE
-
-    - Transaction Type: discard the previous 9 types of the transaction in NEO2 and use the unified `transaction` instead, as well as the redefinition of the [transaction structure](#transaction-structure)
-    - [Assets](../SmartContract#native-contract): discard the UTXO model for the NEO and GAS token, using the account model implemented by the native contract instead
 
 - UPDATE
     - [System Fee](#systemfee): cancel the free discount of 10 GAS for each transaction and redefine the [fee](../NeoVM#fee) of each OpCode
     - [Network Fee](#networkfee): redefine the calculation formula for the network fee
 
+- DELETE
+    - Transaction Type: discard the previous 9 types of the transaction in NEO2 and use the unified `transaction` instead, as well as the redefinition of the [transaction structure](#transaction-structure)
+    - [Assets](../SmartContract#native-contract): discard the UTXO model for the NEO and GAS token, using the account model implemented by the native contract instead
+
+
 ## Transaction Structure
+> **updated in NEO3**： unified `transaction` type and updated the data structure.
 
 A normal transaction has the following attributes:
 
@@ -56,18 +57,19 @@ The version attribute allows updates to the transaction structure with backward 
 ### sender
 Since NEO3 abandoned UTXO model with only account balance model retained. The transfer transaction of the native assets NEO and GAS are unified as the way of NEP-5 assets, so the input and output fields are removed from the transaction structure, instead, the sender field is used to track the source of the transaction. This field is the script hash of the transaction initiation account in the wallet.
 ### systemFee
-The system fee is a fixed cost calculated by instructions to be executed by the Neo virtual machine. NEO3 cancels the free discount of 10 GAS for each transaction. The total fee is subject to the quantity and type of instructions in the contract script. The calculation formula is as follows:
+The system fee is calculated by opcodes to be executed by the Neo virtual machine, please refer to [opcode fee](../NeoVM#fee) section for specific fee on each opcode. The 10 GAS free system fee will be cancled in NEO3. The total fee is subject to the quantity and type of instructions in the contract script. The calculation formula is as follows:
 
 ![system fee](../../images/system_fee.png)
 
-where *OpcodeSet* is opcode set, 𝑂𝑝𝑐𝑜𝑑𝑒𝑃𝑟𝑖𝑐𝑒<sub>𝑖</sub> is the cost of instruction *i*, 𝑛<sub>𝑖</sub> is the number of instruction *i* in the contract script.
+where *OpcodeSet* is opcode set, 𝑂𝑝𝑐𝑜𝑑𝑒𝑃𝑟𝑖𝑐𝑒<sub>𝑖</sub> is the cost of opcode *i*, 𝑛<sub>𝑖</sub> is the number of instruction *i* in the contract script.
 
 ### networkFee
-The network fee is the fee paid by users when they submit transactions to the Neo network and is used to pay the validator for producing new blocks. For each transaction, there is a minimum network fee, which is calculated as follows,
+The network fee is the fee paid by users when they submit transactions to the Neo network and it will be paied to the validator for producing new block. For each transaction, there is a base minimum network fee which is calculated as the followig formular. Transaction will be executed only when user pays network fee equal to or higher than the base network fee. Otherwise, transaction will be invalid.
 
 ![network fee](../../images/network_fee.png)
 
-where *VerificationCost* is the costs for transaction signature verification in NeoVM, *tx.Length* is the byte length of transaction data, *FeePerByte* is the fee per byte， currently is 0.00001GAS. The network fee paid by users must be greater than or equal to NetworkFee, otherwise, the verification of the transaction will fail.
+where *VerificationCost* is the costs for transaction signature verification in NeoVM, *tx.Length* is the byte length of transaction data, *FeePerByte* is the fee per byte, which is 0.00001GAS. 
+
 ### attributes
 Depending on the transaction type, it is allowed to add attributes to the transaction. For each attribute, a usage type has to be specified, together with the external data and the size of the external data.
 
@@ -140,8 +142,33 @@ Except for IP addresses and ports, all variable-length integer types in Neo are 
 > | value > 0xFFFFFFFF  | 0xFF + value         |
 
 ## Transaction Signature
-Transaction signature is to sign the data of the transaction itself (not including signature-attached data, namely witness) by using ECDSA digital signature algorithm.
+Transaction signature is to sign the data of the transaction itself (not including signature-attached data, namely witness) by using ECDSA digital signature algorithm, and then add it to `witnesses` in transaction object.
 
-
+Transaction example: 
+```Json
+{
+    "hash": "0x55d0f1587bdda6a956fd381f96c2d7e3d9f9697e26f3a8d6ddfcb65d2a49848e",
+    "size": 263,
+    "version": 0,
+    "nonce": 886120104,
+    "sender": "AdhEBzaBZujuj5kEiwvKmMVy5ydqj3AC3V",
+    "sys_fee": "1",
+    "net_fee": "0.012633",
+    "valid_until_block": 2104144,
+    "attributes": [
+        {
+            "usage": "Cosigner",
+            "data": "f071d5fc6d2e2978a45842f05b1ac970e87d1977"
+        }
+    ],
+    "script": "0400e1f5051493966ad1f10948af8617f982c7a3daac58ac3d5a14f071d5fc6d2e2978a45842f05b1ac970e87d197753c1087472616e736665721415caa04214310670d5e5a398e147e0dbed98cf4368627d5b52f1",
+    "witnesses": [
+        {
+            "invocation": "40f065cae84459d7299ace9fb4e1429eeccb9e2769f68acfb0804e2c033047c0abece062ee83f4beb5b1bdd5a31891f5927b8cd108e40cdd7f68b7b1c48e4daf3d",
+            "verification": "512102e683c2d21d007780ca256d211048eea862250517a592eb25d2ba828723d04af35168c7c34cba"
+        }
+    ]
+}
+```
 
 *Click [here](../../cn/交易) to see the Chinese edition of the Transactions*
