@@ -78,7 +78,7 @@ Depending on the transaction type, it is allowed to add attributes to the transa
 | `usage` | uint8  | Attribute usage type                                         |
 | `data`  | byte[] | Script of the transaction to be validated. When usage is `0x20` , the data type must be UInt160. |
 
-#### Attribute usage types
+#### *usage*
 The following usage types can be included in the transaction attributes.
 
 
@@ -89,9 +89,9 @@ The following usage types can be included in the transaction attributes.
 
 A maximum of 16 attributes can be added to each transaction.
 
-## script
+### script
 Contract script executed by the virtual machine.
-## witnesses 
+### witnesses 
 A witness is used to verify the validity and integrity of the transaction. There are two attributes for each witness in the witnesses array.
 
 | Field                | Description                                                  |
@@ -101,17 +101,18 @@ A witness is used to verify the validity and integrity of the transaction. There
 
 You can add multiple witnesses to each transaction or use a multi-signature witness as well.
 
-### Invocation Script
+#### *InvocationScript*
 
-The invocation script is constructed with the following steps:
+The InvocationScript is constructed with the following steps:
 
 1.    `0x40`（PUSHBYTES64） followed by the (first) 64-byte signature
 
-The invocation script can push multiple signatures for a multi-signature contract by repeating these steps.
+The InvocationScript can push multiple signatures for a multi-signature contract by repeating these steps.
 
-### Verification Script
+#### *VerificationScript*
+VerificationScript, including ordinary address scripts, or multi-signature address scripts.  This address script could be retrieved from wallet account. Please refer to [wallet-account](../Wallets#address) for details.
 
-Verification scripts, including ordinary address scripts, and multi-signature address scripts.  And also includes custom authentication contract scripts.
+VerificationScript also could be custom authentication contract scripts.
 
 
 
