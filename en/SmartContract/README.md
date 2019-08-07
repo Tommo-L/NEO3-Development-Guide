@@ -107,25 +107,25 @@ Now each contract is required to provide a manifest file to describe its propert
 
 ```json
 {
-"groups": [
-  {
-    "pubKey": "",
-    "signature": ""
-  }
-],
-"features": {
-  "storage": false,
-  "payable": false
-},
-"abi": null,
-"permissions": [
-  {
-    "contract": "*",
-    "methods": "*"
-  }
-],
-"trusts": "*",
-"safemethods": "*"
+    "groups": [
+        {
+            "pubKey": "",
+            "signature": ""
+        }
+    ],
+    "features": {
+        "storage": false,
+        "payable": false
+    },
+    "abi": null,
+    "permissions": [
+        {
+            "contract": "*",
+            "methods": "*"
+        }
+    ],
+    "trusts": "*",
+    "safemethods": "*"
 }
 ```
 
@@ -214,13 +214,10 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
 
 ```csharp
 [ContractMethod(0_03000000, 
-  ContractParameterType.Integer, 
-  ParameterTypes = new[] { 
-  ContractParameterType.Hash160, 
-  ContractParameterType.Integer 
-}, 
-ParameterNames = new[] { "account", "end" }, 
-SafeMethod = true)]
+    ContractParameterType.Integer, 
+    ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Integer }, 
+    ParameterNames = new[] { "account", "end" }, 
+    SafeMethod = true)]
 private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
 
 ```
@@ -234,7 +231,7 @@ private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
 </tr>
 <tr >
 <td>account</td>
-<td >Hash60</td>
+<td >Hash160</td>
 <td>ScriptHash of the account</td>
 </tr>
 <tr >
@@ -261,11 +258,9 @@ private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
 
 ```csharp
 [ContractMethod(0_05000000, 
-  ContractParameterType.Boolean, 
-  ParameterTypes = new[] { 
-  ContractParameterType.PublicKey 
-}, 
-ParameterNames = new[] { "pubkey" })]
+    ContractParameterType.Boolean, 
+    ParameterTypes = new[] { ContractParameterType.PublicKey }, 
+    ParameterNames = new[] { "pubkey" })]
 private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
 ```
 
@@ -386,9 +381,7 @@ private StackItem GetNextBlockValidators(ApplicationEngine engine, VMArray args)
 ```csharp
 [ContractMethod(5_00000000, 
   ContractParameterType.Boolean, 
-  ParameterTypes = new[] {         
-  ContractParameterType.Hash160, 
-  ContractParameterType.Array }, 
+  ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Array }, 
   ParameterNames = new[] { "account", "pubkeys" })]
 private StackItem Vote(ApplicationEngine engine, VMArray args)
 ```
@@ -402,7 +395,7 @@ private StackItem Vote(ApplicationEngine engine, VMArray args)
 </tr>
 <tr >
 <td>account</td>
-<td >Hash60</td>
+<td >Hash160</td>
 <td>Voter's ScriptHash</td>
 </tr>
 <tr >
@@ -562,7 +555,7 @@ protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
 </tr>
 <tr >
 <td>account</td>
-<td >Hash60</td>
+<td >Hash160</td>
 <td>ScriptHash of the account</td>
 <tr >
 <th  rowspan="2">Return</th>
@@ -583,13 +576,9 @@ protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
 
 ```csharp
 [ContractMethod(0_08000000, 
-  ContractParameterType.Boolean, 
-  ParameterTypes = new[] { 
-  ContractParameterType.Hash160, 
-  ContractParameterType.Hash160, 
-  ContractParameterType.Integer 
-}, 
-ParameterNames = new[] { "from", "to", "amount" })]
+    ContractParameterType.Boolean, 
+    ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Hash160, ContractParameterType.Integer }, 
+    ParameterNames = new[] { "from", "to", "amount" })]
 protected StackItem Transfer(ApplicationEngine engine, VMArray args)
 ```
 
@@ -602,12 +591,12 @@ protected StackItem Transfer(ApplicationEngine engine, VMArray args)
 </tr>
 <tr >
 <td>from</td>
-<td >Hash60</td>
+<td >Hash160</td>
 <td>ScriptHash who want to transfer</td>
 </tr >
 <tr >
 <td>to</td>
-<td >Hash60</td>
+<td >Hash160</td>
 <td>ScriptHash of the receiver</td>
 </tr >
 <tr >
@@ -818,7 +807,7 @@ protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
 </tr>
 <tr >
 <td>account</td>
-<td >Hash60</td>
+<td >Hash160</td>
 <td>ScriptHash of the account to be queried </td>
 </tr>
 <tr >
@@ -840,13 +829,9 @@ protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
 
 ```csharp
 [ContractMethod(0_08000000, 
-  ContractParameterType.Boolean, 
-  ParameterTypes = new[] { 
-  ContractParameterType.Hash160, 
-  ContractParameterType.Hash160, 
-  ContractParameterType.Integer 
-}, 
-ParameterNames = new[] { "from", "to", "amount" })]
+    ContractParameterType.Boolean, 
+    ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Hash160, ContractParameterType.Integer }, 
+    ParameterNames = new[] { "from", "to", "amount" })]
 protected StackItem Transfer(ApplicationEngine engine, VMArray args)
 ```
 
@@ -859,12 +844,12 @@ protected StackItem Transfer(ApplicationEngine engine, VMArray args)
 </tr>
 <tr >
 <td>from</td>
-<td >Hash60</td>
+<td >Hash160</td>
 <td>ScriptHash of the sender's account</td>
 </tr >
 <tr >
 <td>to</td>
-<td >Hash60</td>
+<td >Hash160</td>
 <td>ScriptHash of the receiver's account</td>
 </tr >
 <tr >
