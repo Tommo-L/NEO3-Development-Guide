@@ -9,94 +9,6 @@
     - [互操作接口](#互操作接口)
     - [内置数据类型](#内置数据类型)
     - [指令集](#指令集)
-        - [常数](#常数)
-            - [PUSH0](#push0)
-            - [PUSHBYTES](#pushbytes)
-            - [PUSHDATA](#pushdata)
-            - [PUSHM1](#pushm1)
-            - [PUSHN](#pushn)
-        - [流程控制](#流程控制)
-            - [NOP](#nop)
-            - [JMP](#jmp)
-            - [JMPIF](#jmpif)
-            - [JMPIFNOT](#jmpifnot)
-            - [CALL](#call)
-            - [RET](#ret)
-            - [SYSCALL](#syscall)
-        - [栈操作](#栈操作)
-            - [DUPFROMALTSTACKBOTTOM](#dupfromaltstackbottom)
-            - [DUPFROMALTSTACK](#dupfromaltstack)
-            - [TOALTSTACK](#toaltstack)
-            - [FROMALTSTACK](#fromaltstack)
-            - [XDROP](#xdrop)
-            - [XSWAP](#xswap)
-            - [XTUCK](#xtuck)
-            - [DEPTH](#depth)
-            - [DROP](#drop)
-            - [DUP](#dup)
-            - [NIP](#nip)
-            - [OVER](#over)
-            - [PICK](#pick)
-            - [ROLL](#roll)
-            - [ROT](#rot)
-            - [SWAP](#swap)
-            - [TUCK](#tuck)
-        - [字符串操作](#字符串操作)
-            - [CAT](#cat)
-            - [SUBSTR](#substr)
-            - [LEFT](#left)
-            - [RIGHT](#right)
-            - [SIZE](#size)
-        - [逻辑运算](#逻辑运算)
-            - [INVERT](#invert)
-            - [AND](#and)
-            - [OR](#or)
-            - [XOR](#xor)
-            - [EQUAL](#equal)
-        - [算术运算](#算术运算)
-            - [INC](#inc)
-            - [DEC](#dec)
-            - [SIGN](#sign)
-            - [NEGATE](#negate)
-            - [ABS](#abs)
-            - [NOT](#not)
-            - [NZ](#nz)
-            - [ADD](#add)
-            - [SUB](#sub)
-            - [MUL](#mul)
-            - [DIV](#div)
-            - [MOD](#mod)
-            - [SHL](#shl)
-            - [SHR](#shr)
-            - [BOOLAND](#booland)
-            - [BOOLOR](#boolor)
-            - [NUMEQUAL](#numequal)
-            - [NUMNOTEQUAL](#numnotequal)
-            - [LT](#lt)
-            - [GT](#gt)
-            - [LTE](#lte)
-            - [GTE](#gte)
-            - [MIN](#min)
-            - [MAX](#max)
-            - [WITHIN](#within)
-        - [高级数据结构](#高级数据结构)
-            - [ARRAYSIZE](#arraysize)
-            - [PACK](#pack)
-            - [UNPACK](#unpack)
-            - [PICKITEM](#pickitem)
-            - [SETITEM*](#setitem)
-            - [NEWARRAY](#newarray)
-            - [NEWSTRUCT](#newstruct)
-            - [NEWMAP](#newmap)
-        - [APPEND*](#append)
-            - [REVERSE*](#reverse)
-            - [REMOVE*](#remove)
-            - [HASKEY](#haskey)
-            - [KEYS](#keys)
-            - [VALUES](#values)
-        - [异常处理](#异常处理)
-            - [THROW](#throw)
-            - [THROWIFNOT](#throwifnot)
     - [费用](#费用)
 
 <!-- /TOC -->
@@ -110,7 +22,7 @@ NeoVM 是执行 Neo 智能合约代码的虚拟机。本文所讲述的虚拟机
 - 新增
     - [DUPFROMALTSTACKBOTTOM](#栈操作)
 - 删除
-    - `APPCALL`, `TAILCALL`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `CALL_I`, `CALL_E`, `CALL_ED, `CALL_ET`, `CALL_EDT` 等OpCodes。
+    - `APPCALL`, `TAILCALL`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `CALL_I`, `CALL_E`, `CALL_ED`, `CALL_ET`, `CALL_EDT`
 
 ## NeoVM 架构原理
 ![nvm](../../images/nvm.jpg)
@@ -170,7 +82,7 @@ NeoVM内置的数据类型一共有7种：
 | Boolean |  布尔类型，实现为一个bool值和两个字节数组TRUE和FALSE。|
 | Integer | 整型，实现为一个BigInteger值。 |
 | ByteArray | 字节数组，实现为一个byte[]。  |
-| Array |  数组，实现为一个List<StackItem>，StackItem是一个抽象类，NeoVM内置的数据类型均继承自StackItem。 |
+| Array |  数组，实现为一个List<StackItem\>，StackItem是一个抽象类，NeoVM内置的数据类型均继承自StackItem。 |
 | Struct | 结构体，继承自Array。结构与Array相同，只是添加了Clone方法和重写了Equals方法。 |
 | Map |  实现为一个键值对为StackItem的字典类型Dictionary<StackItem, StackItem> 。 |
 | InteropInterface |  互操作接口 |
@@ -301,6 +213,7 @@ NeoVM虚拟机一共实现了173个指令，类别如下：
 实现对栈的元素做复制、移除、交换等功能。
 
 #### DUPFROMALTSTACKBOTTOM
+>**NEO3** 中新添加的指令
 
 | 指令   | DUPFROMALTSTACKBOTTOM                          |
 |----------|------------------------------------------|

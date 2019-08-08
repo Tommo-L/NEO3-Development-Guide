@@ -36,14 +36,14 @@
 
 ### Transactions
 
-- DELETE
-
-    - Transaction Type: discard the previous 9 types of the transaction in NEO2 and use the unified `transaction` instead, as well as the redefinition of the [transaction structure](en/Transactions#transaction-structure)
-    - [Assets](en/SmartContract#native-contract): discard the UTXO model for the NEO and GAS token, using the account model implemented by the native contract instead
-
 - UPDATE
     - [System Fee](en/Transactions#systemfee): cancel the free discount of 10 GAS for each transaction and redefine the [fee](en/NeoVM#fee) of each OpCode
     - [Network Fee](en/Transactions#networkfee): redefine the calculation formula for the network fee
+    
+- DELETE
+    - Transaction Type: discard the previous 9 types of the transaction in NEO2 and use the unified `transaction` instead, as well as the redefinition of the [transaction structure](en/Transactions#transaction-structure)
+    - [Assets](en/SmartContract#native-contract): discard the UTXO model for the NEO and GAS token, using the account model implemented by the native contract instead
+
     
 ### RPC
 

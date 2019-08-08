@@ -18,7 +18,7 @@
     - 返回结果：[getblock](api/getblock.md)，[getblockheader](api/getblockheader.md)，[getrawtransaction](api/getrawtransaction.md)，[getversion](api/getversion.md)，[getcontractstate](api/getcontractstate.md)
 
 - 删除
-    - `claimgas`, `dumpprivkey`, `getaccountstate`, `getapplicationlog`, `getassetstate`, `getbalance`, `getclaimable`, `getmetricblocktimestamp`, `getnep5balances`, `getnep5transfers`, `getnewaddress`, `gettxout`, `getunclaimed`, `getunclaimedgas`, `getunspents`, `getwalletheight`, `importprivkey`, `invoke`, `listaddress`, `sendfrom`, `sendtoaddress`, `sendmany` 等API指令。
+    - `claimgas`, `dumpprivkey`, `getaccountstate`, `getapplicationlog`, `getassetstate`, `getbalance`, `getclaimable`, `getmetricblocktimestamp`, `getnep5balances`, `getnep5transfers`, `getnewaddress`, `gettxout`, `getunclaimed`, `getunclaimedgas`, `getunspents`, `getwalletheight`, `importprivkey`, `invoke`, `listaddress`, `sendfrom`, `sendtoaddress`, `sendmany` 
 
 
 ## API 参考
@@ -27,42 +27,43 @@
 
 `dotnet neo-cli.dll /rpc`
 
-### 修改配置文件
+### 配置Neo-Cli
 
-若要通过 HTTPS 的方式访问 RPC 服务器，需要在启动节点前修改配置文件 `config.json`，并设置域名、证书和密码：
+* **HTTPS 配置**：若要通过 HTTPS 的方式访问 RPC 服务器，需要在启动节点前修改配置文件 `config.json`，并设置域名、证书和密码：
 
-```json
-{
-  "ApplicationConfiguration": {
-    "Paths": {
-      "Chain": "Chain"
-    },
-    "P2P": {
-      "Port": 10333,
-      "WsPort": 10334
-    },
-    "RPC": {
-      "Port": 10331,
-      "SslCert": "YourSslCertFile.xxx",
-      "SslCertPassword": "YourPassword"
-    }
+  ```json
+  {
+    "ApplicationConfiguration": {
+      "Paths": {
+        "Chain": "Chain"
+      },
+      "P2P": {
+        "Port": 10333,
+        "WsPort": 10334
+      },
+      "RPC": {
+        "Port": 10331,
+        "SslCert": "YourSslCertFile.xxx",
+        "SslCertPassword": "YourPassword"
+      }
+    ...
+  ```
+
+* **默认打开钱包:** 如果要调用与钱包相关的 API，也需要先修改配置文件 `config.json`，将:
+  - unlockwallet 改为 true 的状态，
+  - 并填写对象钱包的文件名和密码，如下所示：
+  ```json
   ...
-```
+  "UnlockWallet": {
+        "Path": "YourWallet.json",
+        "Password": "YourPassword",
+        "StartConsensus": false,
+        "IsActive": true
+      }
+  ...
+  ```
 
-如果要调用与钱包相关的 API，也需要先修改配置文件 `config.json`，将 unlockwallet 改为 true 的状态，并填写对象钱包的文件名和密码，如下所示：
-
-```json
-...
-"UnlockWallet": {
-      "Path": "YourWallet.json",
-      "Password": "YourPassword",
-      "StartConsensus": false,
-      "IsActive": true
-    }
-...
-```
-
-完成配置后打开 NEO-CLI，客户端会在同步到最新区块后自动打开已配置的钱包并进行钱包索引同步。
+  完成配置后打开 NEO-CLI，客户端会在同步到最新区块后自动打开已配置的钱包并进行钱包索引同步。
 
 ### 监听端口
 
@@ -74,16 +75,21 @@ JSON-RPC 服务器启动后，会监听 TCP 端口，默认端口如下。P2P �
 | JSON-RPC HTTP  | 10332        | 20332         |
 
 ### 命令列表
+> **NEO3 变更**：
+>
+>调用方式更新：getblockheader，getrawmempool
+>
+>返回结果更新：getblock，getblockheader，getrawtransaction，getversion，getcontractstate
 
 | 方法                                       | 参数                                       | 说明                           | 备注       |
 | ---------------------------------------- | ---------------------------------------- | ---------------------------- | -------- |
 | [getbestblockhash](api/getbestblockhash.md) |                                          | 获取主链中高度最大的区块的散列              |          |
 | [getblock](api/getblock.md)              | \<hash> [verbose=0]                      | 根据指定的散列值，返回对应的区块信息           |          |
-| [getblock](api/getblock2.md)             | \<index> [verbose=0]                     | 根据指定的索引，返回对应的区块信息            |          |
+| | \<index> [verbose=0]                     | 根据指定的索引，返回对应的区块信息            |          |
 | [getblockcount](api/getblockcount.md)    |                                          | 获取主链中区块的数量                   |          |
 | [getblockhash](api/getblockhash.md)      | \<index>                                 | 根据指定的索引，返回对应区块的散列值           |          |
 | [getblockheader](api/getblockheader.md) | \<hash> [verbose=0] | 根据指定的散列值，返回对应的区块头信息。 | |
-| [getblockheader](api/getblockheader2.md) | \<index> [verbose=0] | 根据指定的索引，返回对应的区块头信息。 | |
+| | \<index> [verbose=0] | 根据指定的索引，返回对应的区块头信息。 | |
 | [getblocksysfee](api/getblocksysfee.md)  | \<index>                                 | 根据指定的索引，返回截止到该区块前的系统手续费      |          |
 | [getconnectioncount](api/getconnectioncount.md) |                                          | 获取节点当前的连接数                   |          |
 | [getcontractstate](api/getcontractstate.md) | \<script_hash>                           | 根据合约脚本散列，查询合约信息              |          |

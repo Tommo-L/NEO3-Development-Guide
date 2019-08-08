@@ -30,14 +30,14 @@ Developers are allowed to redesign and modify the Neo wallet under the following
         - Ordinary Address
 
         ```
-        NEO2: 0x21 + publicKey(compressed 33bytes) + 0xac()
+        NEO2: 0x21 + publicKey(compressed 33bytes) + 0xac
         NEO3: 0x21 + publicKey(compressed 33bytes) + 0x68 + 0x747476aa
         ```
 
         - Multi-Signature Address
 
         ```
-        NEO2: emitPush(N) + 0x21 + publicKey1(compressed 33bytes) + .... + 0x21 + publicKeym(compressed 33bytes)  + emitPush(M) + 0xae()
+        NEO2: emitPush(N) + 0x21 + publicKey1(compressed 33bytes) + .... + 0x21 + publicKeym(compressed 33bytes)  + emitPush(M) + 0xae
         NEO3: emitPush(N) + 0x21 + publicKey1(compressed 33bytes) + .... + 0x21 + publicKeym(compressed 33bytes)  + emitPush(M) + 0x68 + 0xc7c34cba
         ```
 
@@ -53,21 +53,22 @@ A private key is a random value generated between 1 and N (N is a constant, less
 
 There are two main encoding formats for private keys in Neo.
 
-- **Hexstring Format**：
+- **hexString Format**：
 
-   The hexstring format is a string that uses hexadecimal characters to represent byte array.
+   The hexString format is a string that uses hexadecimal characters to represent byte array.
 
 - **WIF Format**：
 
-   The wif format is to add prefix `0x80` and suffix `0x01` in the original 32-bit data and get a string of Base58Check encoding.
-   ![wif format](../../images/wif_format.png)
+   The WIF format is to add prefix `0x80` and suffix `0x01` in the original 32-bit data and get a string of Base58Check encoding.
+
+   ![WIF format](../../images/wif_format.png)
 
 Example:
 
 | Format     | Value                                                        |
 | ---------- | ------------------------------------------------------------ |
 | byte[]     | [0xc7,0x13,0x4d,0x6f,0xd8,0xe7,0x3d,0x81,0x9e,0x82,0x75,0x5c,0x64,0xc9,0x37,0x88,0xd8,0xdb,0x09,0x61,0x92,0x9e,0x02,0x5a,0x53,0x36,0x3c,0x4c,0xc0,0x2a,0x69,0x62] |
-| hex string | c7134d6fd8e73d819e82755c64c93788d8db0961929e025a53363c4cc02a6962 |
+| hexString | c7134d6fd8e73d819e82755c64c93788d8db0961929e025a53363c4cc02a6962 |
 | WIF        | L3tgppXLgdaeqSGSFw1Go3skBiy8vQAM7YMXvTHsKQtE16PBncSU         |
 
 
@@ -88,22 +89,22 @@ Example:
 | Public Key (Uncompressed) | 045a928f201639204e06b4368b1a93365462a8ebbff0b8818151b74faab3a2b61a35dfabcb79ac492a2a88588d2f2e73f045cd8af58059282e09d693dc340e113f |
 
 ### Address
-
+> Note: The address script in NEO3 has changed not using the Opcode.CheckSig and OpCode.CheckMultiSig but the interoperable service call `SysCall "Neo.Crypto.CheckSig".hash2uint`, `SysCall "Neo.Crypto .CheckMultiSig".hash2unit` instead.
 #### Ordinary Address
 
-1. Build a `CheckSig` script with the public key, and the format is as follows:
+1. Build a `CheckSig` script with the public key, and the format is as follows: ***(changed in NEO3)***
 
-  ```bash
-  0x21 + Public Key(Compressed 33 bytes) + 0x68 + 0x747476aa
-  ```
-![address checksign](../../images/account_address_script_checksign.png)
+     ```bash
+    0x21 + Public Key(Compressed 33 bytes) + 0x68 + 0x747476aa
+    ```
+    ![address checksign](../../images/account_address_script_checksign.png)
 
-    2. Calculate script hash of the contract (20 bytes, make once SHA256 and RIPEMD160 of the script)
-    3. Add the version prefix in the hash. (Currently, the NEO version is `0x17`)
-    4. Make Base58Check encoding for the above byte data.
+2. Calculate script hash of the contract (20 bytes, make once SHA256 and RIPEMD160 of the script)
+3. Add the version prefix in the hash. (Currently, the NEO version is `0x17`)
+4. Make Base58Check encoding for the above byte data.
 
 
-Example
+Example：
 
 | Format                  | Value                                                        |
 | ----------------------- | ------------------------------------------------------------ |
@@ -116,20 +117,19 @@ Example
 
 #### Multi-Signature Address
 
-1. Construct an N-of-M `CheckMultiSig` script with multiple addresses. The script format is as follows:
+1. Construct an N-of-M `CheckMultiSig` script with multiple addresses. The script format is as follows: ***(changed in NEO3)***
 
+    ```bash
+    emitPush(N) + 0x21 + Public Key1(Compressed 33 bytes)  + .... + 0x21 + Public KeyM + emitPush(M) +  0x68 + 0xc7c34cba
+    ```
 
-```bash
-emitPush(N) + 0x21 + Public Key1(Compressed 33 bytes)  + .... + 0x21 + Public KeyM + emitPush(M) +  0x68 + 0xc7c34cba
-```
-
-![address checksign](../../images/account_address_script_multi_checksign.png)
+    ![address checksign](../../images/account_address_script_multi_checksign.png)
 
 2. Calculate script hash of the contract (20 bytes, make once SHA256 and RIPEMD160 of the script).
 3. Add the version prefix in the hash. (Currently, the NEO version is `0x17`)
 4. Make Base58Check encoding for the above byte data.
 
-Example
+Example:
 
 | Format                  | Value                                                        |
 | ----------------------- | ------------------------------------------------------------ |
@@ -150,9 +150,6 @@ Example
 | number > 16      | number.bytes.length + number.bytes |                  |
 
 
-
-> Note: The address script in NEO3 has changed not using the Opcode.CheckSig and OpCode.CheckMultiSig but the interoperable service call `SysCall "Neo.Crypto.CheckSig".hash2uint`, `SysCall "Neo.Crypto .CheckMultiSig".hash2unit` instead.
-
 ## Wallet File    
 
 ### DB3 File
@@ -161,31 +158,31 @@ db3 wallet file uses SQLite to store data, and the file suffix is `.db3`. There 
 
 - **Account**
 
-| Field               | Type          | isRequired | Note             |
-| ------------------- | ------------- | ---------- | ---------------- |
-| PrivateKeyEncrypted | VarBinary(96) | Yes        | AES256 encrypted |
-| PublicKeyHash       | Binary(20)    | Yes        | Primary Key      |
+    | Field               | Type          | isRequired | Note             |
+    | ------------------- | ------------- | ---------- | ---------------- |
+    | PrivateKeyEncrypted | VarBinary(96) | Yes        | AES256 encrypted |
+    | PublicKeyHash       | Binary(20)    | Yes        | Primary Key      |
 
 - **Address**
 
-| Field      | Type       | isRequired | Note        |
-| ---------- | ---------- | ---------- | ----------- |
-| ScriptHash | Binary(20) | Yes        | Primary Key |
+    | Field      | Type       | isRequired | Note        |
+    | ---------- | ---------- | ---------- | ----------- |
+    | ScriptHash | Binary(20) | Yes        | Primary Key |
 
 - **Contract**
 
-| Field         | Type       | isRequired | Note                                               |
-| ------------- | ---------- | ---------- | -------------------------------------------------- |
-| RawData       | VarBinary  | Yes        |                                                    |
-| ScriptHash    | Binary(20) | Yes        | Primary Key，Foreign Key，associated Address table |
-| PublicKeyHash | Binary(20) | Yes        | Index，Foreign Key，associated Account table       |
+    | Field         | Type       | isRequired | Note                                               |
+    | ------------- | ---------- | ---------- | -------------------------------------------------- |
+    | RawData       | VarBinary  | Yes        |                                                    |
+    | ScriptHash    | Binary(20) | Yes        | Primary Key，Foreign Key，associated Address table |
+    | PublicKeyHash | Binary(20) | Yes        | Index，Foreign Key，associated Account table       |
 
 - **Key**
 
-| Field | Type        | isRequired | Note        |
-| ----- | ----------- | ---------- | ----------- |
-| Name  | VarChar(20) | Yes        | Primary Key |
-| Value | VarBinary   | Yes        |             |
+    | Field | Type        | isRequired | Note        |
+    | ----- | ----------- | ---------- | ----------- |
+    | Name  | VarChar(20) | Yes        | Primary Key |
+    | Value | VarBinary   | Yes        |             |
 
 
 
@@ -257,7 +254,7 @@ NEP6 wallet file meets the NEP6 standard, and the file suffix is `.json`. The JS
 | account.extra                   | additional attributes of the account, null by default          |
 | extra                           | additional attributes of the wallet, null by default |
 
-NEP6 wallet uses `scrypt` algorithm as the core method of wallet encryption and decryption.
+NEP6 wallet uses `scrypt` algorithm as the core method of wallet encryption and decryption which is NEP2.
 
 #### Encryption Steps
 
@@ -285,6 +282,7 @@ NEP6 wallet uses `scrypt` algorithm as the core method of wallet encryption and 
 #### Decryption Steps
 
 1. Decode `NEP2Key` with Base58Check.
+
 2. Verify whether the length of the result is 39 and the first three bytes are `0x01`, `0x42` and `0xe0`.
 3. Take data[3-6] as `addresshash`
 4. Pass the password and addresshash as the parameters in the Scrypt algorithm. Specify the length of the result to 64 bytes and then get the `Derivedkey`.
@@ -299,7 +297,7 @@ NEP2 proposal: <https://github.com/neo-project/proposals/blob/master/nep-2.media
 
 NEP6 proposal: <https://github.com/neo-project/proposals/blob/master/nep-6.mediawiki>
 
-> The NEP2-JSON wallet is currently recommended for higher security and cross-platform features.
+> The NEP6-JSON wallet is currently recommended for higher security and cross-platform features.
 
 
 ## Signature
@@ -344,15 +342,13 @@ Java code：
     }
 ```
 
-
-
-Example
+Example:
 
 | Format      | Value                                                        |
 | ----------- | ------------------------------------------------------------ |
 | data        | hello world                                                  |
-| Private Key | f72b8fab85fdcc1bdd20b107e5da1ab4713487bc88fc53b5b134f5eddeaa1a19 |
-| Public Key  | 031f64da8a38e6c1e5423a72ddd6d4fc4a777abe537e5cb5aa0425685cda8e063b |
+| PrivateKey | f72b8fab85fdcc1bdd20b107e5da1ab4713487bc88fc53b5b134f5eddeaa1a19 |
+| PublicKey  | 031f64da8a38e6c1e5423a72ddd6d4fc4a777abe537e5cb5aa0425685cda8e063b |
 | signature   | 261e894dd456a190f9e99e39cea9f64ca4f939b24cf47ee3498bf883967035b446f554753d5f76219397bc2abb281a13a3c3acce43978c02c510ccb91cb03f87 |
 
 *Click [here](../../cn/钱包) to see the Chinese edition of the Wallets*

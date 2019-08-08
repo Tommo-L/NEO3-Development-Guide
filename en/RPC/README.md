@@ -18,7 +18,7 @@
     - Returns: [getblock](api/getblock.md)，[getblockheader](api/getblockheader.md)，[getrawtransaction](api/getrawtransaction.md)，[getversion](api/getversion.md)，[getcontractstate](api/getcontractstate.md)
 
 - DELETE
-    - Discard the following commands: `claimgas`, `dumpprivkey`, `getaccountstate`, `getapplicationlog`, `getassetstate`, `getbalance`, `getclaimable`, `getmetricblocktimestamp`, `getnep5balances`, `getnep5transfers`, `getnewaddress`, `gettxout`, `getunclaimed`, `getunclaimedgas`, `getunspents`, `getwalletheight`, `importprivkey`, `invoke`, `listaddress`, `sendfrom`, `sendtoaddress`, `sendmany`, etc.
+    - Discard the following commands: `claimgas`, `dumpprivkey`, `getaccountstate`, `getapplicationlog`, `getassetstate`, `getbalance`, `getclaimable`, `getmetricblocktimestamp`, `getnep5balances`, `getnep5transfers`, `getnewaddress`, `gettxout`, `getunclaimed`, `getunclaimedgas`, `getunspents`, `getwalletheight`, `importprivkey`, `invoke`, `listaddress`, `sendfrom`, `sendtoaddress`, `sendmany`
 
 ## API Reference
 
@@ -26,44 +26,44 @@ Neo-CLI provides a set of API interfaces for obtaining blockchain data from a no
 
 `dotnet neo-cli.dll /rpc`
 
-### Configuring the config.json file
+### Configuring Neo-CLI
 
-To access the RPC server via HTTPS, you need to set the domain name, certificate and password in the configuration file `config.json` before starting a node :
+- **HTTPS**: To access the RPC server via HTTPS, you need to set the domain name, certificate and password in the configuration file `config.json` before starting a node :
 
-```json
-{
-  "ApplicationConfiguration": {
-    "Paths": {
-      "Chain": "Chain"
-    },
-    "P2P": {
-      "Port": 10333,
-      "WsPort": 10334
-    },
-    "RPC": {
-      "Port": 10331,
-      "SslCert": "YourSslCertFile.xxx",
-      "SslCertPassword": "YourPassword"
+  ```json
+  {
+    "ApplicationConfiguration": {
+      "Paths": {
+        "Chain": "Chain"
+      },
+      "P2P": {
+        "Port": 10333,
+        "WsPort": 10334
+      },
+      "RPC": {
+        "Port": 10331,
+        "SslCert": "YourSslCertFile.xxx",
+        "SslCertPassword": "YourPassword"
+      }
     }
-  }
-}                                      
-```
+  }                                      
+  ```
 
-To invoke APIs related to the wallet component, you also need to make the following changes in `config.json` before starting a node:
+- **Open wallet by default**: To invoke APIs related to the wallet component, you also need to make the following changes in `config.json` before starting a node:
 
-- Change the attribute `IsActive` of the object `UnlockWallet` to `true`.
-- Specify the file name and password of the desired wallet.
+  - Change the attribute `IsActive` of the object `UnlockWallet` to `true`.
+  - Specify the file name and password of the desired wallet.
 
-```json
-...
-"UnlockWallet": {
-      "Path": "YourWallet.json",
-      "Password": "YourPassword",
-      "StartConsensus": false,
-      "IsActive": true
-    }
-...
-```
+  ```json
+  ...
+  "UnlockWallet": {
+        "Path": "YourWallet.json",
+        "Password": "YourPassword",
+        "StartConsensus": false,
+        "IsActive": true
+      }
+  ...
+  ```
 
 At this point, on the condition of the NEO-CLI launched, the client will automatically open the specified wallet and download the wallet index after the full block synchronization. 
 
@@ -84,11 +84,11 @@ For P2P and WebSocket port information, please refer to [Node Introduction](../.
 | ----------------------------------------------- | ------------------------------------------- | ------------------------------------------------------------ | ---------------------------- |
 | [getbestblockhash](api/getbestblockhash.md)     |                                             | Get the hash of the latest block in the main chain         |                              |
 | [getblock](api/getblock.md)                     | \<hash> [verbose=0]                         | Return the block information with the specified hash value |                              |
-| [getblock](api/getblock2.md)                    | \<index> [verbose=0]                        | Return the block information with the specified index |                              |
+|                                                 | \<index> [verbose=0]                        | Return the block information with the specified index |                              |
 | [getblockcount](api/getblockcount.md)           |                                             | Get the block count of the main chain                  |                              |
 | [getblockhash](api/getblockhash.md)             | \<index>                                    | Return the block hash with the specified index |                              |
 | [getblockheader](api/getblockheader.md)         | \<hash> [verbose=0]                         | Return the information of the block header with the specified script hash |                              |
-| [getblockheader](api/getblockheader2.md)         | \<index> [verbose=0]                         | Return the information of the block header with the specified index |                              |
+|                                                 | \<index> [verbose=0]                         | Return the information of the block header with the specified index |                              |
 | [getblocksysfee](api/getblocksysfee.md)         | \<index>                                    | Return the system fees before the block with the specified index |                              |
 | [getconnectioncount](api/getconnectioncount.md) |                                             | Get the current connection count of the node          |                              |
 | [getcontractstate](api/getcontractstate.md)     | \<script_hash>                              | Return information of the contract with the specified script hash |                              |
