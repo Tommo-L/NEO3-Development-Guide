@@ -8,7 +8,7 @@
         - [Introduction](#introduction)
             - [NeoToken](#neotoken)
             - [GasToken](#gastoken)
-            - [PolicyToken](#policytoken)
+            - [PolicyContract](#policyContract)
         - [NativeContract Deployment](#nativecontract-deployment)
         - [NativeContract Invocation](#nativecontract-invocation)
     - [Interop Service](#interop-service)
@@ -36,7 +36,7 @@ All transactions in NEO3 are the invocation of the smart contract. In addition t
     - [System Trigger](#trigger): triggered when the node receives a new block and currently only triggers the execution of the native contract
     
 - UPDATE
-    - Reduce the [system fee](en/SmartContract#fees) for OpCode and interop services
+    - Reduce the [system fee](#fees) for OpCode and interop services
 
 ## Manifest
 Now each contract is required to provide a manifest file to describe its properties, including Groups, Features, ABI, Permissions, Trusts, SafeMethods, as shown below:
@@ -81,62 +81,71 @@ Now each contract is required to provide a manifest file to describe its propert
 ## Trigger
 Triggers allow contracts to execute different logic depending on the usage scenario.
 
-* **System** This type of trigger is newly added in NEO3. It is triggered when the node receives a new block and currently only triggers the execution of the native contract. After receiving a new block, the node will be triggered by the System Trigger to invoke the onPersist method in all native contracts before the persistence.
-* **Application** An application trigger is used to invoke a contract as an application function, which can accept multiple parameters, change blockchain status, and return values of any type. Here is a simple c# smart contract：
+* **System Trigger** 
 
-```csharp
-  public static Object Main(string operation, params object[] args)
-  {
-    if (Runtime.Trigger == TriggerType.Application)
-    {
-        if (operation == "FunctionA") return FunctionA(args);
-    }  
-  }
-  public static bool FunctionA(params object[] args)
-  {
-    //some code  
-  }
-```
+  This type of trigger is newly added in NEO3, which is only used for native contract, such as NEO and GAS. It is triggered when the node receives a new block and currently only triggers the execution of the native contract. After receiving a new block, the node will be triggered by the System Trigger to invoke the onPersist method in all native contracts before the persistence.
 
-All transactions in NEO3 are the invocation of the smart contract. When a transaction is broadcast and confirmed, the smart contract is executed by the consensus node, and the normal node does not execute the smart contract when forwarding the transaction. Successful execution of a smart contract does not represent the success of the transaction, and the success of the transaction does not determine the success of the smart contract execution.
+  This system trigger will not bring any affect to the normal smart contract. 
 
-* **Verification** The purpose of the validation trigger is to call the contract as a verification function that accepts multiple arguments and should return a Boolean value indicating the validity of the transaction or block.
+* **Application Trigger**
+  
+   An application trigger is used to invoke a contract as an application function, which can accept multiple parameters, change blockchain status, and return values of any type. Here is a simple c# smart contract：
 
-When you transfer tokens from account A to account B, the verification contract will be triggered. All the nodes that receive the transaction (including the normal node and the consensus node) will verify the contract of the account A. If the return value is true, the transfer is successful, and fails otherwise.
-
-If the authentication contract fails to execute, the transaction will not be included in the blockchain.
-
-The following code is a simple example of a verification contract. It returns true if condition A is satisfied, indicating the success of the transfer. Otherwise, it returns false and the transfer fails.
-
-```csharp
-  using Neo.SmartContract.Framework;
-  using Neo.SmartContract.Framework.Neo;
-
-  public static bool Main(byte[] signature)
-  {
-      if (/*条件A*/)
-          return true;
-      else
-          return false;
-  }
-```
-
-The following code works the same as above, but with an additional check for the trigger in the runtime. The code of the verification part is executed only when the trigger is a verification trigger, which is of great use in complex smart contracts. If a smart contract implements multiple triggers, the type of triggers should be judged in the `Main` method.
   ```csharp
-  using Neo.SmartContract.Framework;
-  using Neo.SmartContract.Framework.Neo;
-
-  public static bool Main(byte[] signature)
-  {
-      if (Runtime.Trigger == TriggerType.Verification)
+    public static Object Main(string operation, params object[] args)
+    {
+      if (Runtime.Trigger == TriggerType.Application)
       {
-          if (/* condition A*/)
-                  return true;
-              else
-                  return false;
+          if (operation == "FunctionA") return FunctionA(args);
       }  
-  }
+    }
+    public static bool FunctionA(params object[] args)
+    {
+      //some code  
+    }
   ```
+
+  All transactions in NEO3 are the invocation of the smart contract. When a transaction is broadcast and confirmed, the smart contract is executed by the consensus node, and the normal node does not execute the smart contract when forwarding the transaction. Successful execution of a smart contract does not represent the success of the transaction, and the success of the transaction does not determine the success of the smart contract execution.
+
+* **Verification Trigger** 
+
+  The purpose of the validation trigger is to call the contract as a verification function that accepts multiple arguments and should return a Boolean value indicating the validity of the transaction or block.
+
+  When you transfer tokens from account A to account B, the verification contract will be triggered. All the nodes that receive the transaction (including the normal node and the consensus node) will verify the contract of the account A. If the return value is true, the transfer is successful, and fails otherwise.
+
+  If the authentication contract fails to execute, the transaction will not be included in the blockchain.
+
+  The following code is a simple example of a verification contract. It returns true if condition A is satisfied, indicating the success of the transfer. Otherwise, it returns false and the transfer fails.
+
+  ```csharp
+    using Neo.SmartContract.Framework;
+    using Neo.SmartContract.Framework.Neo;
+
+    public static bool Main(byte[] signature)
+    {
+        if (/*条件A*/)
+            return true;
+        else
+            return false;
+    }
+  ```
+
+  The following code works the same as above, but with an additional check for the trigger in the runtime. The code of the verification part is executed only when the trigger is a verification trigger, which is of great use in complex smart contracts. If a smart contract implements multiple triggers, the type of triggers should be judged in the `Main` method.
+    ```csharp
+    using Neo.SmartContract.Framework;
+    using Neo.SmartContract.Framework.Neo;
+
+    public static bool Main(byte[] signature)
+    {
+        if (Runtime.Trigger == TriggerType.Verification)
+        {
+            if (/* condition A*/)
+                    return true;
+                else
+                    return false;
+        }  
+    }
+    ```
 
 ## Native Contract
 ### Introduction
@@ -146,414 +155,411 @@ Native contracts are executed directly in native code, rather than in a virtual 
 
 Referred to as NEO, it acts as the governance token which is used to enforce the management of the Neo network and conforms to the NEP-5 standard. It has a hard cap total of 100 million tokens, with the smallest unit of 1, and is not divisible. NEO was pre-mined during the genesis block creation. The specific interface details are as follows：
 
-- **unClaimGas**：Get the amount of GAS unclaimed at the specified height
+- **name**： Name of the token
 
-```csharp
-[ContractMethod(0_03000000, 
-    ContractParameterType.Integer, 
-    ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Integer }, 
-    ParameterNames = new[] { "account", "end" }, 
+  ```csharp
+  [ContractMethod(0, 
+    ContractParameterType.String, 
+    Name = "name", 
     SafeMethod = true)]
-private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
+  protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
+  ```
 
-```
+  <table class="mytable">
+  <tr >
+      <th >Parameters</th>
+      <th colspan="2" >none</th>
+  </tr>
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >String</td>
+  <td colspan="2" >Name of the token  </td>
+  </tr>
+  <tr >
+      <th >Fee(GAS)</th>
+      <td colspan="2" >0.00</td>
+  </tr>
+  </table>
 
-<table class="mytable">
-<tr >
-<th rowspan="3">Parameters</th>
-<th >Parameter</th>
-<th >Type</th>
-<th  >Description</th>
-</tr>
-<tr >
-<td>account</td>
-<td >Hash160</td>
-<td>ScriptHash of the account</td>
-</tr>
-<tr >
-<td >end</td>
-<td >Integer</td>
-<td >The height to be queried</td>
-</tr>
-<tr >
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >Integer</td>
-<td colspan="2" >GAS unclaimed </td>
-</tr>
-<tr >
-<th >Fee(GAS)</th>
-<td colspan="3" >0.03</td>
-</tr>
-</table>
+- **symbol**：Symbol of the token
 
-- **RegisterValidator**：Register to become a candidate for the validator
+  ```csharp
+  [ContractMethod(0, 
+    ContractParameterType.String, 
+    Name = "symbol", 
+    SafeMethod = true)]
+  protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
+  ```
 
-```csharp
-[ContractMethod(0_05000000, 
-    ContractParameterType.Boolean, 
-    ParameterTypes = new[] { ContractParameterType.PublicKey }, 
-    ParameterNames = new[] { "pubkey" })]
-private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
-```
+  <table class="mytable">
+  <tr >
+      <th >Parameters</th>
+      <th colspan="2" >none</th>
+  </tr>
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >String</td>
+  <td colspan="2" >Symbol of the token  </td>
+  </tr>
+  <tr >
+      <th >Fee(GAS)</th>
+      <td colspan="2" >0.00</td>
+  </tr>
+  </table>
 
-<table class="mytable">
-<tr >
-<th rowspan="2">Parameters</th>
-<th >Parameter</th>
-<th >Type</th>
-<th  >Description</th>
-</tr>
-<tr >
-<td>pubKey</td>
-<td >PublicKey</td>
-<td>Public key of the account</td>
-</tr>
-<tr >
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >Boolean</td>
-<td colspan="2" >Result. true: sucess, false: failure</td>
-</tr>
-<tr >
-<th >Fee(GAS)</th>
-<td colspan="3" >0.05</td>
-</tr>
-</table>
+- **decimals**: Decimals of the token
 
-- **getRegisteredValidators**：Gets the information of currently registered validators and backup nodes 
+  ```csharp
+  [ContractMethod(0, 
+    ContractParameterType.Integer, 
+    Name = "decimals", 
+    SafeMethod = true)]
+  protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
+  ```
 
-```csharp
-[ContractMethod(1_00000000, 
-  ContractParameterType.Array,
-  SafeMethod = true)]
-private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args)
-```
-
-<table class="mytable">
-<tr >
-  <th >Parameters</th>
-  <th colspan="2" >none</th>
-</tr>
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >Array</td>
-<td colspan="2" >Public keys of all validators and backup nodes </td>
-</tr>
-<tr >
-    <th >Fee(GAS)</th>
-    <td colspan="2" >1.00</td>
-</tr>
-</table>
-
-- **getValidators**: Get all current validators
-
-```csharp
-[ContractMethod(1_00000000, 
-  ContractParameterType.Array, 
-  SafeMethod = true)]
-private StackItem GetValidators(ApplicationEngine engine, VMArray args)
-```
-
-<table class="mytable">
-<tr >
-    <th >Parameters</th>
-    <th colspan="2" >none</th>
-</tr>
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >Array</td>
-<td colspan="2" >Public keys of all current validators </td>
-</tr>
-<tr >
-    <th >Fee(GAS)</th>
-    <td colspan="2" >1.00</td>
-</tr>
-</table>
-
-- **getNextBlockValidators**: Get validators of the next block
-
-```csharp
-[ContractMethod(1_00000000, 
-  ContractParameterType.Array, 
-  SafeMethod = true)]
-private StackItem GetNextBlockValidators(ApplicationEngine engine, VMArray args)
-```
-
-<table class="mytable">
-<tr >
-    <th >Parameters</th>
-    <th colspan="2" >none</th>
-</tr>
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >Array</td>
-<td colspan="2" >Public keys of validators in the next round of consensus </td>
-</tr>
-<tr >
-    <th >Fee(GAS)</th>
-    <td colspan="2" >1.00</td>
-</tr>
-</table>
-
-
-- **vote**：Vote for to validators
-
-```csharp
-[ContractMethod(5_00000000, 
-  ContractParameterType.Boolean, 
-  ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Array }, 
-  ParameterNames = new[] { "account", "pubkeys" })]
-private StackItem Vote(ApplicationEngine engine, VMArray args)
-```
-
-<table class="mytable">
-<tr >
-<th rowspan="3">Parameters</th>
-<th >Parameter</th>
-<th >Type</th>
-<th  >Description</th>
-</tr>
-<tr >
-<td>account</td>
-<td >Hash160</td>
-<td>Voter's ScriptHash</td>
-</tr>
-<tr >
-<td >pubkeys</td>
-<td >Array</td>
-<td >The public keys of validators one vote to</td>
-</tr>
-<tr >
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >Boolean</td>
-<td colspan="2" >Result. true: success, false: failure</td>
-</tr>
-<tr >
-<th >Fee(GAS)</th>
-<td colspan="3" >5.00</td>
-</tr>
-</table>
-
-- **name***： Name of the token
-
-```csharp
-[ContractMethod(0, 
-  ContractParameterType.String, 
-  Name = "name", 
-  SafeMethod = true)]
-protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
-```
-
-<table class="mytable">
-<tr >
-    <th >Parameters</th>
-    <th colspan="2" >none</th>
-</tr>
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >String</td>
-<td colspan="2" >Name of the token  </td>
-</tr>
-<tr >
-    <th >Fee(GAS)</th>
-    <td colspan="2" >0.00</td>
-</tr>
-</table>
-
-- **symbol***：Symbol of the token
-
-```csharp
-[ContractMethod(0, 
-  ContractParameterType.String, 
-  Name = "symbol", 
-  SafeMethod = true)]
-protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
-```
-
-
-<table class="mytable">
-<tr >
-    <th >Parameters</th>
-    <th colspan="2" >none</th>
-</tr>
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >String</td>
-<td colspan="2" >Symbol of the token  </td>
-</tr>
-<tr >
-    <th >Fee(GAS)</th>
-    <td colspan="2" >0.00</td>
-</tr>
-</table>
-
-- **decimals***: Decimals of the token
-
-```csharp
-[ContractMethod(0, 
-  ContractParameterType.Integer, 
-  Name = "decimals", 
-  SafeMethod = true)]
-protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
-```
-
-<table class="mytable">
-<tr >
-    <th >Parameters</th>
-    <th colspan="2" >none</th>
-</tr>
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >uint</td>
-<td colspan="2" >Decimal  </td>
-</tr>
-<tr >
-    <th >Fee(GAS)</th>
-    <td colspan="2" >0.00</td>
-</tr>
-</table>
+  <table class="mytable">
+  <tr >
+      <th >Parameters</th>
+      <th colspan="2" >none</th>
+  </tr>
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >uint</td>
+  <td colspan="2" >Decimal  </td>
+  </tr>
+  <tr >
+      <th >Fee(GAS)</th>
+      <td colspan="2" >0.00</td>
+  </tr>
+  </table>
 
 - **totalSupply***: Total supply
 
-```csharp
-[ContractMethod(0_01000000, 
-  ContractParameterType.Integer, 
-  SafeMethod = true)]
-protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
-```
+  ```csharp
+  [ContractMethod(0_01000000, 
+    ContractParameterType.Integer, 
+    SafeMethod = true)]
+  protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
+  ```
 
-<table class="mytable">
-<tr >
+  <table class="mytable">
+  <tr >
+      <th >Parameters</th>
+      <th colspan="2" >none</th>
+  </tr>
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >BigInteger</td>
+  <td colspan="2" >Total supply  </td>
+  </tr>
+  <tr >
+      <th >Fee(GAS)</th>
+      <td colspan="2" >0.01</td>
+  </tr>
+  </table>
+
+- **balanceOf**: Balance of an account
+
+  ```csharp
+  [ContractMethod(0_01000000, 
+    ContractParameterType.Integer, 
+    ParameterTypes = new[] { ContractParameterType.Hash160 }, 
+    ParameterNames = new[] { "account" }, 
+    SafeMethod = true)]
+  protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
+  ```
+
+  <table class="mytable">
+  <tr >
+  <th rowspan="2">Parameters</th>
+  <th >Parameter</th>
+  <th >Type</th>
+  <th  >Description</th>
+  </tr>
+  <tr >
+  <td>account</td>
+  <td >Hash160</td>
+  <td>ScriptHash of the account</td>
+  <tr >
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >Integer</td>
+  <td colspan="2" >Balance </td>
+  </tr>
+  <tr >
+  <th >Fee(GAS)</th>
+  <td colspan="3" >0.01</td>
+  </tr>
+  </table>
+
+- **transfer**: Transfer token from one to another
+
+  ```csharp
+  [ContractMethod(0_08000000, 
+      ContractParameterType.Boolean, 
+      ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Hash160, ContractParameterType.Integer }, 
+      ParameterNames = new[] { "from", "to", "amount" })]
+  protected StackItem Transfer(ApplicationEngine engine, VMArray args)
+  ```
+
+  <table class="mytable">
+  <tr >
+  <th rowspan="4">Parameters</th>
+  <th >Parameter</th>
+  <th >Type</th>
+  <th  >Description</th>
+  </tr>
+  <tr >
+  <td>from</td>
+  <td >Hash160</td>
+  <td>ScriptHash who want to transfer</td>
+  </tr >
+  <tr >
+  <td>to</td>
+  <td >Hash160</td>
+  <td>ScriptHash of the receiver</td>
+  </tr >
+  <tr >
+  <td>amount</td>
+  <td >Integer</td>
+  <td>Amount of the token </td>
+  </tr >
+  <tr>
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >Boolean</td>
+  <td colspan="2" >Result, true: success，false: failure </td>
+  </tr>
+  <tr >
+  <th >Fee(GAS)</th>
+  <td colspan="3" >0.08</td>
+  </tr>
+  </table>
+
+- **unClaimGas**：Get the amount of GAS unclaimed at the specified height
+
+  ```csharp
+  [ContractMethod(0_03000000, 
+      ContractParameterType.Integer, 
+      ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Integer }, 
+      ParameterNames = new[] { "account", "end" }, 
+      SafeMethod = true)]
+  private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
+
+  ```
+
+  <table class="mytable">
+  <tr >
+  <th rowspan="3">Parameters</th>
+  <th >Parameter</th>
+  <th >Type</th>
+  <th  >Description</th>
+  </tr>
+  <tr >
+  <td>account</td>
+  <td >Hash160</td>
+  <td>ScriptHash of the account</td>
+  </tr>
+  <tr >
+  <td >end</td>
+  <td >Integer</td>
+  <td >The height to be queried</td>
+  </tr>
+  <tr >
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >Integer</td>
+  <td colspan="2" >GAS unclaimed </td>
+  </tr>
+  <tr >
+  <th >Fee(GAS)</th>
+  <td colspan="3" >0.03</td>
+  </tr>
+  </table>
+
+- **RegisterValidator**：Register to become a candidate for the validator
+
+  ```csharp
+  [ContractMethod(0_05000000, 
+      ContractParameterType.Boolean, 
+      ParameterTypes = new[] { ContractParameterType.PublicKey }, 
+      ParameterNames = new[] { "pubkey" })]
+  private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
+  ```
+
+  <table class="mytable">
+  <tr >
+  <th rowspan="2">Parameters</th>
+  <th >Parameter</th>
+  <th >Type</th>
+  <th  >Description</th>
+  </tr>
+  <tr >
+  <td>pubKey</td>
+  <td >PublicKey</td>
+  <td>Public key of the account</td>
+  </tr>
+  <tr >
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >Boolean</td>
+  <td colspan="2" >Result. true: sucess, false: failure</td>
+  </tr>
+  <tr >
+  <th >Fee(GAS)</th>
+  <td colspan="3" >0.05</td>
+  </tr>
+  </table>
+
+- **getRegisteredValidators**：Gets the information of currently registered validators and backup nodes 
+
+  ```csharp
+  [ContractMethod(1_00000000, 
+    ContractParameterType.Array,
+    SafeMethod = true)]
+  private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args)
+  ```
+
+  <table class="mytable">
+  <tr >
     <th >Parameters</th>
     <th colspan="2" >none</th>
-</tr>
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >BigInteger</td>
-<td colspan="2" >Total supply  </td>
-</tr>
-<tr >
-    <th >Fee(GAS)</th>
-    <td colspan="2" >0.01</td>
-</tr>
-</table>
+  </tr>
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >Array</td>
+  <td colspan="2" >Public keys of all validators and backup nodes </td>
+  </tr>
+  <tr >
+      <th >Fee(GAS)</th>
+      <td colspan="2" >1.00</td>
+  </tr>
+  </table>
 
+- **getValidators**: Get all current validators
 
-- **balanceOf***: Balance of an account
+  ```csharp
+  [ContractMethod(1_00000000, 
+    ContractParameterType.Array, 
+    SafeMethod = true)]
+  private StackItem GetValidators(ApplicationEngine engine, VMArray args)
+  ```
 
-```csharp
-[ContractMethod(0_01000000, 
-  ContractParameterType.Integer, 
-  ParameterTypes = new[] { ContractParameterType.Hash160 }, 
-  ParameterNames = new[] { "account" }, 
-  SafeMethod = true)]
-protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
-```
+  <table class="mytable">
+  <tr >
+      <th >Parameters</th>
+      <th colspan="2" >none</th>
+  </tr>
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >Array</td>
+  <td colspan="2" >Public keys of all current validators </td>
+  </tr>
+  <tr >
+      <th >Fee(GAS)</th>
+      <td colspan="2" >1.00</td>
+  </tr>
+  </table>
 
-<table class="mytable">
-<tr >
-<th rowspan="2">Parameters</th>
-<th >Parameter</th>
-<th >Type</th>
-<th  >Description</th>
-</tr>
-<tr >
-<td>account</td>
-<td >Hash160</td>
-<td>ScriptHash of the account</td>
-<tr >
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >Integer</td>
-<td colspan="2" >Balance </td>
-</tr>
-<tr >
-<th >Fee(GAS)</th>
-<td colspan="3" >0.01</td>
-</tr>
-</table>
+- **getNextBlockValidators**: Get validators of the next block
 
-- **transfer***: Transfer token from one to another
+  ```csharp
+  [ContractMethod(1_00000000, 
+    ContractParameterType.Array, 
+    SafeMethod = true)]
+  private StackItem GetNextBlockValidators(ApplicationEngine engine, VMArray args)
+  ```
 
-```csharp
-[ContractMethod(0_08000000, 
+  <table class="mytable">
+  <tr >
+      <th >Parameters</th>
+      <th colspan="2" >none</th>
+  </tr>
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >Array</td>
+  <td colspan="2" >Public keys of validators in the next round of consensus </td>
+  </tr>
+  <tr >
+      <th >Fee(GAS)</th>
+      <td colspan="2" >1.00</td>
+  </tr>
+  </table>
+
+- **vote**：Vote for to validators
+
+  ```csharp
+  [ContractMethod(5_00000000, 
     ContractParameterType.Boolean, 
-    ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Hash160, ContractParameterType.Integer }, 
-    ParameterNames = new[] { "from", "to", "amount" })]
-protected StackItem Transfer(ApplicationEngine engine, VMArray args)
-```
+    ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Array }, 
+    ParameterNames = new[] { "account", "pubkeys" })]
+  private StackItem Vote(ApplicationEngine engine, VMArray args)
+  ```
 
-<table class="mytable">
-<tr >
-<th rowspan="4">Parameters</th>
-<th >Parameter</th>
-<th >Type</th>
-<th  >Description</th>
-</tr>
-<tr >
-<td>from</td>
-<td >Hash160</td>
-<td>ScriptHash who want to transfer</td>
-</tr >
-<tr >
-<td>to</td>
-<td >Hash160</td>
-<td>ScriptHash of the receiver</td>
-</tr >
-<tr >
-<td>amount</td>
-<td >Integer</td>
-<td>Amount of the token </td>
-</tr >
-<tr>
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >Boolean</td>
-<td colspan="2" >Result, true: success，false: failure </td>
-</tr>
-<tr >
-<th >Fee(GAS)</th>
-<td colspan="3" >0.08</td>
-</tr>
-</table>
+  <table class="mytable">
+  <tr >
+  <th rowspan="3">Parameters</th>
+  <th >Parameter</th>
+  <th >Type</th>
+  <th  >Description</th>
+  </tr>
+  <tr >
+  <td>account</td>
+  <td >Hash160</td>
+  <td>Voter's ScriptHash</td>
+  </tr>
+  <tr >
+  <td >pubkeys</td>
+  <td >Array</td>
+  <td >The public keys of validators one vote to</td>
+  </tr>
+  <tr >
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >Boolean</td>
+  <td colspan="2" >Result. true: success, false: failure</td>
+  </tr>
+  <tr >
+  <th >Fee(GAS)</th>
+  <td colspan="3" >5.00</td>
+  </tr>
+  </table>
 
 > Method marked * is [NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki) standard interface.
 
@@ -568,492 +574,487 @@ Where `m` is the height of the block where the user last extracted the GAS, `n` 
 
 GasToken methods details following：
 
-- **getSysFeeAmount**: Total system fee till a specific height
+- **name**: Name of the token
 
-```csharp
-[ContractMethod(0_01000000, 
-  ContractParameterType.Integer, 
-  ParameterTypes = new[] { ContractParameterType.Integer }, 
-  ParameterNames = new[] { "index" }, 
-  SafeMethod = true)]
-private StackItem GetSysFeeAmount(ApplicationEngine engine, VMArray args)
-```
-
-<table class="mytable">
-<tr >
-<th rowspan="2">Parameters</th>
-<th >Parameter</th>
-<th >Type</th>
-<th  >Description</th>
-</tr>
-<tr >
-<td>index</td>
-<td >Integer</td>
-<td>The height one want to query</td>
-</tr>
-<tr >
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >Integer</td>
-<td colspan="2" >Total system fee </td>
-</tr>
-<tr >
-<th >Fee(GAS)</th>
-<td colspan="3" >0.01</td>
-</tr>
-</table>
-
-- **name***: Name of the token
-
-```csharp
-[ContractMethod(0, 
-  ContractParameterType.String, 
-  Name = "name", 
-  SafeMethod = true)]
-protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
-```
+  ```csharp
+  [ContractMethod(0, 
+    ContractParameterType.String, 
+    Name = "name", 
+    SafeMethod = true)]
+  protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
+  ```
 
 
-<table class="mytable">
-<tr >
-    <th >Parameters</th>
-    <th colspan="2" >none</th>
-</tr>
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >String</td>
-<td colspan="2" >Name of the token </td>
-</tr>
-<tr >
-    <th >Fee(GAS)</th>
-    <td colspan="2" >0.00</td>
-</tr>
-</table>
+  <table class="mytable">
+  <tr >
+      <th >Parameters</th>
+      <th colspan="2" >none</th>
+  </tr>
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >String</td>
+  <td colspan="2" >Name of the token </td>
+  </tr>
+  <tr >
+      <th >Fee(GAS)</th>
+      <td colspan="2" >0.00</td>
+  </tr>
+  </table>
 
 - **symbol**: Symbol of the token
 
-```csharp
-[ContractMethod(0, 
-  ContractParameterType.String, 
-  Name = "symbol", 
-  SafeMethod = true)]
-protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
-```
+  ```csharp
+  [ContractMethod(0, 
+    ContractParameterType.String, 
+    Name = "symbol", 
+    SafeMethod = true)]
+  protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
+  ```
 
-<table class="mytable">
-<tr >
-    <th >Parameters</th>
-    <th colspan="2" >none</th>
-</tr>
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >String</td>
-<td colspan="2" >Symbol of the token </td>
-</tr>
-<tr >
-    <th >Fee(GAS)</th>
-    <td colspan="2" >0.00</td>
-</tr>
-</table>
+  <table class="mytable">
+  <tr >
+      <th >Parameters</th>
+      <th colspan="2" >none</th>
+  </tr>
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >String</td>
+  <td colspan="2" >Symbol of the token </td>
+  </tr>
+  <tr >
+      <th >Fee(GAS)</th>
+      <td colspan="2" >0.00</td>
+  </tr>
+  </table>
 
-- **decimals***: Decimals of the token
+- **decimals**: Decimals of the token
 
-```csharp
-[ContractMethod(0, 
-  ContractParameterType.Integer, 
-  Name = "decimals", 
-  SafeMethod = true)]
-protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
-```
+  ```csharp
+  [ContractMethod(0, 
+    ContractParameterType.Integer, 
+    Name = "decimals", 
+    SafeMethod = true)]
+  protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
+  ```
 
-<table class="mytable">
-<tr >
-    <th >Parameters</th>
-    <th colspan="2" >none</th>
-</tr>
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >uint</td>
-<td colspan="2" >Decimal</td>
-</tr>
-<tr >
-    <th >Fee(GAS)</th>
-    <td colspan="2" >0.00</td>
-</tr>
-</table>
+  <table class="mytable">
+  <tr >
+      <th >Parameters</th>
+      <th colspan="2" >none</th>
+  </tr>
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >uint</td>
+  <td colspan="2" >Decimal</td>
+  </tr>
+  <tr >
+      <th >Fee(GAS)</th>
+      <td colspan="2" >0.00</td>
+  </tr>
+  </table>
 
+- **totalSupply**: Total supply
 
-- **totalSupply***: Total supply
+  ```csharp
+  [ContractMethod(0_01000000, 
+    ContractParameterType.Integer, 
+    SafeMethod = true)]
+  protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
+  ```
 
-```csharp
-[ContractMethod(0_01000000, 
-  ContractParameterType.Integer, 
-  SafeMethod = true)]
-protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
-```
+  <table class="mytable">
+  <tr >
+      <th >Parameters</th>
+      <th colspan="2" >none</th>
+  </tr>
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >BigInteger</td>
+  <td colspan="2" >Total supply</td>
+  </tr>
+  <tr >
+      <th >Fee(GAS)</th>
+      <td colspan="2" >0.01</td>
+  </tr>
+  </table>
 
-<table class="mytable">
-<tr >
-    <th >Parameters</th>
-    <th colspan="2" >none</th>
-</tr>
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >BigInteger</td>
-<td colspan="2" >Total supply</td>
-</tr>
-<tr >
-    <th >Fee(GAS)</th>
-    <td colspan="2" >0.01</td>
-</tr>
-</table>
+- **balanceOf**: Balance of a specific account
 
-- **balanceOf***: Balance of a specific account
+  ```csharp
+  [ContractMethod(0_01000000, 
+    ContractParameterType.Integer, 
+    ParameterTypes = new[] { ContractParameterType.Hash160 }, 
+    ParameterNames = new[] { "account" }, 
+    SafeMethod = true)]
+  protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
+  ```
 
-```csharp
-[ContractMethod(0_01000000, 
-  ContractParameterType.Integer, 
-  ParameterTypes = new[] { ContractParameterType.Hash160 }, 
-  ParameterNames = new[] { "account" }, 
-  SafeMethod = true)]
-protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
-```
+  <table class="mytable">
+  <tr >
+  <th rowspan="2">Parameters</th>
+  <th >Parameter</th>
+  <th >Type</th>
+  <th  >Description</th>
+  </tr>
+  <tr >
+  <td>account</td>
+  <td >Hash160</td>
+  <td>ScriptHash of the account to be queried </td>
+  </tr>
+  <tr >
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >Integer</td>
+  <td colspan="2" >Balance </td>
+  </tr>
+  <tr >
+  <th >Fee(GAS)</th>
+  <td colspan="3" >0.01</td>
+  </tr>
+  </table>
 
-<table class="mytable">
-<tr >
-<th rowspan="2">Parameters</th>
-<th >Parameter</th>
-<th >Type</th>
-<th  >Description</th>
-</tr>
-<tr >
-<td>account</td>
-<td >Hash160</td>
-<td>ScriptHash of the account to be queried </td>
-</tr>
-<tr >
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >Integer</td>
-<td colspan="2" >Balance </td>
-</tr>
-<tr >
-<th >Fee(GAS)</th>
-<td colspan="3" >0.01</td>
-</tr>
-</table>
+- **transfer**: Transfer token from one account to another
 
-- **transfer***: Transfer token from one account to another
+  ```csharp
+  [ContractMethod(0_08000000, 
+      ContractParameterType.Boolean, 
+      ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Hash160, ContractParameterType.Integer }, 
+      ParameterNames = new[] { "from", "to", "amount" })]
+  protected StackItem Transfer(ApplicationEngine engine, VMArray args)
+  ```
 
-```csharp
-[ContractMethod(0_08000000, 
-    ContractParameterType.Boolean, 
-    ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Hash160, ContractParameterType.Integer }, 
-    ParameterNames = new[] { "from", "to", "amount" })]
-protected StackItem Transfer(ApplicationEngine engine, VMArray args)
-```
+  <table class="mytable">
+  <tr >
+  <th rowspan="4">Parameters</th>
+  <th >Parameter</th>
+  <th >Type</th>
+  <th  >Description</th>
+  </tr>
+  <tr >
+  <td>from</td>
+  <td >Hash160</td>
+  <td>ScriptHash of the sender's account</td>
+  </tr >
+  <tr >
+  <td>to</td>
+  <td >Hash160</td>
+  <td>ScriptHash of the receiver's account</td>
+  </tr >
+  <tr >
+  <td>amount</td>
+  <td >Integer</td>
+  <td> Transferred amount</td>
+  <tr >
 
-<table class="mytable">
-<tr >
-<th rowspan="4">Parameters</th>
-<th >Parameter</th>
-<th >Type</th>
-<th  >Description</th>
-</tr>
-<tr >
-<td>from</td>
-<td >Hash160</td>
-<td>ScriptHash of the sender's account</td>
-</tr >
-<tr >
-<td>to</td>
-<td >Hash160</td>
-<td>ScriptHash of the receiver's account</td>
-</tr >
-<tr >
-<td>amount</td>
-<td >Integer</td>
-<td> Transferred amount</td>
-<tr >
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >Boolean</td>
+  <td colspan="2" >Result, true: success，false: failure </td>
+  </tr>
+  <tr >
+  <th >Fee(GAS)</th>
+  <td colspan="3" >0.08</td>
+  </tr>
+  </table>
 
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >Boolean</td>
-<td colspan="2" >Result, true: success，false: failure </td>
-</tr>
-<tr >
-<th >Fee(GAS)</th>
-<td colspan="3" >0.08</td>
-</tr>
-</table>
+- **getSysFeeAmount**: Total system fee till a specific height
 
+  ```csharp
+  [ContractMethod(0_01000000, 
+    ContractParameterType.Integer, 
+    ParameterTypes = new[] { ContractParameterType.Integer }, 
+    ParameterNames = new[] { "index" }, 
+    SafeMethod = true)]
+  private StackItem GetSysFeeAmount(ApplicationEngine engine, VMArray args)
+  ```
+
+  <table class="mytable">
+  <tr >
+  <th rowspan="2">Parameters</th>
+  <th >Parameter</th>
+  <th >Type</th>
+  <th  >Description</th>
+  </tr>
+  <tr >
+  <td>index</td>
+  <td >Integer</td>
+  <td>The height one want to query</td>
+  </tr>
+  <tr >
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >Integer</td>
+  <td colspan="2" >Total system fee </td>
+  </tr>
+  <tr >
+  <th >Fee(GAS)</th>
+  <td colspan="3" >0.01</td>
+  </tr>
+  </table>
 
 > Method marked * is [NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki) standard interface
 
-#### PolicyToken
+#### PolicyContract
 
 It is the contract for configuring the consensus strategy and saves relevant parameters in the consensus process, including maximum transactions per block, maximum low-priority transactions per block, maximum low-priority-transaction size, the fee per byte, etc. The interface is described in detail below：
 
 - getMaxTransactionPerBlock: Get maximum transactions per block.
 
-```csharp
-[ContractMethod(0_01000000, 
-  ContractParameterType.Integer, 
-  SafeMethod = true)]
-private StackItem GetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray args)
-```
+  ```csharp
+  [ContractMethod(0_01000000, 
+    ContractParameterType.Integer, 
+    SafeMethod = true)]
+  private StackItem GetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray args)
+  ```
 
-<table class="mytable">
-<tr >
-    <th >Parameters</th>
-    <th colspan="2" >none</th>
-</tr>
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >Integer</td>
-<td colspan="2" >Maximum transaction count per block</td>
-</tr>
-<tr >
-    <th >Fee(GAS)</th>
-    <td colspan="2" >0.01</td>
-</tr>
-</table>
+  <table class="mytable">
+  <tr >
+      <th >Parameters</th>
+      <th colspan="2" >none</th>
+  </tr>
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >Integer</td>
+  <td colspan="2" >Maximum transaction count per block</td>
+  </tr>
+  <tr >
+      <th >Fee(GAS)</th>
+      <td colspan="2" >0.01</td>
+  </tr>
+  </table>
 
 - **GetFeePerByte**： Get system fee per byte
 
-```csharp
-[ContractMethod(0_01000000, 
-  ContractParameterType.Integer, 
-  SafeMethod = true)]
-private StackItem GetFeePerByte(ApplicationEngine engine, VMArray args)
-```
+  ```csharp
+  [ContractMethod(0_01000000, 
+    ContractParameterType.Integer, 
+    SafeMethod = true)]
+  private StackItem GetFeePerByte(ApplicationEngine engine, VMArray args)
+  ```
 
-<table class="mytable">
-<tr >
-    <th >Parameters</th>
-    <th colspan="2" >none</th>
-</tr>
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >Integer</td>
-<td colspan="2" >Fee per byte</td>
-</tr>
-<tr >
-    <th >Fee(GAS)</th>
-    <td colspan="2" >0.01</td>
-</tr>
-</table>
+  <table class="mytable">
+  <tr >
+      <th >Parameters</th>
+      <th colspan="2" >none</th>
+  </tr>
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >Integer</td>
+  <td colspan="2" >Fee per byte</td>
+  </tr>
+  <tr >
+      <th >Fee(GAS)</th>
+      <td colspan="2" >0.01</td>
+  </tr>
+  </table>
 
 - **getBlockedAccounts**: Get the addresses in the blacklist
 
-```csharp
-[ContractMethod(0_01000000, 
-  ContractParameterType.Array, 
-  SafeMethod = true)]
-private StackItem GetBlockedAccounts(ApplicationEngine engine, VMArray args)
-```
+  ```csharp
+  [ContractMethod(0_01000000, 
+    ContractParameterType.Array, 
+    SafeMethod = true)]
+  private StackItem GetBlockedAccounts(ApplicationEngine engine, VMArray args)
+  ```
 
-<table class="mytable">
-<tr >
-    <th >Parameters</th>
-    <th colspan="2" >none</th>
-</tr>
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >Array</td>
-<td colspan="2" >Address blacklist</td>
-</tr>
-<tr >
-    <th >Fee(GAS)</th>
-    <td colspan="2" >0.01</td>
-</tr>
-</table>
+  <table class="mytable">
+  <tr >
+      <th >Parameters</th>
+      <th colspan="2" >none</th>
+  </tr>
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >Array</td>
+  <td colspan="2" >Address blacklist</td>
+  </tr>
+  <tr >
+      <th >Fee(GAS)</th>
+      <td colspan="2" >0.01</td>
+  </tr>
+  </table>
 
 
 - **setMaxTransactionsPerBlock**: Set maximum transactions count per block
 
-```csharp
-[ContractMethod(0_03000000, 
-  ContractParameterType.Boolean, 
-  ParameterTypes = new[] { ContractParameterType.Integer }, 
-  ParameterNames = new[] { "value" })]
-private StackItem SetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray args)
-```
+  ```csharp
+  [ContractMethod(0_03000000, 
+    ContractParameterType.Boolean, 
+    ParameterTypes = new[] { ContractParameterType.Integer }, 
+    ParameterNames = new[] { "value" })]
+  private StackItem SetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray args)
+  ```
 
-<table class="mytable">
-<tr >
-<th rowspan="2">Parameters</th>
-<th >Parameter</th>
-<th >Type</th>
-<th  >Description</th>
-</tr>
-<tr >
-<td>value</td>
-<td >Integer</td>
-<td>Maximum transactions count to be set</td>
-</tr>
+  <table class="mytable">
+  <tr >
+  <th rowspan="2">Parameters</th>
+  <th >Parameter</th>
+  <th >Type</th>
+  <th  >Description</th>
+  </tr>
+  <tr >
+  <td>value</td>
+  <td >Integer</td>
+  <td>Maximum transactions count to be set</td>
+  </tr>
 
-<tr >
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >Boolean</td>
-<td colspan="2" >Result. true: success, false: failure</td>
-</tr>
-<tr >
-<th >Fee(GAS)</th>
-<td colspan="3" >0.03</td>
-</tr>
-</table>
+  <tr >
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >Boolean</td>
+  <td colspan="2" >Result. true: success, false: failure</td>
+  </tr>
+  <tr >
+  <th >Fee(GAS)</th>
+  <td colspan="3" >0.03</td>
+  </tr>
+  </table>
 
 - **setFeePerByte**：Set system fee per byte.
 
-```csharp
-[ContractMethod(0_03000000, 
-  ContractParameterType.Boolean, 
-  ParameterTypes = new[] { ContractParameterType.Integer }, 
-  ParameterNames = new[] { "value" })]
-private StackItem SetFeePerByte(ApplicationEngine engine, VMArray args)
-```
+  ```csharp
+  [ContractMethod(0_03000000, 
+    ContractParameterType.Boolean, 
+    ParameterTypes = new[] { ContractParameterType.Integer }, 
+    ParameterNames = new[] { "value" })]
+  private StackItem SetFeePerByte(ApplicationEngine engine, VMArray args)
+  ```
 
-<table class="mytable">
-<tr >
-<th rowspan="2">Parameters</th>
-<th >Parameter</th>
-<th >Type</th>
-<th  >Description</th>
-</tr>
-<tr >
-<td>value</td>
-<td >Integer</td>
-<td> System fee per byte </td>
-</tr>
+  <table class="mytable">
+  <tr >
+  <th rowspan="2">Parameters</th>
+  <th >Parameter</th>
+  <th >Type</th>
+  <th  >Description</th>
+  </tr>
+  <tr >
+  <td>value</td>
+  <td >Integer</td>
+  <td> System fee per byte </td>
+  </tr>
 
-<tr >
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >Boolean</td>
-<td colspan="2" >Result. true: success, false: failure</td>
-</tr>
-<tr >
-<th >Fee(GAS)</th>
-<td colspan="3" >0.03</td>
-</tr>
-</table>
-
-*0.03*
+  <tr >
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >Boolean</td>
+  <td colspan="2" >Result. true: success, false: failure</td>
+  </tr>
+  <tr >
+  <th >Fee(GAS)</th>
+  <td colspan="3" >0.03</td>
+  </tr>
+  </table>
 
 - **blockAccount**：Add an account into the blacklist.
 
-```csharp
-[ContractMethod(0_03000000, 
-  ContractParameterType.Boolean, 
-  ParameterTypes = new[] { ContractParameterType.Hash160 }, 
-  ParameterNames = new[] { "account" })]
-private StackItem BlockAccount(ApplicationEngine engine, VMArray args)
-```
+  ```csharp
+  [ContractMethod(0_03000000, 
+    ContractParameterType.Boolean, 
+    ParameterTypes = new[] { ContractParameterType.Hash160 }, 
+    ParameterNames = new[] { "account" })]
+  private StackItem BlockAccount(ApplicationEngine engine, VMArray args)
+  ```
 
-<table class="mytable">
-<tr >
-<th rowspan="2">Parameters</th>
-<th >Parameter</th>
-<th >Type</th>
-<th  >Description</th>
-</tr>
-<tr >
-<td>account</td>
-<td >Hash160</td>
-<td> ScriptHash of the account to be added</td>
-</tr>
+  <table class="mytable">
+  <tr >
+  <th rowspan="2">Parameters</th>
+  <th >Parameter</th>
+  <th >Type</th>
+  <th  >Description</th>
+  </tr>
+  <tr >
+  <td>account</td>
+  <td >Hash160</td>
+  <td> ScriptHash of the account to be added</td>
+  </tr>
 
-<tr >
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >Boolean</td>
-<td colspan="2" >Result. true: success, false: failure</td>
-</tr>
-<tr >
-<th >Fee(GAS)</th>
-<td colspan="3" >0.03</td>
-</tr>
-</table>
-
+  <tr >
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >Boolean</td>
+  <td colspan="2" >Result. true: success, false: failure</td>
+  </tr>
+  <tr >
+  <th >Fee(GAS)</th>
+  <td colspan="3" >0.03</td>
+  </tr>
+  </table>
 
 - **unblockAccount**：Remove an account from the blacklist.
 
-```csharp
-[ContractMethod(0_03000000, 
-  ContractParameterType.Boolean, 
-  ParameterTypes = new[] { ContractParameterType.Hash160 }, 
-  ParameterNames = new[] { "account" })]
-private StackItem UnblockAccount(ApplicationEngine engine, VMArray args)
-```
+  ```csharp
+  [ContractMethod(0_03000000, 
+    ContractParameterType.Boolean, 
+    ParameterTypes = new[] { ContractParameterType.Hash160 }, 
+    ParameterNames = new[] { "account" })]
+  private StackItem UnblockAccount(ApplicationEngine engine, VMArray args)
+  ```
 
-<table class="mytable">
-<tr >
-<th rowspan="2">Parameters</th>
-<th >Parameter</th>
-<th >Type</th>
-<th  >Description</th>
-</tr>
-<tr >
-<td>account</td>
-<td >Hash160</td>
-<td> ScriptHash of the account to be removed </td>
-</tr>
+  <table class="mytable">
+  <tr >
+  <th rowspan="2">Parameters</th>
+  <th >Parameter</th>
+  <th >Type</th>
+  <th  >Description</th>
+  </tr>
+  <tr >
+  <td>account</td>
+  <td >Hash160</td>
+  <td> ScriptHash of the account to be removed </td>
+  </tr>
 
-<tr >
-<th  rowspan="2">Return</th>
-<th>Type</th>
-<th colspan="2">Description</th>
-</tr>
-<tr >
-<td  >Boolean</td>
-<td colspan="2" >Result. true: success, false: failure</td>
-</tr>
-<tr >
-<th >Fee(GAS)</th>
-<td colspan="3" >0.03</td>
-</tr>
-</table>
+  <tr >
+  <th  rowspan="2">Return</th>
+  <th>Type</th>
+  <th colspan="2">Description</th>
+  </tr>
+  <tr >
+  <td  >Boolean</td>
+  <td colspan="2" >Result. true: success, false: failure</td>
+  </tr>
+  <tr >
+  <th >Fee(GAS)</th>
+  <td colspan="3" >0.03</td>
+  </tr>
+  </table>
 
 **For more NativeContract, Please stay stunned**
 

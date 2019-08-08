@@ -10,14 +10,14 @@
         - [介绍](#介绍)
             - [NeoToken](#neotoken)
             - [GasToken](#gastoken)
-            - [PolicyToken](#policytoken)
+            - [PolicyContract](#PolicyContract)
         - [原生合约 部署](#原生合约-部署)
         - [原生合约 调用](#原生合约-调用)
     - [互操作服务](#互操作服务)
         - [互操作服务原理](#互操作服务原理)
         - [互操作服务使用](#互操作服务使用)
-          - [System部分](#system部分)
-          - [Neo部分](#neo部分)
+          - [System](#system部分)
+          - [Neo](#neo部分)
     - [费用](#费用)
     - [网路资源访问](#网路资源访问)
     - [合约调用](#合约调用)
@@ -37,7 +37,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
     - [system 触发器](#触发器)：用于节点收到新区块后，触发原生合约的执行。
 
 - 更新
-    - 降低了合约执行互操作接口所对应的[系统费用](cn/合约#费用)。
+    - 降低了合约执行互操作接口所对应的[系统费用](#费用)。
 ## Manifest
 > **NEO3 变更**: 新添加了Manifest文件，随avm文件一起部署到Neo区块链
 
@@ -83,9 +83,15 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
 触发器可以使合约根据不同的使用场景执行不同的逻辑。
  > **NEO3 变更**: 新添加System触发器
 
-- **System** 此触发器为NEO3新增触发器类型。当节点收到新区块后触发，目前只会触发原生合约的执行。当节点收到新区块，持久化之前会调用所有原生合约的onPersist方法，触发方式为System。
+- **System 触发器** 
+  
+  此触发器为NEO3新增触发器类型，仅用于NEO3新添加的原始合约中，即NEO和GAS。当节点收到新区块后触发，目前只会触发原生合约的执行。当节点收到新区块，持久化之前会调用所有原生合约的onPersist方法，只有触发方式为System才会继续执行。
+  
+  该触发器不对普通合约的执行造成任何影响。
 
-- **Application** 应用触发器的目的在于将该合约作为应用函数进行调用，应用函数可以接受多个参数，对区块链的状态进行更改，并返回任意类型的返回值。以下是一个简单的C#智能合约：
+- **Application 触发器** 
+
+  应用触发器的目的在于将该合约作为应用函数进行调用，应用函数可以接受多个参数，对区块链的状态进行更改，并返回任意类型的返回值。以下是一个简单的C#智能合约：
 
   ```csharp
   public static Object Main(string operation, params object[] args)
@@ -103,7 +109,9 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
 
   NEO3中所有交易都为合约的调用，当一笔交易被广播和确认后，智能合约由共识节点执行，普通节点在转发交易时不执行智能合约。智能合约执行成功不代表交易的成功，而交易的成功也不决定智能合约执行的成功。
 
-- **Verification** 验证触发器的目的在于将该合约作为验证函数进行调用，验证函数可以接受多个参数，并且应返回有效的布尔值，标志着交易或区块的有效性。
+- **Verification 触发器** 
+  
+  验证触发器的目的在于将该合约作为验证函数进行调用，验证函数可以接受多个参数，并且应返回有效的布尔值，标志着交易或区块的有效性。
 
   当你想从 A 账户向 B 账户进行转账时，会触发验证合约，所有收到这笔交易的节点（包括普通节点和共识节点）都会验证 A 账户的合约，如果返回值为 true，即转账成功。如果返回 false，即转账失败。
 
@@ -149,6 +157,206 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
 ### **NeoToken**
 
 简称 NEO，是Neo的治理代币，用于执行对 Neo 网络的管理权，符合 NEP-5 标准。NEO 的总量为 1 亿，最小单位为 1，且不可分割。Neo 在创世块中注册生成。具体接口细节如下：
+- **name**： Token的名称
+
+  ```csharp
+  [ContractMethod(0, 
+      ContractParameterType.String, 
+      Name = "name", 
+      SafeMethod = true)]
+  protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
+  ```
+
+  <table>
+  <tr >
+    <th >参数列表</th>
+    <th colspan="2">无参数</th>
+    </tr>
+  <tr >
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
+    </tr>
+    <tr >
+    <td  >String</td>
+    <td colspan="2"  >Token的名称 </td>
+    </tr>
+    <tr >
+    <th >费用（GAS）</th>
+    <td colspan="2" >0.00</td>
+    </tr>
+  </table>
+
+- **symbol**：Token的简称
+
+  ```csharp
+  [ContractMethod(0, 
+      ContractParameterType.String, 
+      Name = "symbol", 
+      SafeMethod = true)]
+  protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
+  ```
+  <table>
+  <tr >
+    <th >参数列表</th>
+    <th colspan="2" >无参数</th>
+    </tr>
+    <tr >
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
+    </tr>
+    <tr >
+    <td  >String</td>
+    <td colspan="2"  >Token的简称 </td>
+    </tr>
+    <tr >
+    <th >费用（GAS）</th>
+    <th colspan="2" >0.00</th>
+    </tr>
+  </table>
+
+- **decimals**: Token的计算精度
+
+  ```csharp
+  [ContractMethod(0, 
+      ContractParameterType.Integer, 
+      Name = "decimals", 
+      SafeMethod = true)]
+  protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
+  ```
+  <table>
+  <tr >
+    <th >参数列表</th>
+    <th colspan="2" >无参数</th>
+    </tr>
+    <tr >
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
+    </tr>
+    <tr >
+    <td  >Unit</td>
+    <td colspan="2"  >Token的计算精度 </td>
+    </tr>
+    <tr >
+    <th >费用（GAS）</th>
+    <th colspan="2" >0.00</th>
+    </tr>
+  </table>
+
+- **totalSupply**: 总发行量
+
+  ```csharp
+  [ContractMethod(0_01000000, 
+      ContractParameterType.Integer, 
+      SafeMethod = true)]
+  protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
+  ```
+  <table>
+  <tr >
+    <th >参数列表</th>
+    <th colspan="2" >无参数</th>
+    </tr>
+    <tr >
+    <th  rowspan="2">返回值</th>
+    <th  >返回值类型</th>
+    <th   colspan="2">描述</th>
+    </tr>
+    <tr >
+    <td  >BigInteger</td>
+    <td colspan="2"  >Token的总发行量 </td>
+    </tr>
+    <tr >
+    <th >费用（GAS）</th>
+    <th colspan="2" >0.01</th>
+    </tr>
+  </table>
+
+- **balanceOf**: 指定地址的Token余额
+
+  ```csharp
+  [ContractMethod(0_01000000, 
+      ContractParameterType.Integer, 
+      ParameterTypes = new[] { ContractParameterType.Hash160 }, 
+      ParameterNames = new[] { "account" }, 
+      SafeMethod = true)]
+  protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
+  ```
+
+  <table>
+  <tr >
+    <th rowspan="2">参数列表</th>
+    <th >参数名称</th>
+    <th >参数类型</th>
+    <th  >描述</th>
+    </tr>
+    <tr >
+    <td>account</td>
+    <td >Hash160</td>
+    <td>要查询账户的ScriptHash</td>
+    </tr>
+    <tr >
+    <th  rowspan="2">返回值</th>
+    <th  colspan="2">返回值类型</th>
+    <th  >描述</th>
+    </tr>
+    <tr >
+    <td colspan="2">BigInteger</td>
+    <td >余额数值</td>
+    </tr>
+    <tr >
+    <th >费用（GAS）</th>
+    <th colspan="3" >0.01</th>
+    </tr>
+  </table>
+
+- **transfer**: 转账
+
+  ```csharp
+  [ContractMethod(0_08000000, 
+      ContractParameterType.Boolean, 
+      ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Hash160, ContractParameterType.Integer }, 
+      ParameterNames = new[] { "from", "to", "amount" })]
+  protected StackItem Transfer(ApplicationEngine engine, VMArray args)
+  ```
+
+  <table>
+    <tr >
+    <th rowspan="4">参数列表</th>
+    <th >参数名称</th>
+    <th >参数类型</th>
+    <th  >描述</th>
+    </tr>
+    <tr >
+    <td>from</td>
+    <td >Hash160</td>
+    <td>转出账户的ScriptHash</td>
+    </tr>
+    <tr >
+    <td>to</td>
+    <td >Hash160</td>
+    <td>转入账户的ScriptHash</td>
+    </tr>
+    <tr >
+    <td>amount</td>
+    <td >Integer</td>
+    <td>转账的Token数量</td>
+    </tr>
+    <tr >
+    <th  rowspan="2">返回值</th>
+    <th  colspan="2">返回值类型</th>
+    <th  >描述</th>
+    </tr>
+    <tr >
+    <td colspan="2">Boolean</td>
+    <td >转账结果，true：成功，false：失败</td>
+    </tr>
+    <tr >
+    <th >费用（GAS）</th>
+    <th colspan="3" >0.08</th>
+    </tr>
+  </table>
 
 - **unClaimGas**：获取到指定高度，未claim的GAS数量
 
@@ -357,206 +565,6 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
     </tr>
   </table>
 
-- **name**： Token的名称
-
-  ```csharp
-  [ContractMethod(0, 
-      ContractParameterType.String, 
-      Name = "name", 
-      SafeMethod = true)]
-  protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
-  ```
-
-  <table>
-  <tr >
-    <th >参数列表</th>
-    <th colspan="2">无参数</th>
-    </tr>
-  <tr >
-    <th  rowspan="2">返回值</th>
-    <th  >返回值类型</th>
-    <th   colspan="2">描述</th>
-    </tr>
-    <tr >
-    <td  >String</td>
-    <td colspan="2"  >Token的名称 </td>
-    </tr>
-    <tr >
-    <th >费用（GAS）</th>
-    <td colspan="2" >0.00</td>
-    </tr>
-  </table>
-
-- **symbol**：Token的简称
-
-  ```csharp
-  [ContractMethod(0, 
-      ContractParameterType.String, 
-      Name = "symbol", 
-      SafeMethod = true)]
-  protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
-  ```
-  <table>
-  <tr >
-    <th >参数列表</th>
-    <th colspan="2" >无参数</th>
-    </tr>
-    <tr >
-    <th  rowspan="2">返回值</th>
-    <th  >返回值类型</th>
-    <th   colspan="2">描述</th>
-    </tr>
-    <tr >
-    <td  >String</td>
-    <td colspan="2"  >Token的简称 </td>
-    </tr>
-    <tr >
-    <th >费用（GAS）</th>
-    <th colspan="2" >0.00</th>
-    </tr>
-  </table>
-
-- **decimals**: Token的计算精度
-
-  ```csharp
-  [ContractMethod(0, 
-      ContractParameterType.Integer, 
-      Name = "decimals", 
-      SafeMethod = true)]
-  protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
-  ```
-  <table>
-  <tr >
-    <th >参数列表</th>
-    <th colspan="2" >无参数</th>
-    </tr>
-    <tr >
-    <th  rowspan="2">返回值</th>
-    <th  >返回值类型</th>
-    <th   colspan="2">描述</th>
-    </tr>
-    <tr >
-    <td  >Unit</td>
-    <td colspan="2"  >Token的计算精度 </td>
-    </tr>
-    <tr >
-    <th >费用（GAS）</th>
-    <th colspan="2" >0.00</th>
-    </tr>
-  </table>
-
-- **totalSupply**: 总发行量
-
-  ```csharp
-  [ContractMethod(0_01000000, 
-      ContractParameterType.Integer, 
-      SafeMethod = true)]
-  protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
-  ```
-  <table>
-  <tr >
-    <th >参数列表</th>
-    <th colspan="2" >无参数</th>
-    </tr>
-    <tr >
-    <th  rowspan="2">返回值</th>
-    <th  >返回值类型</th>
-    <th   colspan="2">描述</th>
-    </tr>
-    <tr >
-    <td  >BigInteger</td>
-    <td colspan="2"  >Token的总发行量 </td>
-    </tr>
-    <tr >
-    <th >费用（GAS）</th>
-    <th colspan="2" >0.01</th>
-    </tr>
-  </table>
-
-- **balanceOf**: 指定地址的Token余额
-
-  ```csharp
-  [ContractMethod(0_01000000, 
-      ContractParameterType.Integer, 
-      ParameterTypes = new[] { ContractParameterType.Hash160 }, 
-      ParameterNames = new[] { "account" }, 
-      SafeMethod = true)]
-  protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
-  ```
-
-  <table>
-  <tr >
-    <th rowspan="2">参数列表</th>
-    <th >参数名称</th>
-    <th >参数类型</th>
-    <th  >描述</th>
-    </tr>
-    <tr >
-    <td>account</td>
-    <td >Hash160</td>
-    <td>要查询账户的ScriptHash</td>
-    </tr>
-    <tr >
-    <th  rowspan="2">返回值</th>
-    <th  colspan="2">返回值类型</th>
-    <th  >描述</th>
-    </tr>
-    <tr >
-    <td colspan="2">BigInteger</td>
-    <td >余额数值</td>
-    </tr>
-    <tr >
-    <th >费用（GAS）</th>
-    <th colspan="3" >0.01</th>
-    </tr>
-  </table>
-
-- **transfer**: 转账
-
-  ```csharp
-  [ContractMethod(0_08000000, 
-      ContractParameterType.Boolean, 
-      ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Hash160, ContractParameterType.Integer }, 
-      ParameterNames = new[] { "from", "to", "amount" })]
-  protected StackItem Transfer(ApplicationEngine engine, VMArray args)
-  ```
-
-  <table>
-    <tr >
-    <th rowspan="4">参数列表</th>
-    <th >参数名称</th>
-    <th >参数类型</th>
-    <th  >描述</th>
-    </tr>
-    <tr >
-    <td>from</td>
-    <td >Hash160</td>
-    <td>转出账户的ScriptHash</td>
-    </tr>
-    <tr >
-    <td>to</td>
-    <td >Hash160</td>
-    <td>转入账户的ScriptHash</td>
-    </tr>
-    <tr >
-    <td>amount</td>
-    <td >Integer</td>
-    <td>转账的Token数量</td>
-    </tr>
-    <tr >
-    <th  rowspan="2">返回值</th>
-    <th  colspan="2">返回值类型</th>
-    <th  >描述</th>
-    </tr>
-    <tr >
-    <td colspan="2">Boolean</td>
-    <td >转账结果，true：成功，false：失败</td>
-    </tr>
-    <tr >
-    <th >费用（GAS）</th>
-    <th colspan="3" >0.08</th>
-    </tr>
-  </table>
 
 > 标*的方法为[NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki)标准接口
 
@@ -570,44 +578,6 @@ GAS 的分发机制: 生成一个新区块时会伴随产生新的 GAS，所生�
 其中，m 表示用户上一次提取 GAS 时所处的区块高度，n 为当前的区块高度，NEO 表示 m 至 n 期间用户持有的 NEO 的数量。BlockBonus 代表每个区块可以提取的 GAS 量，具体细节可参看经济模型部分。SystemFee 代表该区块中所有交易的系统费之和。
 
 GasToken的详细接口介绍如下：
-
-- **getSysFeeAmount**: 获取截止到某一高度的系统费总和
-
-  ```csharp
-  [ContractMethod(0_01000000, 
-    ContractParameterType.Integer, 
-    ParameterTypes = new[] { ContractParameterType.Integer }, 
-    ParameterNames = new[] { "index" }, 
-    SafeMethod = true)]
-  private StackItem GetSysFeeAmount(ApplicationEngine engine, VMArray args)
-  ```
-
-  <table>
-    <tr >
-    <th rowspan="2">参数列表</th>
-    <th >参数名称</th>
-    <th >参数类型</th>
-    <th  >描述</th>
-    </tr>
-    <tr >
-    <td>index</td>
-    <td >Integer</td>
-    <td>要查询的高度</td>
-    </tr>
-    <tr >
-    <th  rowspan="2">返回值</th>
-    <th  colspan="2">返回值类型</th>
-    <th  >描述</th>
-    </tr>
-    <tr >
-    <td colspan="2">Integer</td>
-    <td >系统费总值 </td>
-    </tr>
-    <tr >
-    <th >费用（GAS）</th>
-    <th colspan="3" >0.01</th>
-    </tr>
-  </table>
 
 - **name**: Token的名称
 
@@ -668,7 +638,7 @@ GasToken的详细接口介绍如下：
     </tr>
   </table>
 
-- **decimals***: Token的计算精度
+- **decimals**: Token的计算精度
 
   ```csharp
   [ContractMethod(0, 
@@ -809,9 +779,47 @@ GasToken的详细接口介绍如下：
     </tr>
   </table>
 
+- **getSysFeeAmount**: 获取截止到某一高度的系统费总和
+
+  ```csharp
+  [ContractMethod(0_01000000, 
+    ContractParameterType.Integer, 
+    ParameterTypes = new[] { ContractParameterType.Integer }, 
+    ParameterNames = new[] { "index" }, 
+    SafeMethod = true)]
+  private StackItem GetSysFeeAmount(ApplicationEngine engine, VMArray args)
+  ```
+
+  <table>
+    <tr >
+    <th rowspan="2">参数列表</th>
+    <th >参数名称</th>
+    <th >参数类型</th>
+    <th  >描述</th>
+    </tr>
+    <tr >
+    <td>index</td>
+    <td >Integer</td>
+    <td>要查询的高度</td>
+    </tr>
+    <tr >
+    <th  rowspan="2">返回值</th>
+    <th  colspan="2">返回值类型</th>
+    <th  >描述</th>
+    </tr>
+    <tr >
+    <td colspan="2">Integer</td>
+    <td >系统费总值 </td>
+    </tr>
+    <tr >
+    <th >费用（GAS）</th>
+    <th colspan="3" >0.01</th>
+    </tr>
+  </table>
+
 > 标*的方法为[NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki)标准接口
 
-### **PolicyToken**
+### **PolicyContract**
 
 配置共识策略的合约，保存了共识过程中相关参数，例如区块最大交易数，每字节手续费等。接口详细介绍如下：
 
@@ -1052,10 +1060,6 @@ GasToken的详细接口介绍如下：
 
 **更多原生合约，敬请期待**
 
-### 原生合约 部署
-原生合约在创世区块中通过调用Neo.Native.Deploy互操作接口部署，且只能在创世块中执行。
-
-
 ### 原生合约 调用
 原生合约的调用有两种方法, 第一种是跟普通合约一样，通过合约的脚本哈希来调用，另一种是原生合约特有的，直接通过互操作服务调用。[查看互操作服务使用](#互操作服务使用)
 
@@ -1108,10 +1112,10 @@ GasToken的详细接口介绍如下：
 
 ### 互操作服务原理
 Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智能合约调用。
-- **服务名称** 每个互操作都有一个名称，例如 `System.Contract.Call`。
-- **映射方法** 每个互操作服务都有对应的原生方法，例如`private static bool Contract_Call(ApplicationEngine engine)`，其为在客户端中实际调用的方法
-- **系统费** 每个互操作服务都有其系统费计算方法或者固定系统费。
-- **触发方式** 每个互操作接口都有支持的触发方式，比如`TriggerType.All`支持所有触发器
+- **服务名称**：每个互操作都有一个名称，例如 `System.Contract.Call`。
+- **映射方法**：每个互操作服务都有对应的原生方法，例如`private static bool Contract_Call(ApplicationEngine engine)`，其为在客户端中实际调用的方法
+- **系统费**：每个互操作服务都有其系统费计算方法或者固定系统费。
+- **触发方式**：每个互操作接口都有支持的触发方式，比如`TriggerType.All`支持所有触发器
 
 注册时就是Neo客户端将互操作接口的服务名称，映射的具体方法，系统费计算方法，支持的触发方式封装为一个InteropDescriptor存储在Dictionary中，索引为互操作接口名称的哈希值，其计算方法为：
 `BitConverter.ToUInt32(Encoding.ASCII.GetBytes(ServiceName).Sha256(), 0)`
@@ -1120,8 +1124,8 @@ Neo程序启动时会将一系列的互操作接口注册到虚拟机，供智�
 
 ### 互操作服务使用 
 
-- **智能合约** 智能合约中使用的互操作接口由对应的智能合约开发框架提供，直接调用即可，当编译时会由编译器编译成可在NeoVM中执行的操作符指令
-- **交易Script** 很多时候需要手动拼接执行脚本，这时候使用互操作服务的接口名称的哈希值与SYSCALL操作符来实现。
+- **智能合约**： 智能合约中使用的互操作接口由对应的智能合约开发框架提供，直接调用即可，当编译时会由编译器编译成可在NeoVM中执行的操作符指令
+- **交易Script**： 很多时候需要手动拼接执行脚本，这时候使用互操作服务的接口名称的哈希值与SYSCALL操作符来实现。
 
 例如，如果要通过`System.Contract.Call`来调用合约`0x43cf98eddbe047e198a3e5d57006311442a0ca15`的`name`方法：
 
