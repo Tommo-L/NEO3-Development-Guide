@@ -160,7 +160,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
 
 > 标*的方法为[NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki)标准接口
 
-- **name**： Token的名称
+- **name***： Token的名称
 
   <table>
   <tr >
@@ -182,7 +182,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
     </tr>
   </table>
 
-- **symbol**：Token的简称
+- **symbol***：Token的简称
 
   <table>
   <tr >
@@ -204,7 +204,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
     </tr>
   </table>
 
-- **decimals**: Token的计算精度
+- **decimals***: Token的计算精度
 
    <table>
   <tr >
@@ -226,7 +226,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
     </tr>
   </table>
 
-- **totalSupply**: 总发行量
+- **totalSupply***: 总发行量
 
    <table>
   <tr >
@@ -248,7 +248,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
     </tr>
   </table>
 
-- **balanceOf**: 指定地址的Token余额
+- **balanceOf***: 指定地址的Token余额
 
   <table>
   <tr >
@@ -277,7 +277,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
     </tr>
   </table>
 
-- **transfer**: 转账
+- **transfer***: 转账
 
   <table>
     <tr >
