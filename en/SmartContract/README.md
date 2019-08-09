@@ -154,16 +154,8 @@ Native contracts are executed directly in native code, rather than in a virtual 
 #### NeoToken
 
 Referred to as NEO, it acts as the governance token which is used to enforce the management of the Neo network and conforms to the NEP-5 standard. It has a hard cap total of 100 million tokens, with the smallest unit of 1, and is not divisible. NEO was pre-mined during the genesis block creation. The specific interface details are as follows：
-
+> Method marked * is [NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki) standard interface.
 - **name**： Name of the token
-
-  ```csharp
-  [ContractMethod(0, 
-    ContractParameterType.String, 
-    Name = "name", 
-    SafeMethod = true)]
-  protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
-  ```
 
   <table class="mytable">
   <tr >
@@ -186,14 +178,6 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
 
 - **symbol**：Symbol of the token
 
-  ```csharp
-  [ContractMethod(0, 
-    ContractParameterType.String, 
-    Name = "symbol", 
-    SafeMethod = true)]
-  protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
-  ```
-
   <table class="mytable">
   <tr >
       <th >Parameters</th>
@@ -214,14 +198,6 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
   </table>
 
 - **decimals**: Decimals of the token
-
-  ```csharp
-  [ContractMethod(0, 
-    ContractParameterType.Integer, 
-    Name = "decimals", 
-    SafeMethod = true)]
-  protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
-  ```
 
   <table class="mytable">
   <tr >
@@ -244,13 +220,6 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
 
 - **totalSupply***: Total supply
 
-  ```csharp
-  [ContractMethod(0_01000000, 
-    ContractParameterType.Integer, 
-    SafeMethod = true)]
-  protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
-  ```
-
   <table class="mytable">
   <tr >
       <th >Parameters</th>
@@ -271,15 +240,6 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
   </table>
 
 - **balanceOf**: Balance of an account
-
-  ```csharp
-  [ContractMethod(0_01000000, 
-    ContractParameterType.Integer, 
-    ParameterTypes = new[] { ContractParameterType.Hash160 }, 
-    ParameterNames = new[] { "account" }, 
-    SafeMethod = true)]
-  protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
-  ```
 
   <table class="mytable">
   <tr >
@@ -308,14 +268,6 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
   </table>
 
 - **transfer**: Transfer token from one to another
-
-  ```csharp
-  [ContractMethod(0_08000000, 
-      ContractParameterType.Boolean, 
-      ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Hash160, ContractParameterType.Integer }, 
-      ParameterNames = new[] { "from", "to", "amount" })]
-  protected StackItem Transfer(ApplicationEngine engine, VMArray args)
-  ```
 
   <table class="mytable">
   <tr >
@@ -356,16 +308,6 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
 
 - **unClaimGas**：Get the amount of GAS unclaimed at the specified height
 
-  ```csharp
-  [ContractMethod(0_03000000, 
-      ContractParameterType.Integer, 
-      ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Integer }, 
-      ParameterNames = new[] { "account", "end" }, 
-      SafeMethod = true)]
-  private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
-
-  ```
-
   <table class="mytable">
   <tr >
   <th rowspan="3">Parameters</th>
@@ -400,14 +342,6 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
 
 - **RegisterValidator**：Register to become a candidate for the validator
 
-  ```csharp
-  [ContractMethod(0_05000000, 
-      ContractParameterType.Boolean, 
-      ParameterTypes = new[] { ContractParameterType.PublicKey }, 
-      ParameterNames = new[] { "pubkey" })]
-  private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
-  ```
-
   <table class="mytable">
   <tr >
   <th rowspan="2">Parameters</th>
@@ -437,13 +371,6 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
 
 - **getRegisteredValidators**：Gets the information of currently registered validators and backup nodes 
 
-  ```csharp
-  [ContractMethod(1_00000000, 
-    ContractParameterType.Array,
-    SafeMethod = true)]
-  private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args)
-  ```
-
   <table class="mytable">
   <tr >
     <th >Parameters</th>
@@ -464,13 +391,6 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
   </table>
 
 - **getValidators**: Get all current validators
-
-  ```csharp
-  [ContractMethod(1_00000000, 
-    ContractParameterType.Array, 
-    SafeMethod = true)]
-  private StackItem GetValidators(ApplicationEngine engine, VMArray args)
-  ```
 
   <table class="mytable">
   <tr >
@@ -493,13 +413,6 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
 
 - **getNextBlockValidators**: Get validators of the next block
 
-  ```csharp
-  [ContractMethod(1_00000000, 
-    ContractParameterType.Array, 
-    SafeMethod = true)]
-  private StackItem GetNextBlockValidators(ApplicationEngine engine, VMArray args)
-  ```
-
   <table class="mytable">
   <tr >
       <th >Parameters</th>
@@ -520,14 +433,6 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
   </table>
 
 - **vote**：Vote for to validators
-
-  ```csharp
-  [ContractMethod(5_00000000, 
-    ContractParameterType.Boolean, 
-    ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Array }, 
-    ParameterNames = new[] { "account", "pubkeys" })]
-  private StackItem Vote(ApplicationEngine engine, VMArray args)
-  ```
 
   <table class="mytable">
   <tr >
@@ -561,8 +466,6 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
   </tr>
   </table>
 
-> Method marked * is [NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki) standard interface.
-
 #### GasToken
 
 Referred to as GAS, Neo's fuel token, used to pay the handling fee, in line with NEP-5 standards. Transaction costs and consensus node incentives on the Neo network are paid in GAS. The total amount of GAS is 100 million, and the minimum unit is 0.00000001. GAS is registered in the founding block but not distributed.
@@ -573,17 +476,8 @@ GAS distribution mechanism: When a new block is generated, a new GAS is generate
 Where `m` is the height of the block where the user last extracted the GAS, `n` is the current block height, and `NEO` is the number of NEOs held by the user during `m` to `n`. `BlockBonus` represents the amount of GAS that each block can extract. `SystemFee`  represents the sum of the system fees for all transactions in this block.
 
 GasToken methods details following：
-
+> Method marked * is [NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki) standard interface
 - **name**: Name of the token
-
-  ```csharp
-  [ContractMethod(0, 
-    ContractParameterType.String, 
-    Name = "name", 
-    SafeMethod = true)]
-  protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
-  ```
-
 
   <table class="mytable">
   <tr >
@@ -606,14 +500,6 @@ GasToken methods details following：
 
 - **symbol**: Symbol of the token
 
-  ```csharp
-  [ContractMethod(0, 
-    ContractParameterType.String, 
-    Name = "symbol", 
-    SafeMethod = true)]
-  protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
-  ```
-
   <table class="mytable">
   <tr >
       <th >Parameters</th>
@@ -634,14 +520,6 @@ GasToken methods details following：
   </table>
 
 - **decimals**: Decimals of the token
-
-  ```csharp
-  [ContractMethod(0, 
-    ContractParameterType.Integer, 
-    Name = "decimals", 
-    SafeMethod = true)]
-  protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
-  ```
 
   <table class="mytable">
   <tr >
@@ -664,13 +542,6 @@ GasToken methods details following：
 
 - **totalSupply**: Total supply
 
-  ```csharp
-  [ContractMethod(0_01000000, 
-    ContractParameterType.Integer, 
-    SafeMethod = true)]
-  protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
-  ```
-
   <table class="mytable">
   <tr >
       <th >Parameters</th>
@@ -691,15 +562,6 @@ GasToken methods details following：
   </table>
 
 - **balanceOf**: Balance of a specific account
-
-  ```csharp
-  [ContractMethod(0_01000000, 
-    ContractParameterType.Integer, 
-    ParameterTypes = new[] { ContractParameterType.Hash160 }, 
-    ParameterNames = new[] { "account" }, 
-    SafeMethod = true)]
-  protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
-  ```
 
   <table class="mytable">
   <tr >
@@ -729,14 +591,6 @@ GasToken methods details following：
   </table>
 
 - **transfer**: Transfer token from one account to another
-
-  ```csharp
-  [ContractMethod(0_08000000, 
-      ContractParameterType.Boolean, 
-      ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Hash160, ContractParameterType.Integer }, 
-      ParameterNames = new[] { "from", "to", "amount" })]
-  protected StackItem Transfer(ApplicationEngine engine, VMArray args)
-  ```
 
   <table class="mytable">
   <tr >
@@ -777,15 +631,6 @@ GasToken methods details following：
 
 - **getSysFeeAmount**: Total system fee till a specific height
 
-  ```csharp
-  [ContractMethod(0_01000000, 
-    ContractParameterType.Integer, 
-    ParameterTypes = new[] { ContractParameterType.Integer }, 
-    ParameterNames = new[] { "index" }, 
-    SafeMethod = true)]
-  private StackItem GetSysFeeAmount(ApplicationEngine engine, VMArray args)
-  ```
-
   <table class="mytable">
   <tr >
   <th rowspan="2">Parameters</th>
@@ -813,20 +658,11 @@ GasToken methods details following：
   </tr>
   </table>
 
-> Method marked * is [NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki) standard interface
-
 #### PolicyContract
 
 It is the contract for configuring the consensus strategy and saves relevant parameters in the consensus process, including maximum transactions per block, maximum low-priority transactions per block, maximum low-priority-transaction size, the fee per byte, etc. The interface is described in detail below：
 
 - getMaxTransactionPerBlock: Get maximum transactions per block.
-
-  ```csharp
-  [ContractMethod(0_01000000, 
-    ContractParameterType.Integer, 
-    SafeMethod = true)]
-  private StackItem GetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray args)
-  ```
 
   <table class="mytable">
   <tr >
@@ -849,13 +685,6 @@ It is the contract for configuring the consensus strategy and saves relevant par
 
 - **GetFeePerByte**： Get system fee per byte
 
-  ```csharp
-  [ContractMethod(0_01000000, 
-    ContractParameterType.Integer, 
-    SafeMethod = true)]
-  private StackItem GetFeePerByte(ApplicationEngine engine, VMArray args)
-  ```
-
   <table class="mytable">
   <tr >
       <th >Parameters</th>
@@ -876,13 +705,6 @@ It is the contract for configuring the consensus strategy and saves relevant par
   </table>
 
 - **getBlockedAccounts**: Get the addresses in the blacklist
-
-  ```csharp
-  [ContractMethod(0_01000000, 
-    ContractParameterType.Array, 
-    SafeMethod = true)]
-  private StackItem GetBlockedAccounts(ApplicationEngine engine, VMArray args)
-  ```
 
   <table class="mytable">
   <tr >
@@ -905,14 +727,6 @@ It is the contract for configuring the consensus strategy and saves relevant par
 
 
 - **setMaxTransactionsPerBlock**: Set maximum transactions count per block
-
-  ```csharp
-  [ContractMethod(0_03000000, 
-    ContractParameterType.Boolean, 
-    ParameterTypes = new[] { ContractParameterType.Integer }, 
-    ParameterNames = new[] { "value" })]
-  private StackItem SetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray args)
-  ```
 
   <table class="mytable">
   <tr >
@@ -944,14 +758,6 @@ It is the contract for configuring the consensus strategy and saves relevant par
 
 - **setFeePerByte**：Set system fee per byte.
 
-  ```csharp
-  [ContractMethod(0_03000000, 
-    ContractParameterType.Boolean, 
-    ParameterTypes = new[] { ContractParameterType.Integer }, 
-    ParameterNames = new[] { "value" })]
-  private StackItem SetFeePerByte(ApplicationEngine engine, VMArray args)
-  ```
-
   <table class="mytable">
   <tr >
   <th rowspan="2">Parameters</th>
@@ -982,14 +788,6 @@ It is the contract for configuring the consensus strategy and saves relevant par
 
 - **blockAccount**：Add an account into the blacklist.
 
-  ```csharp
-  [ContractMethod(0_03000000, 
-    ContractParameterType.Boolean, 
-    ParameterTypes = new[] { ContractParameterType.Hash160 }, 
-    ParameterNames = new[] { "account" })]
-  private StackItem BlockAccount(ApplicationEngine engine, VMArray args)
-  ```
-
   <table class="mytable">
   <tr >
   <th rowspan="2">Parameters</th>
@@ -1019,14 +817,6 @@ It is the contract for configuring the consensus strategy and saves relevant par
   </table>
 
 - **unblockAccount**：Remove an account from the blacklist.
-
-  ```csharp
-  [ContractMethod(0_03000000, 
-    ContractParameterType.Boolean, 
-    ParameterTypes = new[] { ContractParameterType.Hash160 }, 
-    ParameterNames = new[] { "account" })]
-  private StackItem UnblockAccount(ApplicationEngine engine, VMArray args)
-  ```
 
   <table class="mytable">
   <tr >
@@ -1060,52 +850,6 @@ It is the contract for configuring the consensus strategy and saves relevant par
 
 ### NativeContract Deployment
 NativeContract is deployed in the Genesis Block by calling the interop interface of Neo.Native.Deploy, and can only be executed in the Genesis Block.
-### NativeContract Invocation
-There are two ways to invoke a native contract. The first one is to invoke the contract with its ScriptHash, just like the normal contract, and the other is specific to the native contract-specific, that is, direct invocation through the interop service. You can refer to [Usage of Interop Service](#Usage-of-Interop-Service)
-
-- **Specific Way**：Using the interop service
-
-Each NativeContract registers an interop interface with the name of its ServiceName, which is under the Neo.Native namespace.
-The ServiceName corresponding to each NativeContract is as follows：
-
-|NativeContract|ServiceName|
-|---|---|
-|NeoToken|Neo.Native.Tokens.NEO|
-|GasToken|Neo.Native.Tokens.GAS|
-|PolicyToken|NeoNeo.Native.Policy|
-
-If you want to implement a function for transferring GAS, a smart contract written in C# can be as follows:
-
-```csharp
-using Neo.SmartContract.Framework;
-using Neo.SmartContract.Framework.Neo;
-
-namespace MyContract
-{
-public class MyContract: SmartContract
-{
-  public static object main(string method, object[] args)
-  {
-    if (method == "test") {
-      if (args.Length < 3) return false;
-      return Native.Tokens.GAS("transfer", args);
-    }
-  }
-}
-}
-```
-
-- **General Way**：Using ScriptHash and System.Contract.Call
-
-Since the ScriptHash of the native contract is fixed, it can be invoked with the interop interface of the System.Contract.Call and the ScriptHash, just like any other normal contract. The existing script hash of the native contract is as follows：
-
-|NativeContract|ScriptHash|
-|---|---|
-|NeoToken| 0x43cf98eddbe047e198a3e5d57006311442a0ca15 |
-|GasToken|0xa1760976db5fcdfab2a9930e8f6ce875b2d18225|
-|PolicyToken|0x9c5699b260bd468e2160dd5d45dfd2686bba8b77|
-
-For details please refer to [Contract Invokation](#Contract-Invocation)
 
 ## Interop Service
 The interop service layer provides APIs for smart contracts to access the blockchain data, including the block information, transaction information, contract information, asset information, etc. Besides, the interop service layer provides the persistence capability for each contract. Each Neo smart contract is allowed to optionally enable a private storage area with the form of key-value pair. The context of persisting the storage for Neo smart contracts is determined by the callee of the contract, not the caller. The caller needs to pass its storage context to the callee (that is, authorization) before the callee can perform the read-write operation. There are two types of interop service, namely System and Neo.
@@ -1643,6 +1387,47 @@ Interop services are divided into System part and Neo part. The specific interfa
 
 ## Accessing to Internet Resources
 ## Contract Invocation
+### Invocation via Interop Service Directly
+Only Native Contracts are supported. Each NativeContract registers an interop interface with the name of its ServiceName, which is under the Neo.Native namespace.
+The ServiceName corresponding to each NativeContract is as follows：
+
+|NativeContract|ServiceName|
+|---|---|
+|NeoToken|Neo.Native.Tokens.NEO|
+|GasToken|Neo.Native.Tokens.GAS|
+|PolicyToken|NeoNeo.Native.Policy|
+
+If you want to implement a function for transferring GAS, a smart contract written in C# can be as follows:
+
+```csharp
+using Neo.SmartContract.Framework;
+using Neo.SmartContract.Framework.Neo;
+
+namespace MyContract
+{
+public class MyContract: SmartContract
+{
+  public static object main(string method, object[] args)
+  {
+    if (method == "test") {
+      if (args.Length < 3) return false;
+      return Native.Tokens.GAS("transfer", args);
+    }
+  }
+}
+}
+```
+More information about usage of Interop Service you can refer to [Usage of Interop Service](#Usage-of-Interop-Service).
+
+Since the ScriptHash of the native contract is fixed, it can be invoked with the interop interface of the System.Contract.Call and the ScriptHash, just like any other normal contract. The existing script hash of the native contract is as follows：
+
+|NativeContract|ScriptHash|
+|---|---|
+|NeoToken| 0x43cf98eddbe047e198a3e5d57006311442a0ca15 |
+|GasToken|0xa1760976db5fcdfab2a9930e8f6ce875b2d18225|
+|PolicyToken|0x9c5699b260bd468e2160dd5d45dfd2686bba8b77|
+
+### Invoke another contract in contract
 When writing a contract, you can invoke other contracts through the interop service provided by the development framework[System.Contract.Call](#SystemContractCall). Here is an example in C#:
 
 ```csharp
@@ -1664,7 +1449,7 @@ public class MyContract: SmartContract
 }
 }
 ```
-
+### Invoke contract in script
 In the case of the execution script constructed manually, the contract should be invoked with the interop service [System.Contract.Call](#SystemContractCall) and the ScriptHash of the contract. Please refer to [How to use interop services](#Usage-of-Interop-Service)
 
 Here is an example for invoking method `transfer` of the contract `0x43cf98eddbe047e198a3e5d57006311442a0ca15` via `System.Contract.Call`：
