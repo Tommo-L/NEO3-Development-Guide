@@ -61,7 +61,7 @@ The system fee is calculated by opcodes to be executed by the Neo virtual machin
 
 ![system fee](../../images/system_fee.png)
 
-where *OpcodeSet* is opcode set, 𝑂𝑝𝑐𝑜𝑑𝑒𝑃𝑟𝑖𝑐𝑒<sub>𝑖</sub> is the cost of opcode *i*, 𝑛<sub>𝑖</sub> is the number of instruction *i* in the contract script.
+where *OpcodeSet* is opcode set, 𝑂𝑝𝑐𝑜𝑑𝑒𝑃𝑟𝑖𝑐𝑒<sub>𝑖</sub> is the cost of opcode *i*, 𝑛<sub>𝑖</sub> is the execution times of instruction *i* in the contract script.
 
 ### networkFee
 The network fee is the fee paid by users when they submit transactions to the Neo network and it will be paied to the validator for producing new block. For each transaction, there is a base minimum network fee which is calculated as the followig formular. Transaction will be executed only when user pays network fee equal to or higher than the base network fee. Otherwise, transaction will be invalid.
