@@ -181,7 +181,22 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
     <td colspan="2" >0.00</td>
     </tr>
   </table>
+  在合约中调用示例：
 
+  ```csharp
+  using Neo.SmartContract.Framework;
+  using Neo.SmartContract.Framework.Neo;
+
+  public static bool Main(string method, object[] args)
+  {
+      if (Runtime.Trigger == TriggerType.Application)
+      {
+          if (method == "neoName") {
+            return Neo.Native.Tokens.Neo("name", new object[]());
+          }
+      }  
+  }
+  ```
 - **symbol***：Token的简称
 
   <table>
@@ -509,7 +524,6 @@ GAS 的分发机制: 生成一个新区块时会伴随产生新的 GAS，所生�
     <th colspan="2" >0.00</th>
     </tr>
   </table>
-
 - **symbol**: Token的简称
 
   <table>
