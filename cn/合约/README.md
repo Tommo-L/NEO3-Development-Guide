@@ -183,19 +183,82 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   </table>
   在合约中调用示例：
 
+  1.直接使用互操作服务
+
   ```csharp
   using Neo.SmartContract.Framework;
   using Neo.SmartContract.Framework.Neo;
 
-  public static bool Main(string method, object[] args)
+  public static object Main(string method, object[] args)
   {
       if (Runtime.Trigger == TriggerType.Application)
       {
           if (method == "neoName") {
-            return Neo.Native.Tokens.Neo("name", new object[]());
+            string name = Neo.Native.Tokens.Neo("name", new object[]());
+            return name;
           }
       }  
   }
+  ```
+  2.使用合约脚本哈希
+
+  ```csharp
+  using Neo.SmartContract.Framework;
+  using Neo.SmartContract.Framework.System;
+
+  public static object Main(string method, object[] args)
+  {
+    private static string neoScriptHash = "0x43cf98eddbe047e198a3e5d57006311442a0ca15";
+      if (Runtime.Trigger == TriggerType.Application)
+      {
+          if (method == "neoName") {
+            string name = Contract.Call(neoScriptHash.HexToBytes(), "name", new object[]{});
+            return name;
+          }
+      }  
+  }
+  ```
+  拼接脚本
+
+
+  1.使用互操作服务
+  NeoToken注册的互操作服务哈希为0x45c49284,所以脚本为
+  ```
+  PUSH0
+  NEWARRAY
+  PUSHBYTES4 6e616d65
+  SYSCALL 45c49284
+  ```
+  生成脚本的C#代码为：
+
+  ```
+  ScriptBuilder sb = new ScriptBuilder()
+  sb.EmitPush(0);
+  sb.Emit(OpCode.NEWARRAY);
+  sb.EmitPush("name");
+  sb.EmitSysCall(Neo.Native.Tokens.NEO); //根据互操作索引调用
+  byte[] script = sb.ToArray();
+  ```
+
+  2.使用合约脚本哈希
+  通过System.Contract.Call来调用合约脚本为:
+  ```
+  PUSH0
+  NEWARRAY
+  PUSHBYTES4  6e616d65
+  PUSHBYTES20 0x43cf98eddbe047e198a3e5d57006311442a0ca15
+  SYSCALL     0x627d5b52
+  ```
+
+  生成脚本的C#代码为：
+  ```
+  ScriptBuilder sb = new ScriptBuilder()
+  sb.EmitPush(0);
+  sb.Emit(OpCode.NEWARRAY);
+  sb.EmitPush("name");
+  sb.EmitPush(scriptHash);
+  sb.EmitSysCall(InteropService.System_Contract_Call); //根据互操作索引调用
+  byte[] script = sb.ToArray();
   ```
 - **symbol***：Token的简称
 
