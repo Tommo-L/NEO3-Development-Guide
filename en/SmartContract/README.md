@@ -175,7 +175,86 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
       <td colspan="2" >0.00</td>
   </tr>
   </table>
+  Example in C# contract
 
+  1. Using Interop Service
+
+  ```csharp
+    using Neo.SmartContract.Framework;
+    using Neo.SmartContract.Framework.Neo;
+
+    public static object Main(string method, object[] args)
+    {
+        if (Runtime.Trigger == TriggerType.Application)
+        {
+            if (method == "neoName") {
+              string name = Neo.Native.Tokens.Neo("name", new object[]());
+              return name;
+            }
+        }  
+    }
+    ```
+  2. Using Contract Script Hash
+
+    ```csharp
+    using Neo.SmartContract.Framework;
+    using Neo.SmartContract.Framework.System;
+
+    public static object Main(string method, object[] args)
+    {
+      private static string neoScriptHash = "0x43cf98eddbe047e198a3e5d57006311442a0ca15";
+        if (Runtime.Trigger == TriggerType.Application)
+        {
+            if (method == "neoName") {
+              string name = Contract.Call(neoScriptHash.HexToBytes(), "name", new object[]{});
+              return name;
+            }
+        }  
+    }
+    ```
+  Build Script
+
+
+  1. Using Interop Service
+  The hash of NeoToken interop service is `0x45c49284`. The script:
+  ```
+  PUSH0
+  NEWARRAY
+  PUSHBYTES4 6e616d65
+  SYSCALL 45c49284
+  ```
+  C# code to build the script：
+
+  ```
+  ScriptBuilder sb = new ScriptBuilder()
+  sb.EmitPush(0);
+  sb.Emit(OpCode.NEWARRAY);
+  sb.EmitPush("name");
+  sb.EmitSysCall(Neo.Native.Tokens.NEO);
+  byte[] script = sb.ToArray();
+  ```
+
+  2. Using Contract Script Hash
+  Using System.Contract.Call to invoke contract:
+  ```
+  PUSH0
+  NEWARRAY
+  PUSHBYTES4  6e616d65
+  PUSHBYTES20 0x43cf98eddbe047e198a3e5d57006311442a0ca15
+  SYSCALL     0x627d5b52
+  ```
+
+  C# code to build the script：
+  ```
+  ScriptBuilder sb = new ScriptBuilder()
+  UInt160 scriptHash = UInt160.Parse("0x43cf98eddbe047e198a3e5d57006311442a0ca15");
+  sb.EmitPush(0);
+  sb.Emit(OpCode.NEWARRAY);
+  sb.EmitPush("name");
+  sb.EmitPush(scriptHash.ToArray());
+  sb.EmitSysCall(InteropService.System_Contract_Call);
+  byte[] script = sb.ToArray();
+  ```
 - **symbol**：Symbol of the token
 
   <table class="mytable">
@@ -305,7 +384,105 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
   <td colspan="3" >0.08</td>
   </tr>
   </table>
+  Example in C# contract
 
+  1. Using Interop Service
+
+    ```csharp
+    using Neo.SmartContract.Framework;
+    using Neo.SmartContract.Framework.Neo;
+
+    public static object Main(string method, object[] args)
+    {
+        if (Runtime.Trigger == TriggerType.Application)
+        {
+            if (method == "transferNeo") {
+              string name = Neo.Native.Tokens.Neo("transfer", args);
+              return name;
+            }
+        }  
+    }
+    ```
+  2. Using Contract Script Hash
+
+    ```csharp
+    using Neo.SmartContract.Framework;
+    using Neo.SmartContract.Framework.System;
+
+    public static object Main(string method, object[] args)
+    {
+      private static string neoScriptHash = "0x43cf98eddbe047e198a3e5d57006311442a0ca15";
+        if (Runtime.Trigger == TriggerType.Application)
+        {
+            if (method == "transferNeo") {
+              byte[] from  = "AesUJTLg93cWMTSzp2snxpBJSCets89ebM".ToScriptHash();
+              byte[] to    = "AMhbbwR8r6LuTx5okkZudvvp3LW6Fh1Y7o".ToScriptHash();
+              BigInterger value = new BigInteger(100000000);
+              string name = Contract.Call(neoScriptHash.HexToBytes(), "transfer", new Object[]{from, to, value.AsByteArray()});
+              return name;
+            }
+        }  
+    }
+    ```
+  Build Script
+
+
+  1. Using Interop Service
+  The hash of NeoToken interop service is `0x45c49284`. The script:
+  ```
+  PUSHBYTE4  00e1f505
+  PUSHBYTE20 4101b2a928fd88e1d976fd23c2db25a822338a08
+  PUSHBYTE20 fd59e6a0e3eee5cd9cea7233f01e1cc9c8b23502
+  PUSH3
+  PACK
+  PUSHBYTES4 7472616e73666572
+  SYSCALL 45c49284
+  ```
+  C# code to build the script：
+
+  ```
+  ScriptBuilder sb = new ScriptBuilder()
+  UInt160 from = UInt160.Parse("0xfd59e6a0e3eee5cd9cea7233f01e1cc9c8b23502");
+  UInt160 to = UInt160.Parse("0x4101b2a928fd88e1d976fd23c2db25a822338a08");
+  long value = 1000000000;
+  sb.EmitPush(value);
+  sb.EmitPush(to);
+  sb.EmitPush(from);
+  sb.Emit(OpCode.PUSH3);
+  sb.Emit(OpCode.PACK);
+  sb.EmitPush("transfer");
+  sb.EmitSysCall(Neo.Native.Tokens.NEO);
+  byte[] script = sb.ToArray();
+  ```
+
+  2. Using Contract Script Hash
+  Using System.Contract.Call to invoke contract:
+  ```
+  PUSHBYTE4   00e1f505
+  PUSHBYTE20  4101b2a928fd88e1d976fd23c2db25a822338a08
+  PUSHBYTE20  fd59e6a0e3eee5cd9cea7233f01e1cc9c8b23502
+  PUSH3
+  PACK
+  PUSHBYTES4  7472616e73666572
+  PUSHBYTES20 0x43cf98eddbe047e198a3e5d57006311442a0ca15
+  SYSCALL     0x627d5b52
+  ```
+
+  C# code to build the script：
+  ```
+  ScriptBuilder sb = new ScriptBuilder()
+  UInt160 from = UInt160.Parse("0xfd59e6a0e3eee5cd9cea7233f01e1cc9c8b23502");
+  UInt160 to = UInt160.Parse("0x4101b2a928fd88e1d976fd23c2db25a822338a08");
+  long value = 1000000000;
+  sb.EmitPush(value);
+  sb.EmitPush(to);
+  sb.EmitPush(from);
+  sb.Emit(OpCode.PUSH3);
+  sb.Emit(OpCode.PACK);
+  sb.EmitPush("transfer");
+  sb.EmitSysCall(InteropService.System_Contract_Call);
+  byte[] script = sb.ToArray();
+  ```
 - **unClaimGas**：Get the amount of GAS unclaimed at the specified height
 
   <table class="mytable">
@@ -339,7 +516,100 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
   <td colspan="3" >0.03</td>
   </tr>
   </table>
+  Example in C# contract
 
+  1. Using Interop Service
+
+    ```csharp
+    using Neo.SmartContract.Framework;
+    using Neo.SmartContract.Framework.Neo;
+
+    public static object Main(string method, object[] args)
+    {
+        if (Runtime.Trigger == TriggerType.Application)
+        {
+            if (method == "accountUnClaimGas") {
+              byte[] account = "AXx1A21wcoXuVxxxggkQChxQP5EGYe6zsN".ToScriptHash();
+              int height = 1000000;
+              int gas = Neo.Native.Tokens.Neo("unClaimGas", new Object[]{account, height});
+              return name;
+            }
+        }  
+    }
+    ```
+  2. Using Contract Script Hash
+
+    ```csharp
+    using Neo.SmartContract.Framework;
+    using Neo.SmartContract.Framework.System;
+
+    public static object Main(string method, object[] args)
+    {
+      private static string neoScriptHash = "0x43cf98eddbe047e198a3e5d57006311442a0ca15";
+        if (Runtime.Trigger == TriggerType.Application)
+        {
+            if (method == "accountUnClaimGas") {
+              byte[] account = "AXx1A21wcoXuVxxxggkQChxQP5EGYe6zsN".ToScriptHash();
+              int height = 1000000;
+              string name = Contract.Call(neoScriptHash.HexToBytes(), "unClaimGas", new Object[]{account, height});
+              return name;
+            }
+        }  
+    }
+    ```
+  Build Script
+
+
+  1. Using Interop Service
+    The hash of NeoToken interop service is `0x45c49284`. The script:
+    ```
+    PUSHBYTE3   40420f
+    PUSHBYTE20  b16c70b94928ddb62f5793fbc98d6245ee308ecd
+    PUSH2
+    PACK
+    PUSHBYTES4  756e436c61696d476173
+    SYSCALL     45c49284
+    ```
+    C# code to build the script：
+
+    ```
+    ScriptBuilder sb = new ScriptBuilder()
+    UInt160 account = UInt160.Parse("0xb16c70b94928ddb62f5793fbc98d6245ee308ecd");
+    int height = 1000000
+    sb.EmitPush(height);
+    sb.EmitPush(account);
+    sb.Emit(OpCode.PUSH2);
+    sb.Emit(OpCode.PACK);
+    sb.EmitPush("unClaimGas");
+    sb.EmitSysCall(Neo.Native.Tokens.NEO);
+    byte[] script = sb.ToArray();
+    ```
+
+  2. Using Contract Script Hash
+    Using System.Contract.Call to invoke contract:
+    ```
+    PUSHBYTE3   40420f
+    PUSHBYTE20  b16c70b94928ddb62f5793fbc98d6245ee308ecd
+    PUSH2
+    PACK
+    PUSHBYTES4  756e436c61696d476173
+    PUSHBYTES20 0x43cf98eddbe047e198a3e5d57006311442a0ca15
+    SYSCALL     0x627d5b52
+    ```
+
+    C# code to build the script：
+    ```
+    ScriptBuilder sb = new ScriptBuilder()
+    UInt160 account = UInt160.Parse("0xb16c70b94928ddb62f5793fbc98d6245ee308ecd");
+    int height = 1000000
+    sb.EmitPush(height);
+    sb.EmitPush(account);
+    sb.Emit(OpCode.PUSH2);
+    sb.Emit(OpCode.PACK);
+    sb.EmitPush("unClaimGas");
+    sb.EmitSysCall(InteropService.System_Contract_Call);
+    byte[] script = sb.ToArray();
+    ```
 - **RegisterValidator**：Register to become a candidate for the validator
 
   <table class="mytable">

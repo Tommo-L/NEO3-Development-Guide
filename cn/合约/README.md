@@ -218,7 +218,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
       }  
   }
   ```
-  拼接脚本
+  拼接脚本示例
 
 
   1.使用互操作服务
@@ -236,7 +236,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   sb.EmitPush(0);
   sb.Emit(OpCode.NEWARRAY);
   sb.EmitPush("name");
-  sb.EmitSysCall(Neo.Native.Tokens.NEO); //根据互操作索引调用
+  sb.EmitSysCall(Neo.Native.Tokens.NEO);
   byte[] script = sb.ToArray();
   ```
 
@@ -253,11 +253,12 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   生成脚本的C#代码为：
   ```
   ScriptBuilder sb = new ScriptBuilder()
+  UInt160 scriptHash = UInt160.Parse("0x43cf98eddbe047e198a3e5d57006311442a0ca15");
   sb.EmitPush(0);
   sb.Emit(OpCode.NEWARRAY);
   sb.EmitPush("name");
-  sb.EmitPush(scriptHash);
-  sb.EmitSysCall(InteropService.System_Contract_Call); //根据互操作索引调用
+  sb.EmitPush(scriptHash.ToArray());
+  sb.EmitSysCall(InteropService.System_Contract_Call);
   byte[] script = sb.ToArray();
   ```
 - **symbol***：Token的简称
@@ -393,7 +394,105 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
     <th colspan="3" >0.08</th>
     </tr>
   </table>
+  在合约中调用示例：
 
+  1.直接使用互操作服务
+
+  ```csharp
+  using Neo.SmartContract.Framework;
+  using Neo.SmartContract.Framework.Neo;
+
+  public static object Main(string method, object[] args)
+  {
+      if (Runtime.Trigger == TriggerType.Application)
+      {
+          if (method == "transferNeo") {
+            string name = Neo.Native.Tokens.Neo("transfer", args);
+            return name;
+          }
+      }  
+  }
+  ```
+  2.使用合约脚本哈希
+
+  ```csharp
+  using Neo.SmartContract.Framework;
+  using Neo.SmartContract.Framework.System;
+
+  public static object Main(string method, object[] args)
+  {
+    private static string neoScriptHash = "0x43cf98eddbe047e198a3e5d57006311442a0ca15";
+      if (Runtime.Trigger == TriggerType.Application)
+      {
+          if (method == "transferNeo") {
+            byte[] from  = "AesUJTLg93cWMTSzp2snxpBJSCets89ebM".ToScriptHash();
+            byte[] to    = "AMhbbwR8r6LuTx5okkZudvvp3LW6Fh1Y7o".ToScriptHash();
+            BigInterger value = new BigInteger(100000000);
+            string name = Contract.Call(neoScriptHash.HexToBytes(), "transfer", new Object[]{from, to, value.AsByteArray()});
+            return name;
+          }
+      }  
+  }
+  ```
+  拼接脚本示例
+
+
+  1.使用互操作服务
+  NeoToken注册的互操作服务哈希为0x45c49284,所以脚本为
+  ```
+  PUSHBYTE4  00e1f505
+  PUSHBYTE20 4101b2a928fd88e1d976fd23c2db25a822338a08
+  PUSHBYTE20 fd59e6a0e3eee5cd9cea7233f01e1cc9c8b23502
+  PUSH3
+  PACK
+  PUSHBYTES4 7472616e73666572
+  SYSCALL 45c49284
+  ```
+  生成脚本的C#代码为：
+
+  ```
+  ScriptBuilder sb = new ScriptBuilder()
+  UInt160 from = UInt160.Parse("0xfd59e6a0e3eee5cd9cea7233f01e1cc9c8b23502");
+  UInt160 to = UInt160.Parse("0x4101b2a928fd88e1d976fd23c2db25a822338a08");
+  long value = 1000000000;
+  sb.EmitPush(value);
+  sb.EmitPush(to);
+  sb.EmitPush(from);
+  sb.Emit(OpCode.PUSH3);
+  sb.Emit(OpCode.PACK);
+  sb.EmitPush("transfer");
+  sb.EmitSysCall(Neo.Native.Tokens.NEO);
+  byte[] script = sb.ToArray();
+  ```
+
+  2.使用合约脚本哈希
+  通过System.Contract.Call来调用合约脚本为:
+  ```
+  PUSHBYTE4   00e1f505
+  PUSHBYTE20  4101b2a928fd88e1d976fd23c2db25a822338a08
+  PUSHBYTE20  fd59e6a0e3eee5cd9cea7233f01e1cc9c8b23502
+  PUSH3
+  PACK
+  PUSHBYTES4  7472616e73666572
+  PUSHBYTES20 0x43cf98eddbe047e198a3e5d57006311442a0ca15
+  SYSCALL     0x627d5b52
+  ```
+
+  生成脚本的C#代码为：
+  ```
+  ScriptBuilder sb = new ScriptBuilder()
+  UInt160 from = UInt160.Parse("0xfd59e6a0e3eee5cd9cea7233f01e1cc9c8b23502");
+  UInt160 to = UInt160.Parse("0x4101b2a928fd88e1d976fd23c2db25a822338a08");
+  long value = 1000000000;
+  sb.EmitPush(value);
+  sb.EmitPush(to);
+  sb.EmitPush(from);
+  sb.Emit(OpCode.PUSH3);
+  sb.Emit(OpCode.PACK);
+  sb.EmitPush("transfer");
+  sb.EmitSysCall(InteropService.System_Contract_Call);
+  byte[] script = sb.ToArray();
+  ```
 - **unClaimGas**：获取到指定高度，未claim的GAS数量
 
   <table class="mytable">
@@ -419,7 +518,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   <th >描述</th>
   </tr>
   <tr >
-  <td colspan="2">registerValidator</td>
+  <td colspan="2">integer</td>
   <td >未claimGAS数量 </td>
   </tr>
   <tr >
@@ -427,7 +526,100 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   <td colspan="3" >0.03</td>
   </tr>
   </table>
+  在合约中调用示例：
 
+  1.直接使用互操作服务
+
+  ```csharp
+  using Neo.SmartContract.Framework;
+  using Neo.SmartContract.Framework.Neo;
+
+  public static object Main(string method, object[] args)
+  {
+      if (Runtime.Trigger == TriggerType.Application)
+      {
+          if (method == "accountUnClaimGas") {
+            byte[] account = "AXx1A21wcoXuVxxxggkQChxQP5EGYe6zsN".ToScriptHash();
+            int height = 1000000;
+            int gas = Neo.Native.Tokens.Neo("unClaimGas", new Object[]{account, height});
+            return name;
+          }
+      }  
+  }
+  ```
+  2.使用合约脚本哈希
+
+  ```csharp
+  using Neo.SmartContract.Framework;
+  using Neo.SmartContract.Framework.System;
+
+  public static object Main(string method, object[] args)
+  {
+    private static string neoScriptHash = "0x43cf98eddbe047e198a3e5d57006311442a0ca15";
+      if (Runtime.Trigger == TriggerType.Application)
+      {
+          if (method == "accountUnClaimGas") {
+            byte[] account = "AXx1A21wcoXuVxxxggkQChxQP5EGYe6zsN".ToScriptHash();
+            int height = 1000000;
+            string name = Contract.Call(neoScriptHash.HexToBytes(), "unClaimGas", new Object[]{account, height});
+            return name;
+          }
+      }  
+  }
+  ```
+  拼接脚本示例
+
+
+  1.使用互操作服务
+  NeoToken注册的互操作服务哈希为0x45c49284,所以脚本为
+  ```
+  PUSHBYTE3   40420f
+  PUSHBYTE20  b16c70b94928ddb62f5793fbc98d6245ee308ecd
+  PUSH2
+  PACK
+  PUSHBYTES4  756e436c61696d476173
+  SYSCALL     45c49284
+  ```
+  生成脚本的C#代码为：
+
+  ```
+  ScriptBuilder sb = new ScriptBuilder()
+  UInt160 account = UInt160.Parse("0xb16c70b94928ddb62f5793fbc98d6245ee308ecd");
+  int height = 1000000
+  sb.EmitPush(height);
+  sb.EmitPush(account);
+  sb.Emit(OpCode.PUSH2);
+  sb.Emit(OpCode.PACK);
+  sb.EmitPush("unClaimGas");
+  sb.EmitSysCall(Neo.Native.Tokens.NEO);
+  byte[] script = sb.ToArray();
+  ```
+
+  2.使用合约脚本哈希
+  通过System.Contract.Call来调用合约脚本为:
+  ```
+  PUSHBYTE3   40420f
+  PUSHBYTE20  b16c70b94928ddb62f5793fbc98d6245ee308ecd
+  PUSH2
+  PACK
+  PUSHBYTES4  756e436c61696d476173
+  PUSHBYTES20 0x43cf98eddbe047e198a3e5d57006311442a0ca15
+  SYSCALL     0x627d5b52
+  ```
+
+  生成脚本的C#代码为：
+  ```
+  ScriptBuilder sb = new ScriptBuilder()
+  UInt160 account = UInt160.Parse("0xb16c70b94928ddb62f5793fbc98d6245ee308ecd");
+  int height = 1000000
+  sb.EmitPush(height);
+  sb.EmitPush(account);
+  sb.Emit(OpCode.PUSH2);
+  sb.Emit(OpCode.PACK);
+  sb.EmitPush("unClaimGas");
+  sb.EmitSysCall(InteropService.System_Contract_Call);
+  byte[] script = sb.ToArray();
+  ```
 - **RegisterValidator**：注册验证人
 
   <table class="mytable">
