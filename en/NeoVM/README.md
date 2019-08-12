@@ -120,7 +120,7 @@ The constant instructions mainly complete the function of pushing constants or a
 |--------|----------|
 | Bytecode: | 0x00                                  |
 | Alias: |   `PUSHF`                |
-| Fee: | 3e-7 GAS                           |
+| Fee: | 0.00000030 GAS                           |
 | Function: | Push an empty array into the `EvaluationStack`  |
 
 #### PUSHBYTES
@@ -128,7 +128,7 @@ The constant instructions mainly complete the function of pushing constants or a
 | Instruction   | PUSHBYTES1\~PUSHBYTES75                                    |
 |----------|-----------------------------|
 | Bytecode: | 0x01\~0x4B                                                 |
-| Fee: | 1.2e-6 GAS                           |
+| Fee: | 0.00000120 GAS                           |
 | Function:   | Push a byte array into the `EvaluationStack`, the length of which is equal to the value of this instruction's bytecode. |
 
 #### PUSHDATA
@@ -136,7 +136,7 @@ The constant instructions mainly complete the function of pushing constants or a
 | Instruction   | PUSHDATA1, PUSHDATA2, PUSHDATA4                                   |
 |----------|---------------------------------------|
 | Bytecode: | 0x4C, 0x4D, 0x4E                                                  |
-| Fee: | 1.8e-6 GAS, 1.3e-4 GAS, 1.1e-3 GAS                    |
+| Fee: | 0.00000180 GAS, 0.00013000 GAS, 0.00110000 GAS                    |
 | Function:   | Push a byte array into the `EvaluationStack`, the length of which is specified by 1\|2\|4 bytes after this instruction.  |
 
 #### PUSHM1
@@ -144,7 +144,7 @@ The constant instructions mainly complete the function of pushing constants or a
 | Instruction   | PUSHM1                                   |
 |----------|------------------------------------------|
 | Bytecode: | 0x4F                                     |
-| Fee: | 3e-7 GAS                             |
+| Fee: | 0.00000030 GAS                             |
 | Function:   | Push a BigInteger of `-1`  into the `EvaluationStack`. |
 
 #### PUSHN
@@ -153,7 +153,7 @@ The constant instructions mainly complete the function of pushing constants or a
 |----------|---------------------------------------------|
 | Bytecode: | 0x51\~0x60                                  |
 | Alias:   |  `PUSHT` is an alias for `PUSH1`      |
-| Fee: | 3e-7 GAS                                      |
+| Fee: | 0.00000030 GAS                                      |
 | Function:   | Push a BigInteger into the `EvaluationStack`, the value of which is equal to 1\~16. |
 
 ### Flow Control
@@ -165,7 +165,7 @@ It's used to control the running process of NeoVM, including jump, call and othe
 | Instruction   | NOP                                         |
 |----------|---------------------------------------------|
 | Bytecode: | 0x61                                        |
-| Fee: | 3e-7 GAS                                |
+| Fee: | 0.00000030 GAS                                |
 | Function:   | Empty operation, but will add 1 to the instruction counter. |
 
 #### JMP
@@ -173,7 +173,7 @@ It's used to control the running process of NeoVM, including jump, call and othe
 | Instruction   | JMP                                                     |
 |----------|---------------------------------------------------------|
 | Bytecode: | 0x62                                                    |
-| Fee: | 7e-7 GAS                                            |
+| Fee: | 0.00000070 GAS                                            |
 | Function:   | Jump to the specified offset unconditionally, which is specified by 2 bytes after this instruction. |
 
 #### JMPIF
@@ -181,7 +181,7 @@ It's used to control the running process of NeoVM, including jump, call and othe
 | Instruction   | JMPIF                                                                                                                |
 |----------|-------------------------------------------------------------|
 | Bytecode: | 0x63      |
-| Fee: | 7e-7 GAS                                                                                                         |
+| Fee: | 0.00000070 GAS                                                                                                         |
 | Function:   | When the top element of the `EvaluationStack` isn't 0, then jump to the specified offset, which is specified by 2 bytes after this instruction. </br> Whether the condition determines true or not, the top element of the stack will be removed.  |
 
 #### JMPIFNOT
@@ -189,7 +189,7 @@ It's used to control the running process of NeoVM, including jump, call and othe
 | Instruction   | JMPIFNOT                                                           |
 |----------|--------------------------------------------------------------------|
 | Bytecode: | 0x64                                                               |
-| Fee: | 7e-7 GAS                                                        |
+| Fee: | 0.00000070 GAS                                                        |
 | Function:   | When the top element of the `EvaluationStack` is 0, then jump to the specified offset, which is specified by 2 bytes after this instruction. |
 
 #### CALL
@@ -197,7 +197,7 @@ It's used to control the running process of NeoVM, including jump, call and othe
 | Instruction   | CALL                                                  |
 |----------|-------------------------------------------------------|
 | Bytecode: | 0x65                                                  |
-| Fee: | 2.2e-4 GAS                           |
+| Fee: | 0.00022000 GAS                           |
 | Function:   | Call the function at the specified offset, which is specified by 2 bytes after this instruction.  |
 
 #### RET
@@ -205,7 +205,7 @@ It's used to control the running process of NeoVM, including jump, call and othe
 | Instruction   | RET                                                                                              |
 |----------|--------------------------------------------------------------------------------------------------|
 | Bytecode: | 0x66                                                                                             |
-| Fee: | 4e-7 GAS                                                        |
+| Fee: | 0.00000040 GAS                                                        |
 | Function:   | Remove the top element of the `InvocationStack` and set the instruction counter point to the next frame of the stack. </br> If the `InvocationStack` is empty, the virtual machine enters `HALT` state.  |
 
 #### SYSCALL
@@ -213,7 +213,7 @@ It's used to control the running process of NeoVM, including jump, call and othe
 | Instruction   | SYSCALL                                                |
 |----------|--------------------------------------------------------|
 | Bytecode: | 0x68                                                   |
-| Fee: | 0 GAS                                                        |
+| Fee: | According to the specific interoperable service billing of the system call, refer to [Interop Service Fees](../SmartContract/README.md#Fees)                                                       |
 | Function:   | Call the specified interoperable function whose name is specified by the string after this instruction. |
 
 ### Stack Operation
@@ -226,7 +226,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | DUPFROMALTSTACKBOTTOM            |
 |--------|------------------------------------------|
 | Bytecode: | 0x69                                     |
-| Fee: | 6e-7 GAS                                                        |
+| Fee: | 0.00000060 GAS                                                        |
 | Function:   | Copy the bottom element of the `AltStack`, and push it into the `EvaluationStack `. |
 
 #### DUPFROMALTSTACK
@@ -234,7 +234,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | DUPFROMALTSTACK                          |
 |--------|------------------------------------------|
 | Bytecode: | 0x6A                                     |
-| Fee: | 6e-7 GAS                                                        |
+| Fee: | 0.00000060 GAS                                                        |
 | Function:   | Copy the top element of the `AltStack`, and push it into the `EvaluationStack `. |
 
 #### TOALTSTACK
@@ -242,7 +242,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | TOALTSTACK                               |
 |----------|------------------------------------------|
 | Bytecode: | 0x6B                                     |
-| Fee: | 6e-7 GAS                                                        |
+| Fee: | 0.00000060 GAS                                                        |
 | Function:   | Remove the top element of the `EvaluationStack`, and push it into the `AltStack`. |
 
 #### FROMALTSTACK
@@ -250,7 +250,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | FROMALTSTACK                             |
 |----------|------------------------------------------|
 | Bytecode: | 0x6C                                     |
-| Fee: | 6e-7 GAS                                                        |
+| Fee: | 0.00000060 GAS                                                        |
 | Function:   | Remove the top element of the `AltStack`, and push it into the `EvaluationStack`. |
 
 #### XDROP
@@ -258,7 +258,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | XDROP                                              |
 |----------|----------------------------------------------------|
 | Bytecode: | 0x6D                                               |
-| Fee: | 4e-6 GAS                                                        |
+| Fee: | 0.00000400 GAS                                                        |
 | Function:   | Remove the element n at the top of the `EvaluationStack`, and remove the remaining element with index n. |
 | Input:   | Xn Xn-1 ... X2 X1 X0 n                             |
 | Output:   | Xn-1 ... X2 X1 X0                                  |
@@ -268,7 +268,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | XSWAP                                                                   |
 |----------|-------------------------------------------------------------------------|
 | Bytecode: | 0x72                                                                    |
-| Fee: | 6e-7 GAS                                                        |
+| Fee: | 0.0000006 GAS                                                        |
 | Function:   | Remove the element n at the top of the `EvaluationStack`, and swap the remaining element with index 0 and the element with index n. |
 | Input:   | Xn Xn-1 ... X2 X1 X0 n                                                  |
 | Output:   | X0 Xn-1 ... X2 X1 Xn                                                    |
@@ -278,7 +278,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | XTUCK                                                                     |
 |----------|---------------------------------------------------------------------------|
 | Bytecode: | 0x73                                                                      |
-| Fee: | 4e-6 GAS                                                        |
+| Fee: | 0.000004 GAS                                                        |
 | Function:   |  Remove the element n at the top of the `EvaluationStack`, copy the element with index 0, and insert to the index n.  |
 | Input:   | Xn Xn-1 ... X2 X1 X0 n                                                    |
 | Output:   | Xn X0 Xn-1 ... X2 X1 X0                                                   |
@@ -288,7 +288,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | DEPTH                                  |
 |----------|----------------------------------------|
 | Bytecode: | 0x74                                   |
-| Fee: | 6e-7 GAS                                                        |
+| Fee: | 0.0000006 GAS                                                        |
 | Function:   | Push the numbe of elements in the `EvaluationStack` into the top of the `EvaluationStack`. |
 
 #### DROP
@@ -296,7 +296,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | DROP                   |
 |----------|------------------------|
 | Bytecode: | 0x75                   |
-| Fee: | 6e-7 GAS                                                        |
+| Fee: | 0.0000006 GAS                                                        |
 | Function:   | Remove the top element of the `EvaluationStack` |
 
 #### DUP
@@ -304,7 +304,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | DUP                    |
 |----------|------------------------|
 | Bytecode: | 0x76                   |
-| Fee: | 6e-7 GAS                                                        |
+| Fee: | 0.0000006 GAS                                                        |
 | Function:   | Copy the top element of the `EvaluationStack`, and push it into the `EvaluationStack`. |
 | Input:   | X                      |
 | Output:   | X X                    |
@@ -314,7 +314,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | NIP                         |
 |----------|-----------------------------|
 | Bytecode: | 0x77                        |
-| Fee: | 6e-7 GAS                                                        |
+| Fee: | 0.0000006 GAS                                                        |
 | Function:   | Remove the second top element of the `EvaluationStack` |
 | Input:   | X1 X0                       |
 | Output:   | X0                          |
@@ -324,7 +324,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | OVER                                     |
 |----------|------------------------------------------|
 | Bytecode: | 0x78                                     |
-| Fee: | 6e-7 GAS                                                        |
+| Fee: | 0.0000006 GAS                                                        |
 | Function:   |  Copy the second top element of the `EvaluationStack`, and push it into the `EvaluationStack`. |
 | Input:   | X1 X0                                    |
 | Output:   | X1 X0 X1                                 |
@@ -334,7 +334,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | PICK                                                       |
 |----------|------------------------------------------------------------|
 | Bytecode: | 0x79                                                       |
-| Fee: | 6e-7 GAS                                                        |
+| Fee: | 0.0000006 GAS                                                        |
 | Function:   | Remove the element n at the top of the `EvaluationStack`, and copy the element with index n to the top. |
 | Input:   | Xn Xn-1 ... X2 X1 X0 n                                     |
 | Output:   | Xn Xn-1 ... X2 X1 X0 Xn                                    |
@@ -344,7 +344,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | ROLL                                                       |
 |----------|------------------------------------------------------------|
 | Bytecode: | 0x7A                                                       |
-| Fee: | 4e-6 GAS                                                        |
+| Fee: | 0.000004 GAS                                                        |
 | Function:   | Remove the element n at the top of the `EvaluationStack`, and move the element with index n to the top.  |
 | Input:   | Xn Xn-1 ... X2 X1 X0 n                                     |
 | Output:   | Xn-1 ... X2 X1 X0 Xn                                       |
@@ -354,7 +354,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | ROT                                         |
 |----------|---------------------------------------------|
 | Bytecode: | 0x7B                                        |
-| Fee: | 6e-7 GAS                                                        |
+| Fee: | 0.0000006 GAS                                                        |
 | Function:   | Move the third top element of the `EvaluationStack` to the top.  |
 | Input:   | X2 X1 X0                                    |
 | Output:   | X1 X0 X2                                    |
@@ -364,7 +364,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | SWAP                           |
 |----------|--------------------------------|
 | Bytecode: | 0x7C                           |
-| Fee: | 6e-7 GAS                                                        |
+| Fee: | 0.0000006 GAS                                                        |
 | Function:   | Swap the two elements at the top of the `EvaluationStack` |
 | Input:   | X1 X0                          |
 | Output:   | X0 X1                          |
@@ -374,7 +374,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | TUCK                                  |
 |----------|---------------------------------------|
 | Bytecode: | 0x7D                                  |
-| Fee: | 6e-7 GAS                                                        |
+| Fee: | 0.0000006 GAS                                                        |
 | Function:   | Copy the top element of the `EvaluationStack`, and insert to the index 2. |
 | Input:   | X1 X0                                 |
 | Output:   | X0 X1 X0                              |
@@ -387,7 +387,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | CAT                                              |
 |----------|--------------------------------------------------|
 | Bytecode: | 0x7E                                             |
-| Fee: | 8e-4 GAS                                                        |
+| Fee: | 0.0008 GAS                                                        |
 | Function:   | Remove the two top elements of the `EvaluationStack`, concat them together and push it back to the `EvaluationStack` |
 | Input:   | X1 X0                                            |
 | Output:   | Concat(X1,X0)                                    |
@@ -397,7 +397,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | SUBSTR                                       |
 |----------|----------------------------------------------|
 | Bytecode: | 0x7F                                         |
-| Fee: | 8e-4 GAS                                                        |
+| Fee: | 0.0008 GAS                                                        |
 | Function:   | Remove the three top elements of the `EvaluationStack`, calculate the substring and push it back. |
 | Input:   | X index len                                  |
 | Output:   | SubString(X,index,len)                       |
@@ -407,7 +407,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | LEFT                                         |
 |----------|----------------------------------------------|
 | Bytecode: | 0x80                                         |
-| Fee: | 8e-4 GAS                                                        |
+| Fee: | 0.0008 GAS                                                        |
 | Function:   | Remove the two top elements of the `EvaluationStack`, calculate the left-side substring and push it back. |
 | Input:   | X len                                        |
 | Output:   | Left(X,len)                                  |
@@ -417,7 +417,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | RIGHT                                        |
 |----------|----------------------------------------------|
 | Bytecode: | 0x81                                         |
-| Fee: | 8e-4 GAS                                                        |
+| Fee: | 0.0008 GAS                                                        |
 | Function:   | Remove the two top elements of the `EvaluationStack`, calculate the right-side substring and push it back. |
 | Input:   | X len                                        |
 | Output:   | Right(X,len)                                 |
@@ -427,7 +427,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | SIZE                             |
 |----------|----------------------------------|
 | Bytecode: | 0x82                             |
-| Fee: | 6e-7 GAS                                                        |
+| Fee: | 0.0000006 GAS                                                        |
 | Function:   | Push the length of the top string element to the `EvaluationStack` top.  |
 | Input:   | X                                |
 | Output:   | X len(X)                         |
@@ -440,7 +440,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | INVERT                       |
 |----------|------------------------------|
 | Bytecode: | 0x83                         |
-| Fee: | 1e-6 GAS                                                        |
+| Fee: | 0.000001 GAS                                                        |
 | Function:   | Remove the top element, inverse by bit, and push it back to the `EvaluationStack` top.  |
 | Input:   | X                            |
 | Output:   | \~X                          |
@@ -450,7 +450,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | AND                                    |
 |----------|----------------------------------------|
 | Bytecode: | 0x84                                   |
-| Fee: | 2e-6 GAS                                                        |
+| Fee: | 0.000002 GAS                                                        |
 | Function:   | Remove the two top elements, push the logic AND result of the two elements back to the `EvaluationStack` top. |
 | Input:   | AB                                     |
 | Output:   | A&B                                    |
@@ -460,7 +460,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | OR                                     |
 |----------|----------------------------------------|
 | Bytecode: | 0x85                                   |
-| Fee: | 2e-6 GAS                                                        |
+| Fee: | 0.000002 GAS                                                        |
 | Function:   | Remove the two top elements, push the logic OR result of the two elements back to the `EvaluationStack` top.  |
 | Input:   | AB                                     |
 | Output:   | A\|B                                   |
@@ -470,7 +470,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | XOR                                      |
 |----------|------------------------------------------|
 | Bytecode: | 0x86                                     |
-| Fee: | 2e-6 GAS                                                        |
+| Fee: | 0.000002 GAS                                                        |
 | Function:   | Remove the two top elements, push the logic XOR result of the two elements back to the `EvaluationStack` top.  |
 | Input:   | AB                                       |
 | Output:   | A\^B                                     |
@@ -480,7 +480,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | EQUAL                                        |
 |----------|----------------------------------------------|
 | Bytecode: | 0x87                                         |
-| Fee: | 2e-6 GAS                                                        |
+| Fee: | 0.000002 GAS                                                        |
 | Function:   | Check whether the top two elements are equivalence bit-by-bit. |
 | Input:   | AB                                           |
 | Output:   | Equals(A,B)                                  |
@@ -492,7 +492,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | INC                                |
 |----------|------------------------------------|
 | Bytecode: | 0x8B                               |
-| Fee: | 1e-6 GAS                                                        |
+| Fee: | 0.000001 GAS                                                        |
 | Function:   | Add 1 to the top element of the `EvaluationStack`.   |
 | Input:   | X                                  |
 | Output:   | X+1                                |
@@ -502,7 +502,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | DEC                                |
 |----------|------------------------------------|
 | Bytecode: | 0x8C                               |
-| Fee: | 1e-6 GAS                                                        |
+| Fee: | 0.000001 GAS                                                        |
 | Function:   | Add -1 to the top element of the `EvaluationStack`. |
 | Input:   | X                                  |
 | Output:   | X-1                                |
@@ -512,7 +512,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | SIGN                                         |
 |----------|----------------------------------------------|
 | Bytecode: | 0x8D                                         |
-| Fee: | 1e-6 GAS                                                        |
+| Fee: | 0.000001 GAS                                                        |
 | Function:   | Remove the top element and push the sign of it back to the `EvaluationStack`. |
 | Input:   | X                                            |
 | Output:   | X.Sign()                                     |
@@ -522,7 +522,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | NEGATE                         |
 |----------|--------------------------------|
 | Bytecode: | 0x8F                           |
-| Fee: | 1e-6 GAS                                                        |
+| Fee: | 0.000001 GAS                                                        |
 | Function:   | Remove the top element and push the opposite number back to the `EvaluationStack`.  |
 | Input:   | X                              |
 | Output:   | \-X                            |
@@ -532,7 +532,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | ABS                            |
 |----------|--------------------------------|
 | Bytecode: | 0x90                           |
-| Fee: | 1e-6 GAS                                                        |
+| Fee: | 0.000001 GAS                                                        |
 | Function:   | Remove the top element and push the absolute number back to the `EvaluationStack`.  |
 | Input:   | X                              |
 | Output:   | Abs(X)                         |
@@ -542,7 +542,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | NOT                                |
 |----------|------------------------------------|
 | Bytecode: | 0x91                               |
-| Fee: | 1e-6 GAS                                                        |
+| Fee: | 0.000001 GAS                                                        |
 | Function:   | Remove the top element and push the logic "negation" value back to the `EvaluationStack`.  |
 | Input:   | X                                  |
 | Output:   | !X                                 |
@@ -552,7 +552,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | NZ                                  |
 |----------|-------------------------------------|
 | Bytecode: | 0x92                                |
-| Fee: | 1e-6 GAS                                                        |
+| Fee: | 0.000001 GAS                                                        |
 | Function:   | Check whether the top element of the `EvaluationStack` is a non-zero value. |
 | Input:   | X                                   |
 | Output:   | X!=0                                |
@@ -562,7 +562,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | ADD                                    |
 |----------|----------------------------------------|
 | Bytecode: | 0x93                                   |
-| Fee: | 2e-6 GAS                                                        |
+| Fee: | 0.000002 GAS                                                        |
 | Function:   | The addition operation is performed on the top two elments of the `EvaluationStack`.  |
 | Input:   | AB                                     |
 | Output:   | A+B                                    |
@@ -572,7 +572,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | SUB                                    |
 |----------|----------------------------------------|
 | Bytecode: | 0x94                                   |
-| Fee: | 2e-6 GAS                                                        |
+| Fee: | 0.000002 GAS                                                        |
 | Function:   | The subtraction operation is performed on the top two elments of the `EvaluationStack`.    |
 | Input:   | AB                                     |
 | Output:   | A-B                                    |
@@ -582,7 +582,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | MUL                                    |
 |----------|----------------------------------------|
 | Bytecode: | 0x95                                   |
-| Fee: | 3e-6 GAS                                                        |
+| Fee: | 0.000003 GAS                                                        |
 | Function:   | The multiplication operation is performed on the top two elments of the `EvaluationStack`.  |
 | Input:   | AB                                     |
 | Output:   | A\*B                                   |
@@ -592,7 +592,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | DIV                                    |
 |----------|----------------------------------------|
 | Bytecode: | 0x96                                   |
-| Fee: | 3e-6 GAS                                                        |
+| Fee: | 0.000003 GAS                                                        |
 | Function:  | The division operation is performed on the top two elments of the `EvaluationStack`.   |
 | Input:   | AB                                     |
 | Output:   | A/B                                    |
@@ -602,7 +602,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | MOD                                    |
 |----------|----------------------------------------|
 | Bytecode: | 0x97                                   |
-| Fee: | 3e-6 GAS                                                        |
+| Fee: | 0.000003 GAS                                                        |
 | Function:   | The redundancy operation is performed on the top two elments of the `EvaluationStack`.   |
 | Input:   | AB                                     |
 | Output:   | A%B                                    |
@@ -612,7 +612,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | SHL                              |
 |----------|----------------------------------|
 | Bytecode: | 0x98                             |
-| Fee: | 3e-6 GAS                                                        |
+| Fee: | 0.000003 GAS                                                        |
 | Function:   | The left-shift operation is performed on the top elment of the `EvaluationStack`.  |
 | Instruction   | Xn                               |
 | Bytecode: | X\<\<n                           |
@@ -622,7 +622,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | SHR                              |
 |----------|----------------------------------|
 | Bytecode: | 0x99                             |
-| Fee: | 3e-6 GAS                                                        |
+| Fee: | 0.000003 GAS                                                        |
 | Function:   | The right-shift operation is performed on the top elment of the `EvaluationStack`.  |
 | Input:   | Xn                               |
 | Output:   | X\>\>n                           |
@@ -632,7 +632,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | BOOLAND                                |
 |----------|----------------------------------------|
 | Bytecode: | 0x9A                                   |
-| Fee: | 2e-6 GAS                                                        |
+| Fee: | 0.000002 GAS                                                        |
 | Function:   | The logic "and" operation is performed on the top two elments of the `EvaluationStack`. |
 | Input:   | AB                                     |
 | Output:   | A&&B                                   |
@@ -642,7 +642,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | BOOLOR                                 |
 |----------|----------------------------------------|
 | Bytecode: | 0x9D                                   |
-| Fee: | 2e-6 GAS                                                        |
+| Fee: | 0.000002 GAS                                                        |
 | Function:   | The logic "or" operation is performed on the top two elments of the `EvaluationStack`.  |
 | Input:   | AB                                     |
 | Output:   | A\|\|B                                 |
@@ -652,7 +652,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | NUMEQUAL                               |
 |----------|----------------------------------------|
 | Bytecode: | 0x9C                                   |
-| Fee: | 2e-6 GAS                                                        |
+| Fee: | 0.000002 GAS                                                        |
 | Function:   | Check whether the top two Bitintegers of the `EvaluationStack` are equal.   |
 | Input:   | AB                                     |
 | Output:   | A==B                                   |
@@ -662,7 +662,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | NUMNOTEQUAL                              |
 |----------|------------------------------------------|
 | Bytecode: | 0x9E                                     |
-| Fee: | 2e-6 GAS                                                        |
+| Fee: | 0.000002 GAS                                                        |
 | Function:   | Check whether the top two Bitintegers of the `EvaluationStack` aren't equal.  |
 | Input:   | AB                                       |
 | Output:   | A!=B                                     |
@@ -672,7 +672,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | LT                                     |
 |----------|----------------------------------------|
 | Bytecode: | 0x9F                                   |
-| Fee: | 2e-6 GAS                                                        |
+| Fee: | 0.000002 GAS                                                        |
 | Function:   | Check whether the first top element is less than the second top element in the `EvaluationStack`.  |
 | Input:   | AB                                     |
 | Output:   | A\<B                                   |
@@ -682,7 +682,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | GT                                     |
 |----------|----------------------------------------|
 | Bytecode: | 0xA0                                   |
-| Fee: | 2e-6 GAS                                                        |
+| Fee: | 0.000002 GAS                                                        |
 | Function:   | Check whether the first top element is more than the second top element in the `EvaluationStack`.   |
 | Input:   | AB                                     |
 | Output:   | A\>B                                   |
@@ -692,7 +692,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | LTE                                        |
 |----------|--------------------------------------------|
 | Bytecode: | 0xA1                                       |
-| Fee: | 2e-6 GAS                                                        |
+| Fee: | 0.000002 GAS                                                        |
 | Function:   | Check whether the first top element ls less than or equal to the second top element in the `EvaluationStack`.  |
 | Input:   | AB                                         |
 | Output:   | A\<=B                                      |
@@ -702,7 +702,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | GTE                                        |
 |----------|--------------------------------------------|
 | Bytecode: | 0xA2                                       |
-| Fee: | 2e-6 GAS                                                        |
+| Fee: | 0.000002 GAS                                                        |
 | Function:   | Check whether the first top element is more than or equal to the second top element in the `EvaluationStack`. |
 | Input:   | AB                                         |
 | Output:   | A\>=B                                      |
@@ -712,7 +712,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | MIN                                    |
 |----------|----------------------------------------|
 | Bytecode: | 0xA3                                   |
-| Fee: | 2e-6 GAS                                                        |
+| Fee: | 0.000002 GAS                                                        |
 | Function:   | Calculate the minimum of the two top elements in the `EvaluationStack`.  |
 | Input:   | AB                                     |
 | Output:   | Min(A,B)                               |
@@ -722,7 +722,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | MAX                                    |
 |----------|----------------------------------------|
 | Bytecode: | 0xA4                                   |
-| Fee: | 2e-6 GAS                                                        |
+| Fee: | 0.000002 GAS                                                        |
 | Function:   | Calculate the maximum of the two top elements in the `EvaluationStack`. |
 | Input:   | AB                                     |
 | Output:   | Max(A,B)                               |
@@ -732,7 +732,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | WITHIN                                       |
 |----------|----------------------------------------------|
 | Bytecode: | 0xA5                                         |
-| Fee: | 2e-6 GAS                                                        |
+| Fee: | 0.000002 GAS                                                        |
 | Function:   | Check whether the Biginteger value is within the specified range.  |
 | Input:   | XAB                                          |
 | Output:   | A\<=X&&X\<B                                  |
@@ -746,7 +746,7 @@ It has implemented common operations for array, map, struct, etc.
 | Instruction   | ARRAYSIZE                        |
 |----------|----------------------------------|
 | Bytecode: | 0xC0                             |
-| Fee: | 1.5e-6 GAS                                                        |
+| Fee: | 0.0000015 GAS                                                        |
 | Function:   | Get the number of elements of the array at the top of the `EvaluationStack`. |
 | Input:   | [X0 X1 X2 ... Xn-1]              |
 | Output:   | n                                |
@@ -756,7 +756,7 @@ It has implemented common operations for array, map, struct, etc.
 | Instruction   | PACK                              |
 |----------|-----------------------------------|
 | Bytecode: | 0xC1                              |
-| Fee: | 7e-5 GAS                                                        |
+| Fee: | 0.00007GAS                                                        |
 | Function:   | Pack the n elments at the top of the `EvaluationStack` into array. |
 | Input:   | Xn-1 ... X2 X1 X0 n               |
 | Output:   | [X0 X1 X2 ... Xn-1]               |
@@ -766,7 +766,7 @@ It has implemented common operations for array, map, struct, etc.
 | Instruction   | UNPACK                             |
 |----------|------------------------------------|
 | Bytecode: | 0xC2                               |
-| Fee: | 7e-5 GAS                                                        |
+| Fee: | 0.00007 GAS                                                        |
 | Function:   | Get the number of elements of the array at the top of the `EvaluationStack`.  |
 | Input:   | [X0 X1 X2 ... Xn-1]                |
 | Output:   | Xn-1 ... X2 X1 X0 n                |
@@ -776,7 +776,7 @@ It has implemented common operations for array, map, struct, etc.
 | Instruction   | PICKITEM                           |
 |----------|------------------------------------|
 | Bytecode: | 0xC3                               |
-| Fee: | 2.7e-3 GAS                                                        |
+| Fee: | 0.0027 GAS                                                        |
 | Function:   | Get the specified element in the array at the top of the `EvaluationStack`. |
 | Input:   | [X0 X1 X2 ... Xn-1] i              |
 | Output:   | Xi                                 |
@@ -786,7 +786,7 @@ It has implemented common operations for array, map, struct, etc.
 | Instruction   | SETITEM                                  |
 |----------|------------------------------------------|
 | Bytecode: | 0xC4                                     |
-| Fee: | 2.7e-3 GAS                                                        |
+| Fee: | 0.0027 GAS                                                        |
 | Function:   | Assign a value to the specified index element in the array at the top of the `EvaluationStack`. |
 | Input:   | [X0 X1 X2 ... Xn-1] I V                  |
 | Output:   | [X0 X1 X2 Xi-1 V X i+1 ... Xn-1]         |
@@ -796,7 +796,7 @@ It has implemented common operations for array, map, struct, etc.
 | Instruction   | NEWARRAY                           |
 |----------|------------------------------------|
 | Bytecode: | 0xC5                               |
-| Fee: | 1.5e-4 GAS                                                        |
+| Fee: | 0.00015 GAS                                                        |
 | Function:   | Create a new N-size array on the top of the `EvaluationStack`. |
 | Input:   | n                                  |
 | Output:   | Array(n) with all `false` elements.         |
@@ -806,7 +806,7 @@ It has implemented common operations for array, map, struct, etc.
 | Instruction   | NEWSTRUCT                           |
 |----------|-------------------------------------|
 | Bytecode: | 0xC6                                |
-| Fee: | 1.5e-4 GAS                                                        |
+| Fee: | 0.00015 GAS                                                        |
 | Function:   | Create a new N-size struct on the top of the `EvaluationStack`. |
 | Input:   | n                                   |
 | Output:   | Struct(n) with all `false` elements.        |
@@ -816,7 +816,7 @@ It has implemented common operations for array, map, struct, etc.
 | Instruction   | NEWMAP                  |
 |----------|-------------------------|
 | Bytecode: | 0xC7                    |
-| Fee: | 2e-6 GAS                                                        |
+| Fee: | 0.000002 GAS                                                        |
 | Function:   | Create a new map on the top of the `EvaluationStack`.  |
 | Input:   |                       |
 | Output:   | Map()                   |
@@ -826,7 +826,7 @@ It has implemented common operations for array, map, struct, etc.
 | Instruction   | APPEND                |
 |----------|-----------------------|
 | Bytecode: | 0xC8                  |
-| Fee: | 1.5e-4 GAS                                                        |
+| Fee: | 0.00015 GAS                                                        |
 | Function:   | Add a new item to the array |
 | Input:   | Array item            |
 | Output:   | Array.add(item)       |
@@ -836,7 +836,7 @@ It has implemented common operations for array, map, struct, etc.
 | Instruction   | REVERSE             |
 |----------|---------------------|
 | Bytecode: | 0xC9                |
-| Fee: | 5e-6 GAS                                                        |
+| Fee: | 0.000005 GAS                                                        |
 | Function:   | Reverse the array. |
 | Input:   | [X0 X1 X2 ... Xn-1] |
 | Output:   | [Xn-1 ... X2 X1 X0] |
@@ -846,7 +846,7 @@ It has implemented common operations for array, map, struct, etc.
 | Instruction   | REMOVE                            |
 |----------|-----------------------------------|
 | Bytecode: | 0xCA                              |
-| Fee: | 5e-6 GAS                                                        |
+| Fee: | 0.000005 GAS                                                        |
 | Function:   | Remove the specified element from the array or map.     |
 | Input:   | [X0 X1 X2 ... Xn-1] m             |
 | Output:   | [X0 X1 X2 ... Xm-1 Xm+1 ... Xn-1] |
@@ -856,7 +856,7 @@ It has implemented common operations for array, map, struct, etc.
 | Instruction   | HASKEY                              |
 |----------|-------------------------------------|
 | Bytecode: | 0xCB                                |
-| Fee: | 2.7e-3 GAS                                                        |
+| Fee: | 0.0027 GAS                                                        |
 | Function:   |  Check whether the array or the map contains a specified key element. |
 | Input:   | [X0 X1 X2 ... Xn-1] key             |
 | Output:   | true or false                       |
@@ -866,7 +866,7 @@ It has implemented common operations for array, map, struct, etc.
 | Instruction   | KEYS                                |
 |----------|-------------------------------------|
 | Bytecode: | 0xCC                                |
-| Fee: | 5e-6 GAS                                                        |
+| Fee: | 0.000005 GAS                                                        |
 | Function:   | Get all the keys of the map, and put them into a new array. |
 | Input:   | Map                                 |
 | Output:   | [key1 key2 ... key n]               |
@@ -876,7 +876,7 @@ It has implemented common operations for array, map, struct, etc.
 | Instruction   | VALUES                                  |
 |----------|-----------------------------------------|
 | Bytecode: | 0xCD                                    |
-| Fee: | 7e-5 GAS                                                        |
+| Fee: | 0.00007 GAS                                                        |
 | Function:   | Get all the values of the array or the map, and put them into a new array. |
 | Input:   | Map or Array                              |
 | Output:   | [Value1 Value2... Value n]              |
@@ -888,7 +888,7 @@ It has implemented common operations for array, map, struct, etc.
 | Instruction   | THROW                 |
 |----------|-----------------------|
 | Bytecode: | 0xF0                  |
-| Fee: | 3e-7 GAS                                                        |
+| Fee: | 0.0000003 GAS                                                        |
 | Function:   | Set the virtual machine state to `FAULT` |
 
 #### THROWIFNOT
@@ -896,96 +896,9 @@ It has implemented common operations for array, map, struct, etc.
 | Instruction   | THROWIFNOT                                                       |
 |----------|------------------------------------------------------------------|
 | Bytecode: | 0xF1                                                             |
-| Fee: | 3e-7 GAS                                                        |
+| Fee: | 0.0000003 GAS                                                        |
 | Function:   | Read a boolean value from the top of the stack, and if it's False, then set the virtual machine state to `FAULT`. |
 
 Note: The operation code with \* indicates that the result of the operation is not pushed back to the `EvaluationStack`.
-
-## Fee
-
-| OpCode | Fee (GAS) |
-|---|---|
-| PUSH0 | 0.00000030 |
-| PUSHBYTES1 ~ PUSHBYTES75 | 0.00000120 |
-| PUSHDATA1 | 0.00000180 |
-| PUSHDATA2 | 0.00013000 |
-| PUSHDATA4 | 0.00110000 |
-| PUSHM1 | 0.00000030 |
-| PUSH1 ~ PUSH16 | 0.00000030 |
-| NOP | 0.00000030 |
-| JMP | 0.00000070 |
-| JMPIF | 0.00000070 |
-| JMPIFNOT | 0.00000070 |
-| CALL | 0.00022000 |
-| RET | 0.00000040 |
-| SYSCALL | 0 |
-| DUPFROMALTSTACKBOTTOM | 0.00000060 |
-| DUPFROMALTSTACK | 0.00000060 |
-| TOALTSTACK | 0.00000060 |
-| FROMALTSTACK | 0.00000060 |
-| XDROP | 0.00000400 |
-| XSWAP | 0.0000006 |
-| XTUCK | 0.000004 |
-| DEPTH | 0.0000006 |
-| DROP     | 0.0000006 |
-| DUP     | 0.0000006 |
-| NIP     | 0.0000006 |
-| OVER     | 0.0000006 |
-| PICK     | 0.0000006 |
-| ROLL     | 0.000004 |
-| ROT     | 0.0000006 |
-| SWAP     | 0.0000006 |
-| TUCK     | 0.0000006 |
-| CAT     | 0.0008 |
-| SUBSTR     | 0.0008 |
-| LEFT     | 0.0008 |
-| RIGHT     | 0.0008 |
-| SIZE     | 0.0000006 |
-| INVERT     | 0.000001 |
-| AND     | 0.000002 |
-| OR     | 0.000002 |
-| XOR     | 0.000002 |
-| EQUAL     | 0.000002 |
-| INC     | 0.000001 |
-| DEC     | 0.000001 |
-| SIGN     | 0.000001 |
-| NEGATE     | 0.000001 |
-| ABS     | 0.000001 |
-| NOT     | 0.000001 |
-| NZ     | 0.000001 |
-| ADD     | 0.000002 |
-| SUB     | 0.000002 |
-| MUL     | 0.000003 |
-| DIV     | 0.000003 |
-| MOD     | 0.000003 |
-| SHL     | 0.000003 |
-| SHR     | 0.000003 |
-| BOOLAND     | 0.000002 |
-| BOOLOR     | 0.000002 |
-| NUMEQUAL     | 0.000002 |
-| NUMNOTEQUAL     | 0.000002 |
-| LT     | 0.000002 |
-| GT     | 0.000002 |
-| LTE     | 0.000002 |
-| GTE     | 0.000002 |
-| MIN     | 0.000002 |
-| MAX     | 0.000002 |
-| WITHIN     | 0.000002 |
-| ARRAYSIZE     | 0.0000015 |
-| PACK     | 0.00007 |
-| UNPACK     | 0.00007 |
-| PICKITEM     | 0.0027 |
-| SETITEM     | 0.0027 |
-| NEWARRAY     | 0.00015 |
-| NEWSTRUCT     | 0.00015 |
-| NEWMAP     | 0.000002 |
-| APPEND     | 0.00015 |
-| REVERSE     | 0.000005 |
-| REMOVE     | 0.000005 |
-| HASKEY     | 0.0027 |
-| KEYS     | 0.000005 |
-| VALUES     | 0.00007 |
-| THROW     | 0.0000003 |
-| THROWIFNOT     | 0.0000003 |
 
 *Click [here](../../cn/虚拟机) to see the Chinese edition of the NeoVM*
