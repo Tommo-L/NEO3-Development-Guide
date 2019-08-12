@@ -10,7 +10,6 @@
     - [Interoperable service layer](#interoperable-service-layer)
     - [Built-in data types](#built-in-data-types)
     - [Instructions](#instructions)
-    - [Fee](#fee)
 
 <!-- /TOC -->
 
