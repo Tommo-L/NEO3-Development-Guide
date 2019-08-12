@@ -21,7 +21,7 @@
 
 ### 参数说明
 
-* asset_id：资产 ID（资产标识符）, 此处为合约的 Script Hash。
+* asset_id：资产 ID（资产标识符）, 即NEP-5合约的scripthash。
 
 
 

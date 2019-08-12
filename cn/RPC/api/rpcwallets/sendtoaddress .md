@@ -21,7 +21,7 @@
 
 ### 参数说明
 
-* asset_id：资产 ID（资产标识符），即该资产在注册时的 RegistTransaction 的交易 ID。
+* asset_id：资产 ID（资产标识符），即NEP-5合约的scripthash。
 * address：收款地址。
 * value：转账金额。
 * fee：可选参数，设置手续费可以提升网络处理该笔转账的优先级，默认为 0，最小值可设为 0.00000001。

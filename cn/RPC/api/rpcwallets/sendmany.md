@@ -27,7 +27,7 @@
   {"asset": <asset>,"value": <value>,"address": <address>}
   ```
 
-  * asset：资产 ID（资产标识符），即NEP-5合约scripthash。
+  * asset：资产 ID（资产标识符），即NEP-5合约的scripthash。
   * value：转账金额。
   * address：收款地址。
 
