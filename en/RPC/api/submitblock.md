@@ -1,10 +1,19 @@
 ﻿# submitblock Method
 
-Broadcast a raw block in the NEO network. 
+Broadcast a raw block in the NEO network.
 
-## Parameter Description
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "submitblock",
+  "params": [hex],
+  "id": 1
+}
+```
 
-Hex: A hexadecimal string of a serialized block.
+### Parameter Description
+
+* hex: A hexadecimal string of a serialized block.
 
 ## Example
 

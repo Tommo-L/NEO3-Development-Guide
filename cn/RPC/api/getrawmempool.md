@@ -2,9 +2,20 @@
 
 获取内存中确认 / 未确认的交易列表。
 
-## 参数说明
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "getrawmempool",
+  "params": [shouldGetUnverified],
+  "id": 1
+}
+```
 
-shouldGetUnverified：可选参数，shouldGetUnverified 默认值为 0，shouldGetUnverified 为 0 时返回的是内存池中已经确认过的交易hash列表。shouldGetUnverified 为 1 时返回的信息包含当前高度，内存池中已经确认过以及未确认过的交易hash列表。
+### 参数说明
+
+* shouldGetUnverified：可选参数，shouldGetUnverified 默认值为 0。
+  * 为 0 时，返回的是内存池中已经确认过的交易hash列表。
+  * 为 1 时，返回的信息包含当前高度，内存池中已经确认过以及未确认过的交易hash列表。
 
 ## 调用示例
 

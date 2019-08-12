@@ -7,13 +7,25 @@ Return the result after calling a smart contract at scripthash with the given op
 > - This method is to test your VM script as if they were ran on the blockchain at that point in time. This RPC call does not affect the blockchain in any way.
 > - This method is provided by the plugin [RpcWallet](https://github.com/neo-project/neo-plugins/releases). You need to install the plugin before you can invoke the method.
 
-## Parameter Description
 
-scripthash: Smart contract scripthash
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "invokefunction",
+  "params": [
+    scripthash,
+    operation,
+    params
+  ],
+  "id": 3
+}
+```
 
-operation: The operation name (string)
+### Parameter Description
 
-params: The parameters to be passed into the smart contract operation
+* scripthash: Smart contract scripthash
+* operation: The operation name (string)
+* params: The parameters to be passed into the smart contract operation
 
 ## Example
 

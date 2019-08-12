@@ -2,11 +2,22 @@
 
 The corresponding block information is returned according to the specified hash value.
 
-## Parameter Description
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "getblock",
+  "params": [hash, verbose],
+  "id": 1
+}
+```
 
-Hash: Block hash value.
+### Parameter Description
 
-Verbose: Optional, the default value of verbose is 0. When verbose is 0, the serialized information of the block is returned in a hexadecimal string. If you want the detailed information, you will need to use the SDK for deserialization. When verbose is 1, detailed information of the corresponding block in Json format string is returned.
+* hash: Block hash value.
+
+* verbose: Optional, the default value of verbose is 0. 
+  * When verbose is 0, the serialized information of the block is returned in a hexadecimal string. If you want the detailed information, you will need to use the SDK for deserialization. 
+  * When verbose is 1, detailed information of the corresponding block in Json format string is returned.
 
 ## Example
 

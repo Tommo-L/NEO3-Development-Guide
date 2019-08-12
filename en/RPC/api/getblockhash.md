@@ -2,9 +2,18 @@
 
 Return the hash value of the corresponding block based on the specified index.
 
-## Parameter Description
+```json
+{
+   "jsonrpc": "2.0",
+   "method": "getblockhash",
+   "params": [Index],
+   "id": 1
+}
+```
 
-Index: Block index (block height)
+###  Parameter Description
+
+* index: Block index (block height)
 
 ## Example
 

@@ -2,9 +2,18 @@
 
 Return the system fees of the block, based on the specified index.
 
-## Parameter Description
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "getblocksysfee",
+  "params": [index],
+  "id": 1
+}
+```
 
-index: Block index
+### Parameter Description
+
+* index: Block index
 
 ## Example
 

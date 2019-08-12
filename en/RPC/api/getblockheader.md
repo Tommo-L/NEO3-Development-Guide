@@ -2,11 +2,23 @@
 
 Return the corresponding block header information according to the specified script hash.
 
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "getblockheader",
+  "params": [hash, verbose],
+  "id": 1
+}
+
+```
+
 ## Parameter Description
 
-hash: The block script hash.
+* hash: The block script hash.
 
-verbose: Optional, the default value of verbose is 0. When verbose is 0, the serialized information of the block is returned in a hexadecimal string. If you want the detailed information, you will need to use the SDK for deserialization. When verbose is 1, detailed information of the corresponding block in Json format string, is returned.
+* verbose: Optional, the default value of verbose is 0. 
+  * When verbose is 0, the serialized information of the block is returned in a hexadecimal string. If you want the detailed information, you will need to use the SDK for deserialization. 
+  * When verbose is 1, detailed information of the corresponding block in Json format string, is returned.
 
 ## Example
 

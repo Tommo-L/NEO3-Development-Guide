@@ -2,9 +2,18 @@
 
 Verify that the address is a valid NEO address.
 
-## Parameter Description
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "validateaddress",
+  "params": [address],
+  "id": 1
+}
+```
 
-address: Address.
+### Parameter Description
+
+* address: Address.
 
 ## Example
 

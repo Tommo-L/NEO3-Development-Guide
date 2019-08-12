@@ -2,9 +2,18 @@
 
 根据合约脚本散列，查询合约信息。
 
-## 参数说明
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "getcontractstate",
+  "params": [scrip_hash],
+  "id": 1
+}
+```
 
-script_hash：合约脚本散列。
+### 参数说明
+
+* script_hash：合约脚本散列。
 
 ## 调用示例
 

@@ -7,7 +7,16 @@ Return the result after passing a script through the VM.
 > - This method is to test your VM script as if they were ran on the blockchain at that point in time. This RPC call does not affect the blockchain in any way.
 > - This method is provided by the plugin [RpcWallet](https://github.com/neo-project/neo-plugins/releases). You need to install the plugin before you can invoke the method.
 
-## Parameter Description
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "invokescript",
+  "params": [script],
+  "id": 3
+}
+```
+
+### Parameter Description
 
 script: A script runnable in the VM. This is the same script that is carried in InvocationTransaction
 

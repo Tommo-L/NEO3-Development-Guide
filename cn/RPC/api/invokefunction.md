@@ -7,13 +7,28 @@
 > - 此方法用于测试你的虚拟机脚本，如同在区块链上运行一样。这个RPC调用对区块链没有任何影响。
 > - 此方法由插件提供，需要安装 [RpcWallet](https://github.com/neo-project/neo-plugins/releases) 插件才可以调用。
 
-## 参数说明
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "invokefunction",
+  "params": [
+    scripthash,
+    operation,
+    params
+  ],
+  "id": 3
+}
+```
 
-scripthash：智能合约脚本散列值。
 
-operation：操作名称（字符串）。
 
-params：传递给智能合约操作的参数。
+### 参数说明
+
+* scripthash：智能合约脚本散列值。
+* operation：操作名称（字符串）。
+* params：传递给智能合约操作的参数。
+
+
 
 ## 调用示例
 

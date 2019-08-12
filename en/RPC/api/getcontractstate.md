@@ -2,9 +2,18 @@
 
 Query contract information with the contract script hash. 
 
-## Parameter Description
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "getcontractstate",
+  "params": [script_hash],
+  "id": 1
+}
+```
 
-Script_hash：Contract script hash 
+### Parameter Description
+
+* script_hash：Contract script hash 
 
 ## Example
 

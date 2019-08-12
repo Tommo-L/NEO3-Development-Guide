@@ -2,9 +2,17 @@
 
 Broadcast a transaction over the NEO network.
 
-## Parameter Description
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "sendrawtransaction",
+  "params": [hex]
+  "id": 1
+}
+```
+### Parameter Description
 
-Hex: A hexadecimal string that has been serialized after transaction signed in the program.
+* hex: A hexadecimal string that has been serialized after transaction signed in the program.
 
 ## Example
 

@@ -2,9 +2,18 @@
 
 验证地址是否是正确的 NEO 地址。
 
-## 参数说明
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "validateaddress",
+  "params": [address],
+  "id": 1
+}
+```
 
-address：地址。
+### 参数说明
+
+* address：地址。
 
 ## 调用示例
 
