@@ -81,8 +81,8 @@ JSON-RPC 服务器启动后，会监听 TCP 端口，默认端口如下。P2P �
 >
 >返回结果更新：getblock，getblockheader，getrawtransaction，getversion，getcontractstate
 
-| 方法                                       | 参数                                       | 说明                           | 备注       |
-| ---------------------------------------- | ---------------------------------------- | ---------------------------- | -------- |
+| 方法           | 参数      | 说明        | 备注       |
+| ----------- | ---------- | ------------- | -------- |
 | [getbestblockhash](api/getbestblockhash.md) |                                          | 获取主链中高度最大的区块的散列              |          |
 | [getblock](api/getblock.md)              | \<hash> [verbose=0]                      | 根据指定的散列值，返回对应的区块信息           |          |
 | | \<index> [verbose=0]                     | 根据指定的索引，返回对应的区块信息            |          |
@@ -106,6 +106,25 @@ JSON-RPC 服务器启动后，会监听 TCP 端口，默认端口如下。P2P �
 | [sendrawtransaction](api/sendrawtransaction.md) | \<hex>                                   | 广播交易                         |          |
 | [submitblock](api/submitblock.md) | \<hex>                                   | 提交新的区块                       | 需要成为共识节点 |
 | [validateaddress](api/validateaddress.md) | \<address>                               | 验证地址是否是正确的 Neo 地址            |          |
+
+
+
+### RpcWallet 插件
+
+| 方法           | 参数      | 说明        | 备注       |
+| ----------- | ---------- | ------------- | -------- |
+| [dumpprivkey ](api/rpcwallets/dumpprivkey.md) | \<address> | 导出指定地址的私钥 |  |
+| [getbalance](api/rpccwallets/getbalance.md) | \<asset_id> | 查询资产余额 | |
+| [getnewaddress](/api/rpcwallets/getnewaddress.md) |  | 创建一个新的地址 | |
+| [getunclaimedgas](/api/rpcwallets/getunclaimedgas.md) |  | 显示钱包中未提取的 GAS 数量 | |
+| [getwalletheight](/api/rpcwallets/getwalletheight.md) |  | 获取当前钱包索引高度 | |
+| [importprivkey](/api/rpcwallets/importprivkey.md) | \<key> | 导入私钥到钱包 | |
+| [listaddress](/api/rpcwallets/listaddress.md) |  | 列出当前钱包内的所有地址 | |
+| [sendfrom](/api/rpcwallets/sendfrom.md) | \<asset_id>\<from>\<to>\<value>\[fee]\[change_address] | 从指定地址，向指定地址转账 | |
+| [sendmany](/api/rpcwallets/sendmany.md) | \<outputs_array>\[fee]\[change_address] | 批量转账命令 | |
+| [sendtoaddress](/api/rpcwallets/sendtoaddress.md) | \<asset_id>\<address>\<value>\[fee]\[change_address] | 向指定地址转账 | |
+
+
 
 
 ### GET 请求示例
