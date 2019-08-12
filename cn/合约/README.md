@@ -157,15 +157,10 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
 ### **NeoToken**
 
 简称 NEO，是Neo的治理代币，用于执行对 Neo 网络的管理权，符合 NEP-5 标准。NEO 的总量为 1 亿，最小单位为 1，且不可分割。Neo 在创世块中注册生成。具体接口细节如下：
-- **name**： Token的名称
 
-  ```csharp
-  [ContractMethod(0, 
-      ContractParameterType.String, 
-      Name = "name", 
-      SafeMethod = true)]
-  protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
-  ```
+> 标*的方法为[NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki)标准接口
+
+- **name***： Token的名称
 
   <table>
   <tr >
@@ -186,16 +181,88 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
     <td colspan="2" >0.00</td>
     </tr>
   </table>
+  在合约中调用示例
 
-- **symbol**：Token的简称
+  1.直接使用互操作服务
 
   ```csharp
-  [ContractMethod(0, 
-      ContractParameterType.String, 
-      Name = "symbol", 
-      SafeMethod = true)]
-  protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
+  using Neo.SmartContract.Framework;
+  using Neo.SmartContract.Framework.Neo;
+
+  public static object Main(string method, object[] args)
+  {
+      if (Runtime.Trigger == TriggerType.Application)
+      {
+          if (method == "neoName") {
+            string name = Neo.Native.Tokens.Neo("name", new object[]());
+            return name;
+          }
+      }  
+  }
   ```
+  2.使用合约脚本哈希
+
+  ```csharp
+  using Neo.SmartContract.Framework;
+  using Neo.SmartContract.Framework.System;
+
+  public static object Main(string method, object[] args)
+  {
+    private static string neoScriptHash = "0x43cf98eddbe047e198a3e5d57006311442a0ca15";
+      if (Runtime.Trigger == TriggerType.Application)
+      {
+          if (method == "neoName") {
+            string name = Contract.Call(neoScriptHash.HexToBytes(), "name", new object[]{});
+            return name;
+          }
+      }  
+  }
+  ```
+  拼接脚本示例
+
+
+  1.使用互操作服务
+  NeoToken注册的互操作服务哈希为0x45c49284,所以脚本为
+  ```
+  PUSH0
+  NEWARRAY
+  PUSHBYTES4 6e616d65
+  SYSCALL 45c49284
+  ```
+  生成脚本的C#代码为：
+
+  ```
+  ScriptBuilder sb = new ScriptBuilder()
+  sb.EmitPush(0);
+  sb.Emit(OpCode.NEWARRAY);
+  sb.EmitPush("name");
+  sb.EmitSysCall(Neo.Native.Tokens.NEO);
+  byte[] script = sb.ToArray();
+  ```
+
+  2.使用合约脚本哈希
+  通过System.Contract.Call来调用合约脚本为:
+  ```
+  PUSH0
+  NEWARRAY
+  PUSHBYTES4  6e616d65
+  PUSHBYTES20 0x43cf98eddbe047e198a3e5d57006311442a0ca15
+  SYSCALL     0x627d5b52
+  ```
+
+  生成脚本的C#代码为：
+  ```
+  ScriptBuilder sb = new ScriptBuilder()
+  UInt160 scriptHash = UInt160.Parse("0x43cf98eddbe047e198a3e5d57006311442a0ca15");
+  sb.EmitPush(0);
+  sb.Emit(OpCode.NEWARRAY);
+  sb.EmitPush("name");
+  sb.EmitPush(scriptHash.ToArray());
+  sb.EmitSysCall(InteropService.System_Contract_Call);
+  byte[] script = sb.ToArray();
+  ```
+- **symbol***：Token的简称
+
   <table>
   <tr >
     <th >参数列表</th>
@@ -216,16 +283,9 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
     </tr>
   </table>
 
-- **decimals**: Token的计算精度
+- **decimals***: Token的计算精度
 
-  ```csharp
-  [ContractMethod(0, 
-      ContractParameterType.Integer, 
-      Name = "decimals", 
-      SafeMethod = true)]
-  protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
-  ```
-  <table>
+   <table>
   <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
@@ -245,15 +305,9 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
     </tr>
   </table>
 
-- **totalSupply**: 总发行量
+- **totalSupply***: 总发行量
 
-  ```csharp
-  [ContractMethod(0_01000000, 
-      ContractParameterType.Integer, 
-      SafeMethod = true)]
-  protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
-  ```
-  <table>
+   <table>
   <tr >
     <th >参数列表</th>
     <th colspan="2" >无参数</th>
@@ -273,16 +327,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
     </tr>
   </table>
 
-- **balanceOf**: 指定地址的Token余额
-
-  ```csharp
-  [ContractMethod(0_01000000, 
-      ContractParameterType.Integer, 
-      ParameterTypes = new[] { ContractParameterType.Hash160 }, 
-      ParameterNames = new[] { "account" }, 
-      SafeMethod = true)]
-  protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
-  ```
+- **balanceOf***: 指定地址的Token余额
 
   <table>
   <tr >
@@ -311,15 +356,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
     </tr>
   </table>
 
-- **transfer**: 转账
-
-  ```csharp
-  [ContractMethod(0_08000000, 
-      ContractParameterType.Boolean, 
-      ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Hash160, ContractParameterType.Integer }, 
-      ParameterNames = new[] { "from", "to", "amount" })]
-  protected StackItem Transfer(ApplicationEngine engine, VMArray args)
-  ```
+- **transfer***: 转账
 
   <table>
     <tr >
@@ -357,17 +394,106 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
     <th colspan="3" >0.08</th>
     </tr>
   </table>
+  在合约中调用示例
 
-- **unClaimGas**：获取到指定高度，未claim的GAS数量
+  1.直接使用互操作服务
 
   ```csharp
-  [ContractMethod(0_03000000, 
-      ContractParameterType.Integer, 
-      ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Integer },
-      ParameterNames = new[] { "account", "end" }, 
-      SafeMethod = true)]
-  private StackItem UnclaimedGas(ApplicationEngine engine, VMArray args)
+  using Neo.SmartContract.Framework;
+  using Neo.SmartContract.Framework.Neo;
+
+  public static object Main(string method, object[] args)
+  {
+      if (Runtime.Trigger == TriggerType.Application)
+      {
+          if (method == "transferNeo") {
+            string name = Neo.Native.Tokens.Neo("transfer", args);
+            return name;
+          }
+      }  
+  }
   ```
+  2.使用合约脚本哈希
+
+  ```csharp
+  using Neo.SmartContract.Framework;
+  using Neo.SmartContract.Framework.System;
+
+  public static object Main(string method, object[] args)
+  {
+    private static string neoScriptHash = "0x43cf98eddbe047e198a3e5d57006311442a0ca15";
+      if (Runtime.Trigger == TriggerType.Application)
+      {
+          if (method == "transferNeo") {
+            byte[] from  = "AesUJTLg93cWMTSzp2snxpBJSCets89ebM".ToScriptHash();
+            byte[] to    = "AMhbbwR8r6LuTx5okkZudvvp3LW6Fh1Y7o".ToScriptHash();
+            BigInterger value = new BigInteger(100000000);
+            string name = Contract.Call(neoScriptHash.HexToBytes(), "transfer", new Object[]{from, to, value.AsByteArray()});
+            return name;
+          }
+      }  
+  }
+  ```
+  拼接脚本示例
+
+
+  1.使用互操作服务
+  NeoToken注册的互操作服务哈希为0x45c49284,所以脚本为
+  ```
+  PUSHBYTE4  00e1f505
+  PUSHBYTE20 4101b2a928fd88e1d976fd23c2db25a822338a08
+  PUSHBYTE20 fd59e6a0e3eee5cd9cea7233f01e1cc9c8b23502
+  PUSH3
+  PACK
+  PUSHBYTES4 7472616e73666572
+  SYSCALL 45c49284
+  ```
+  生成脚本的C#代码为：
+
+  ```
+  ScriptBuilder sb = new ScriptBuilder()
+  UInt160 from = UInt160.Parse("0xfd59e6a0e3eee5cd9cea7233f01e1cc9c8b23502");
+  UInt160 to = UInt160.Parse("0x4101b2a928fd88e1d976fd23c2db25a822338a08");
+  long value = 1000000000;
+  sb.EmitPush(value);
+  sb.EmitPush(to);
+  sb.EmitPush(from);
+  sb.Emit(OpCode.PUSH3);
+  sb.Emit(OpCode.PACK);
+  sb.EmitPush("transfer");
+  sb.EmitSysCall(Neo.Native.Tokens.NEO);
+  byte[] script = sb.ToArray();
+  ```
+
+  2.使用合约脚本哈希
+  通过System.Contract.Call来调用合约脚本为:
+  ```
+  PUSHBYTE4   00e1f505
+  PUSHBYTE20  4101b2a928fd88e1d976fd23c2db25a822338a08
+  PUSHBYTE20  fd59e6a0e3eee5cd9cea7233f01e1cc9c8b23502
+  PUSH3
+  PACK
+  PUSHBYTES4  7472616e73666572
+  PUSHBYTES20 0x43cf98eddbe047e198a3e5d57006311442a0ca15
+  SYSCALL     0x627d5b52
+  ```
+
+  生成脚本的C#代码为：
+  ```
+  ScriptBuilder sb = new ScriptBuilder()
+  UInt160 from = UInt160.Parse("0xfd59e6a0e3eee5cd9cea7233f01e1cc9c8b23502");
+  UInt160 to = UInt160.Parse("0x4101b2a928fd88e1d976fd23c2db25a822338a08");
+  long value = 1000000000;
+  sb.EmitPush(value);
+  sb.EmitPush(to);
+  sb.EmitPush(from);
+  sb.Emit(OpCode.PUSH3);
+  sb.Emit(OpCode.PACK);
+  sb.EmitPush("transfer");
+  sb.EmitSysCall(InteropService.System_Contract_Call);
+  byte[] script = sb.ToArray();
+  ```
+- **unClaimGas**：获取到指定高度，未claim的GAS数量
 
   <table class="mytable">
   <tr >
@@ -392,7 +518,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   <th >描述</th>
   </tr>
   <tr >
-  <td colspan="2">registerValidator</td>
+  <td colspan="2">integer</td>
   <td >未claimGAS数量 </td>
   </tr>
   <tr >
@@ -400,16 +526,102 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   <td colspan="3" >0.03</td>
   </tr>
   </table>
+  在合约中调用示例
 
-- **RegisterValidator**：注册验证人
+  1.直接使用互操作服务
 
   ```csharp
-  [ContractMethod(0_05000000, 
-      ContractParameterType.Boolean, 
-      ParameterTypes = new[] { ContractParameterType.PublicKey }, 
-      ParameterNames = new[] { "pubkey" })]
-  private StackItem RegisterValidator(ApplicationEngine engine, VMArray args)
+  using Neo.SmartContract.Framework;
+  using Neo.SmartContract.Framework.Neo;
+
+  public static object Main(string method, object[] args)
+  {
+      if (Runtime.Trigger == TriggerType.Application)
+      {
+          if (method == "accountUnClaimGas") {
+            byte[] account = "AXx1A21wcoXuVxxxggkQChxQP5EGYe6zsN".ToScriptHash();
+            int height = 1000000;
+            int gas = Neo.Native.Tokens.Neo("unClaimGas", new Object[]{account, height});
+            return name;
+          }
+      }  
+  }
   ```
+  2.使用合约脚本哈希
+
+  ```csharp
+  using Neo.SmartContract.Framework;
+  using Neo.SmartContract.Framework.System;
+
+  public static object Main(string method, object[] args)
+  {
+    private static string neoScriptHash = "0x43cf98eddbe047e198a3e5d57006311442a0ca15";
+      if (Runtime.Trigger == TriggerType.Application)
+      {
+          if (method == "accountUnClaimGas") {
+            byte[] account = "AXx1A21wcoXuVxxxggkQChxQP5EGYe6zsN".ToScriptHash();
+            int height = 1000000;
+            string name = Contract.Call(neoScriptHash.HexToBytes(), "unClaimGas", new Object[]{account, height});
+            return name;
+          }
+      }  
+  }
+  ```
+  拼接脚本示例
+
+
+  1.使用互操作服务
+  NeoToken注册的互操作服务哈希为0x45c49284,所以脚本为
+  ```
+  PUSHBYTE3   40420f
+  PUSHBYTE20  b16c70b94928ddb62f5793fbc98d6245ee308ecd
+  PUSH2
+  PACK
+  PUSHBYTES4  756e436c61696d476173
+  SYSCALL     45c49284
+  ```
+  生成脚本的C#代码为：
+
+  ```
+  ScriptBuilder sb = new ScriptBuilder()
+  UInt160 account = UInt160.Parse("0xb16c70b94928ddb62f5793fbc98d6245ee308ecd");
+  int height = 1000000
+  sb.EmitPush(height);
+  sb.EmitPush(account);
+  sb.Emit(OpCode.PUSH2);
+  sb.Emit(OpCode.PACK);
+  sb.EmitPush("unClaimGas");
+  sb.EmitSysCall(Neo.Native.Tokens.NEO);
+  byte[] script = sb.ToArray();
+  ```
+
+  2.使用合约脚本哈希
+  通过System.Contract.Call来调用合约脚本为:
+  ```
+  PUSHBYTE3   40420f
+  PUSHBYTE20  b16c70b94928ddb62f5793fbc98d6245ee308ecd
+  PUSH2
+  PACK
+  PUSHBYTES4  756e436c61696d476173
+  PUSHBYTES20 0x43cf98eddbe047e198a3e5d57006311442a0ca15
+  SYSCALL     0x627d5b52
+  ```
+
+  生成脚本的C#代码为：
+  ```
+  ScriptBuilder sb = new ScriptBuilder()
+  UInt160 account = UInt160.Parse("0xb16c70b94928ddb62f5793fbc98d6245ee308ecd");
+  int height = 1000000
+  sb.EmitPush(height);
+  sb.EmitPush(account);
+  sb.Emit(OpCode.PUSH2);
+  sb.Emit(OpCode.PACK);
+  sb.EmitPush("unClaimGas");
+  sb.EmitSysCall(InteropService.System_Contract_Call);
+  byte[] script = sb.ToArray();
+  ```
+- **RegisterValidator**：注册验证人
+
   <table class="mytable">
   <tr >
   <th rowspan="2">参数列表</th>
@@ -439,13 +651,6 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
 
 - **getRegisteredValidators**：获取当前注册的验证人和备选节点信息
 
-  ```csharp
-  [ContractMethod(1_00000000, 
-      ContractParameterType.Array,
-      SafeMethod = true)]
-  private StackItem GetRegisteredValidators(ApplicationEngine engine, VMArray args)
-  ```
-
   <table class="mytable">
     <tr >
         <th >参数列表</th>
@@ -467,13 +672,6 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   </table>
 
 - **getValidators**: 获取当前区块所有验证人信息
-
-  ```csharp
-  [ContractMethod(1_00000000, 
-      ContractParameterType.Array, 
-      SafeMethod = true)]
-  private StackItem GetValidators(ApplicationEngine engine, VMArray args)
-  ```
 
   <table class="mytable">
   <tr >
@@ -497,12 +695,6 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
 
 - **getNextBlockValidators**: 获取下一个区块的验证人信息
 
-  ```csharp
-  [ContractMethod(1_00000000, 
-      ContractParameterType.Array, 
-      SafeMethod = true)]
-  private StackItem GetNextBlockValidators(ApplicationEngine engine, VMArray args)
-  ```
   <table class="mytable">
   <tr >
     <th >参数列表</th>
@@ -524,14 +716,6 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   </table>
 
 - **vote**：投票选举验证人
-
-  ```csharp
-  [ContractMethod(5_00000000, 
-      ContractParameterType.Boolean, 
-      ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Array }, 
-      ParameterNames = new[] { "account", "pubkeys" })]
-  private StackItem Vote(ApplicationEngine engine, VMArray args)
-  ```
 
   <table class="mytable">
     <tr >
@@ -565,9 +749,6 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
     </tr>
   </table>
 
-
-> 标*的方法为[NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki)标准接口
-
 ### **GasToken**
 
 简称 GAS，Neo 的燃料代币，用于支付手续费，符合 NEP-5 标准。Neo 网络上的 交易费用和共识节点激励均以 GAS 来支付。GAS 总量 1 亿，最小单位 0.00000001。 GAS 在创始块中被注册，但未分发。  
@@ -575,19 +756,10 @@ GAS 的分发机制: 生成一个新区块时会伴随产生新的 GAS，所生�
 
 ![GAS distribution](../../images/GAS_distribution.png) 
 
-其中，m 表示用户上一次提取 GAS 时所处的区块高度，n 为当前的区块高度，NEO 表示 m 至 n 期间用户持有的 NEO 的数量。BlockBonus 代表每个区块可以提取的 GAS 量，具体细节可参看经济模型部分。SystemFee 代表该区块中所有交易的系统费之和。
-
-GasToken的详细接口介绍如下：
-
+其中，m 表示用户上一次提取 GAS 时所处的区块高度，n 为当前的区块高度，NEO 表示 m 至 n 期间用户持有的 NEO 的数量。BlockBonus 代表每个区块可以提取的 GAS 量，具体细节可参看经济模型部分。SystemFee 代表该区块中所有交易的系统费之和。GasToken的详细接口介绍如下：
+> 标*的方法为[NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki)标准接口
 - **name**: Token的名称
 
-  ```csharp
-  [ContractMethod(0, 
-    ContractParameterType.String, 
-    Name = "name", 
-    SafeMethod = true)]
-  protected StackItem NameMethod(ApplicationEngine engine, VMArray args)
-  ```
   <table>
   <tr >
     <th >参数列表</th>
@@ -607,16 +779,7 @@ GasToken的详细接口介绍如下：
     <th colspan="2" >0.00</th>
     </tr>
   </table>
-
 - **symbol**: Token的简称
-
-  ```csharp
-  [ContractMethod(0, 
-    ContractParameterType.String, 
-    Name = "symbol", 
-    SafeMethod = true)]
-  protected StackItem SymbolMethod(ApplicationEngine engine, VMArray args)
-  ```
 
   <table>
   <tr >
@@ -640,13 +803,6 @@ GasToken的详细接口介绍如下：
 
 - **decimals**: Token的计算精度
 
-  ```csharp
-  [ContractMethod(0, 
-    ContractParameterType.Integer, 
-    Name = "decimals", 
-    SafeMethod = true)]
-  protected StackItem DecimalsMethod(ApplicationEngine engine, VMArray args)
-  ```
   <table>
   <tr >
     <th >参数列表</th>
@@ -669,12 +825,6 @@ GasToken的详细接口介绍如下：
 
 - **totalSupply**: 总发行量
 
-  ```csharp
-  [ContractMethod(0_01000000, 
-    ContractParameterType.Integer, 
-    SafeMethod = true)]
-  protected StackItem TotalSupply(ApplicationEngine engine, VMArray args)
-  ```
   <table>
   <tr >
     <th >参数列表</th>
@@ -696,15 +846,6 @@ GasToken的详细接口介绍如下：
   </table>
 
 - **balanceOf**: 指定地址的Token余额
-
-  ```csharp
-  [ContractMethod(0_01000000, 
-    ContractParameterType.Integer, 
-    ParameterTypes = new[] { ContractParameterType.Hash160 }, 
-    ParameterNames = new[] { "account" }, 
-    SafeMethod = true)]
-  protected StackItem BalanceOf(ApplicationEngine engine, VMArray args)
-  ```
 
   <table>
   <tr >
@@ -735,13 +876,6 @@ GasToken的详细接口介绍如下：
 
 - **transfer**: 转账
 
-  ```csharp
-  [ContractMethod(0_08000000, 
-      ContractParameterType.Boolean, 
-      ParameterTypes = new[] { ContractParameterType.Hash160, ContractParameterType.Hash160, ContractParameterType.Integer }, 
-      ParameterNames = new[] { "from", "to", "amount" })]
-  protected StackItem Transfer(ApplicationEngine engine, VMArray args)
-  ```
   <table>
     <tr >
     <th rowspan="4">参数列表</th>
@@ -781,15 +915,6 @@ GasToken的详细接口介绍如下：
 
 - **getSysFeeAmount**: 获取截止到某一高度的系统费总和
 
-  ```csharp
-  [ContractMethod(0_01000000, 
-    ContractParameterType.Integer, 
-    ParameterTypes = new[] { ContractParameterType.Integer }, 
-    ParameterNames = new[] { "index" }, 
-    SafeMethod = true)]
-  private StackItem GetSysFeeAmount(ApplicationEngine engine, VMArray args)
-  ```
-
   <table>
     <tr >
     <th rowspan="2">参数列表</th>
@@ -817,20 +942,11 @@ GasToken的详细接口介绍如下：
     </tr>
   </table>
 
-> 标*的方法为[NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki)标准接口
-
 ### **PolicyContract**
 
 配置共识策略的合约，保存了共识过程中相关参数，例如区块最大交易数，每字节手续费等。接口详细介绍如下：
 
 - getMaxTransactionPerBlock: 获取每个区块最大交易数
-
-  ```csharp
-  [ContractMethod(0_01000000, 
-    ContractParameterType.Integer, 
-    SafeMethod = true)]
-  private StackItem GetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray args)
-  ```
 
   <table>
   <tr >
@@ -854,13 +970,6 @@ GasToken的详细接口介绍如下：
 
 - **GetFeePerByte**： 获取每个区块最大交易数
 
-  ```csharp
-  [ContractMethod(0_01000000, 
-    ContractParameterType.Integer, 
-    SafeMethod = true)]
-  private StackItem GetFeePerByte(ApplicationEngine engine, VMArray args)
-  ```
-
   <table>
   <tr >
     <th >参数列表</th>
@@ -883,12 +992,6 @@ GasToken的详细接口介绍如下：
 
 - **getBlockedAccounts**: 获取被加入黑名单的地址列表
 
-  ```csharp
-  [ContractMethod(0_01000000, 
-    ContractParameterType.Array, 
-    SafeMethod = true)]
-  private StackItem GetBlockedAccounts(ApplicationEngine engine, VMArray args)
-  ```
   <table>
   <tr >
     <th >参数列表</th>
@@ -910,14 +1013,6 @@ GasToken的详细接口介绍如下：
   </table>
 
 - **setMaxTransactionsPerBlock**: 设置每个区块的最大交易数
-
-  ```csharp
-  [ContractMethod(0_03000000, 
-    ContractParameterType.Boolean, 
-    ParameterTypes = new[] { ContractParameterType.Integer }, 
-    ParameterNames = new[] { "value" })]
-  private StackItem SetMaxTransactionsPerBlock(ApplicationEngine engine, VMArray args)
-  ```
 
   <table>
     <tr >
@@ -942,20 +1037,13 @@ GasToken的详细接口介绍如下：
     <td >结果，true：设置成功， false：设置失败 </td>
     </tr>
     <tr >
-    <th >费用（GAS）</th>
+    <th >费用(GAS)</th>
     <th colspan="3" >0.03</th>
     </tr>
   </table>
 
 - **setFeePerByte**：设置每比特手续费
 
-  ```csharp
-  [ContractMethod(0_03000000, 
-    ContractParameterType.Boolean, 
-    ParameterTypes = new[] { ContractParameterType.Integer }, 
-    ParameterNames = new[] { "value" })]
-  private StackItem SetFeePerByte(ApplicationEngine engine, VMArray args)
-  ```
   <table>
     <tr >
     <th rowspan="2">参数列表</th>
@@ -979,20 +1067,13 @@ GasToken的详细接口介绍如下：
     <td >结果，true：设置成功，false：设置失败 </td>
     </tr>
     <tr >
-    <th >费用（GAS）</th>
+    <th >费用(GAS)</th>
     <th colspan="3" >0.03</th>
     </tr>
   </table>
 
 - **blockAccount**：将某个地址加入黑名单
 
-  ```csharp
-  [ContractMethod(0_03000000, 
-    ContractParameterType.Boolean, 
-    ParameterTypes = new[] { ContractParameterType.Hash160 }, 
-    ParameterNames = new[] { "account" })]
-  private StackItem BlockAccount(ApplicationEngine engine, VMArray args)
-  ```
   <table style="width:65%;">
     <tr >
     <th rowspan="2">参数列表</th>
@@ -1016,20 +1097,13 @@ GasToken的详细接口介绍如下：
     <td > 结果，true：设置成功，false：设置失败 </td>
     </tr>
     <tr >
-    <th >费用（GAS）</th>
+    <th >费用(GAS)</th>
     <th colspan="3" >0.03</th>
     </tr>
   </table>
 
 - **unblockAccount**：将某个地址从黑名单移除
 
-  ```csharp
-  [ContractMethod(0_03000000, 
-    ContractParameterType.Boolean, 
-    ParameterTypes = new[] { ContractParameterType.Hash160 }, 
-    ParameterNames = new[] { "account" })]
-  private StackItem UnblockAccount(ApplicationEngine engine, VMArray args)
-  ```
   <table style="width:65%">
     <tr >
     <th rowspan="2">参数列表</th>
@@ -1053,59 +1127,12 @@ GasToken的详细接口介绍如下：
     <td > true：设置成功，false：设置失败 </td>
     </tr>
     <tr >
-    <th >费用（GAS）</th>
+    <th >费用(GAS)</th>
     <th colspan="3" >0.03</th>
     </tr>
   </table>
 
 **更多原生合约，敬请期待**
-
-### 原生合约 调用
-原生合约的调用有两种方法, 第一种是跟普通合约一样，通过合约的脚本哈希来调用，另一种是原生合约特有的，直接通过互操作服务调用。[查看互操作服务使用](#互操作服务使用)
-
-- **特有方法**：通过互操作接口直接调用
-
-  每个原生合约都会注册一个互操作接口，互操作接口名称为其ServiceName，都属于Neo.Native命名空间。
-  每个原生合约对应的ServiceName如下：
-
-  |原生合约|服务名称|
-  |---|---|
-  |NeoToken|Neo.Native.Tokens.NEO|
-  |GasToken|Neo.Native.Tokens.GAS|
-  |PolicyToken|NeoNeo.Native.Policy|
-
-  例如在C#编写智能合约中，如果需要调用GAS转账就可以如下编写：
-
-  ```csharp
-  using Neo.SmartContract.Framework;
-  using Neo.SmartContract.Framework.Neo;
-
-  namespace MyContract
-  {
-    public class MyContract: SmartContract
-    {
-      public static object main(string method, object[] args)
-      {
-        if (method == "test") {
-          if (args.Length < 3) return false;
-          return Native.Tokens.GAS("transfer", args);
-        }
-      }
-    }
-  }
-  ```
-
-- **通用方法**：通过ScriptHash调用
-
-  原生合约的ScriptHash都是固定的，可以像调用其他普通合约一样用System.Contract.Call互操作接口和原生合约的ScriptHash调用。现有原生合约的ScriptHash如下：
-
-  |原生合约|脚本哈希|
-  |---|---|
-  |NeoToken| 0x43cf98eddbe047e198a3e5d57006311442a0ca15 |
-  |GasToken|0xa1760976db5fcdfab2a9930e8f6ce875b2d18225|
-  |PolicyToken|0x9c5699b260bd468e2160dd5d45dfd2686bba8b77|
-
-具体调用细节参考[合约调用](#合约调用)
 
 ## 互操作服务
 互操作服务层提供了智能合约所能访问区块链数据的一些 API，利用这些 API，可以访问区块信息、交易信息、合约信息、资产信息等。除此之外互操作服务层还为每个合约提供了一个持久化存储区的功能。Neo 的每个智能合约在创建的时候都可选地启用一个私有存储区，存储区是 key-value 形式的，Neo 智能合约由合约的被调用者决定持久化存储区的上下文，而非调用者来决定。当然，调用者需要将自己的存储上下文传给被调用者（即完成授权）后，被调用者才可以执行读写操作。互操作服务分为System部分和Neo部分。
@@ -1137,12 +1164,11 @@ PUSHBYTES20 0x43cf98eddbe047e198a3e5d57006311442a0ca15
 SYSCALL     0x627d5b52
 ```
 C#代码为：
-
 ```csharp
 ScriptBuilder sb = new ScriptBuilder()
 sb.EmitPush(0);
 sb.Emit(OpCode.NEWARRAY);
-sb.EmitPush(operation);
+sb.EmitPush("name");
 sb.EmitPush(scriptHash);
 sb.EmitSysCall(InteropService.System_Contract_Call); //根据互操作索引调用
 byte[] script = sb.ToArray();
@@ -1640,7 +1666,45 @@ namespace MyContract
 | Neo.Json.Deserialize| 0.005  |
 
 ## 网路资源访问
-## 合约调用 
+## 合约调用
+### 直接通过互操作服务调用原生合约
+**仅支持原生合约的调用**。每个原生合约都会注册一个互操作接口，互操作接口名称为其ServiceName，都属于Neo.Native命名空间。每个原生合约对应的ServiceName如下：
+
+|原生合约|服务名称|
+|---|---|
+|NeoToken|Neo.Native.Tokens.NEO|
+|GasToken|Neo.Native.Tokens.GAS|
+|PolicyToken|NeoNeo.Native.Policy|
+
+例如在C#编写智能合约中，如果需要调用GAS转账就可以如下编写：
+
+```csharp
+using Neo.SmartContract.Framework;
+using Neo.SmartContract.Framework.Neo;
+
+namespace MyContract
+{
+  public class MyContract: SmartContract
+  {
+    public static object main(string method, object[] args)
+    {
+      if (method == "test") {
+        if (args.Length < 3) return false;
+        return Native.Tokens.GAS("transfer", args);
+      }
+    }
+  }
+}
+```
+互操作服务在C#合约以及脚本中的使用请参考[查看互操作服务使用](#互操作服务使用)  
+原生合约的ScriptHash都是固定的，可以像调用其他普通合约一样用System.Contract.Call互操作接口和原生合约的ScriptHash调用。现有原生合约的ScriptHash如下：
+
+|原生合约|脚本哈希|
+|---|---|
+|NeoToken| 0x43cf98eddbe047e198a3e5d57006311442a0ca15 |
+|GasToken|0xa1760976db5fcdfab2a9930e8f6ce875b2d18225|
+|PolicyToken|0x9c5699b260bd468e2160dd5d45dfd2686bba8b77|
+### 在合约中调用其他合约
 合约中通过开发框架提供的互操作接口[System.Contract.Call](#contract-call)来调用其他合约
 例如在C#中可以如下方式调用：
 
@@ -1663,7 +1727,7 @@ namespace MyContract
   }
 }
 ```
-
+### 脚本中调用合约
 很多时候需要手动拼接执行脚本，这时候需要使用互操作接口[System.Contract.Call](#contract-call)与合约的脚本哈希来调用合约。[如何使用互操作接口](#互操作服务使用)
 
 例如，如果要通过`System.Contract.Call`来调用合约`0x43cf98eddbe047e198a3e5d57006311442a0ca15`的`transfer`方法：
@@ -1698,7 +1762,7 @@ byte[] script = sb.ToArray();
 
 public static ScriptBuilder EmitAppCall(this ScriptBuilder sb, UInt160 scriptHash, string operation, params ContractParameter[] args)
 {
-    for (int i = args.Length - 1; i >= 0; i--)
+    for (int i = args.Length - 1; 0 <= i; i--)
         sb.EmitPush(args[i]);
     sb.EmitPush(args.Length);
     sb.Emit(OpCode.PACK);
