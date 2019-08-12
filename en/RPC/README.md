@@ -1,4 +1,4 @@
-﻿
+
 # RPC
 <!-- TOC -->
 - [API Reference](#API-Reference)
@@ -105,6 +105,25 @@ For P2P and WebSocket port information, please refer to [Node Introduction](../.
 | [sendrawtransaction](api/sendrawtransaction.md) | \<hex>                                      | Broadcast a transaction over the network. |                              |
 | [submitblock](api/submitblock.md)               | \<hex>                                      | Submit a new block to the network                             | Need to be a validator |
 | [validateaddress](api/validateaddress.md)       | \<address>                                  | Verify whether the address is a valid NEO address             |                              |
+
+
+
+### RpcWallet Plugin
+
+| Command                                               | Parameter                                              | Description                                                  | Remark |
+| ----------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------ | ------ |
+| [dumpprivkey ](api/rpcwallets/dumpprivkey.md)         | \<address>                                             | Exports the private key of the specified address             |        |
+| [getbalance](api/rpccwallets/getbalance.md)           | \<asset_id>                                            | Returns the balance of the corresponding asset in the wallet |        |
+| [getnewaddress](/api/rpcwallets/getnewaddress.md)     |                                                        | Creates a new address                                        |        |
+| [getunclaimedgas](/api/rpcwallets/getunclaimedgas.md) |                                                        | Gets the amount of unclaimed GAS in the wallet               |        |
+| [getwalletheight](/api/rpcwallets/getwalletheight.md) |                                                        | Obtains the current wallet index height                      |        |
+| [importprivkey](/api/rpcwallets/importprivkey.md)     | \<key>                                                 | Imports the private key to the wallet                        |        |
+| [listaddress](/api/rpcwallets/listaddress.md)         |                                                        | Lists all the addresses in the current wallet                |        |
+| [sendfrom](/api/rpcwallets/sendfrom.md)               | \<asset_id>\<from>\<to>\<value>\[fee]\[change_address] | Transfer from the specified address to the destination address |        |
+| [sendmany](/api/rpcwallets/sendmany.md)               | \<outputs_array>\[fee]\[change_address]                | Bulk transfer order, and you can specify a change address.   |        |
+| [sendtoaddress](/api/rpcwallets/sendtoaddress.md)     | \<asset_id>\<address>\<value>\[fee]\[change_address]   | Transfers to the specified address.                          |        |
+
+
 
 ### An example of GET request 
 
