@@ -53,7 +53,40 @@ Now each contract is required to provide a manifest file to describe its propert
         "storage": false,
         "payable": false
     },
-    "abi": null,
+    "abi": {
+      "hash": "0x562851057d8afbc08fabc8c438d7cc771aef2195",
+      "entrypoint": {
+        "name": "main",
+        "parameters": [
+          {
+            "name": "operation",
+            "type": "String"
+          },
+          {
+            "name": "args",
+            "type": "Array"
+          }
+        ],
+        "returntype": "Any"
+      },
+      "methods": [
+        {
+          "name": "name",
+          "parameters": [],
+          "returntype": "string"
+        }
+      ],
+      "events": [
+        {
+          "name": "transfered",
+          "parameters": [
+            {"name": "from","type": "Hash160"},
+            {"name": "to","type": "Hash160"},
+            {"name": "value","type": "Integer"}
+          ]
+        }
+      ]
+    },
     "permissions": [
         {
             "contract": "*",
