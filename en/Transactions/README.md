@@ -10,11 +10,13 @@
         - [systemFee](#systemfee)
         - [networkFee](#networkfee)
         - [attributes](#attributes)
-            - [usage](#attribute-usage-types)
-    - [script](#script)
-    - [witnesses](#witnesses)
-        - [InvocationScript](#invocation-script)
-        - [VerificationScript](#verification-script)
+            - [*usage*](#usage)
+        - [cosigners](#cosigners)
+            - [Scopes](#scopes)
+        - [script](#script)
+        - [witnesses](#witnesses)
+            - [*InvocationScript*](#invocationscript)
+            - [*VerificationScript*](#verificationscript)
     - [Transaction Serialization](#transaction-serialization)
     - [Transaction Signature](#transaction-signature)
 
@@ -46,9 +48,10 @@ A normal transaction has the following attributes:
 | `nonce`           | uint      | random number                                                |
 | `validUntilBlock` | uint      | block expiration time                                        |
 | `sender`          | UInt160   | address script hash of the sender                            |
-| `systemFee`       | long      | Fee to pay the network for resource usage                    |
-| `networkFee`      | long      | Fee to pay the validator for including transactions in the block |
-| `attributes`      | tx_attr[] | Additional features for the transaction                      |
+| `systemFee`       | long      | fee to pay the network for resource usage                    |
+| `networkFee`      | long      | fee to pay the validator for including transactions in the block |
+| `attributes`      | tx_attr[] | additional features for the transaction                      |
+| `cosigners` | Cosigner[]   | scope where the witness is valid  |
 | `script`          | byte[]    | contract script of the transaction                           |
 | `witnesses`       | Witness[] | scripts used to validate the transaction                     |
 
@@ -75,8 +78,8 @@ Depending on the transaction type, it is allowed to add attributes to the transa
 
 | Field   | Type   | Description                                                  |
 | ------- | ------ | ------------------------------------------------------------ |
-| `usage` | uint8  | Attribute usage type                                         |
-| `data`  | byte[] | Script of the transaction to be validated. When usage is `0x20` , the data type must be UInt160. |
+| `usage` | uint8  | attribute usage type                                         |
+| `data`  | byte[] | script of the transaction to be validated. When usage is `0x20` , the data type must be UInt160. |
 
 #### *usage*
 The following usage types can be included in the transaction attributes.
@@ -84,10 +87,32 @@ The following usage types can be included in the transaction attributes.
 
 | Value  | Name       | Description                                 | Type   |
 | ------ | ---------- | ------------------------------------------- | ------ |
-| `0x20` | `Cosigner` | Indicating the multi-signature  transaction | `byte` |
 | `0x81` | `Url`      | URL for description                         | `byte` |
 
 A maximum of 16 attributes can be added to each transaction.
+
+### cosigners
+
+Currently the witness is valid in the global scope. In order to enable users to control the scope of signatures more finely, NEO3 has changed the cosigners field in the transaction structure to realize the function that witnesses are limited to verifying specified contracts.
+
+| Field | Description|  Type|
+|--------------|------------------| --|
+| `Account`   | scripthash of the account  |  `UInt160` |
+| `Scopes` | indicate the scope of the witness   |  `WitnessScope` |
+| `AllowedContracts`  |  the verifiable contracts  | `UInt160[]` |
+| `AllowedGroups` | the  verifiable contract group | `ECPoint[]` |
+
+#### Scopes
+
+The Scopes field defines the scope of witness, including the following four types:
+
+| Value    | Name| Description| Type|
+|---------------|-------------|---------------|--------------|
+| `0x00`           | `Global`          | allow the witness in all contexts (default Neo2 behavior), with backwards-compatibility   | `byte`  |
+| `0x01`           | `CalledByEntry`          | the callingscript must be the entry script    | `byte`  |
+| `0x10`           | `CustomContracts`          |  custom hash for contract-specific    | `byte`  |
+| `0x20`           | `CustomGroups`          | custom pubkey for contract group members    | `byte`  |
+
 
 ### script
 Contract script executed by the virtual machine.
@@ -114,8 +139,6 @@ VerificationScript, including ordinary address scripts, or multi-signature addre
 
 VerificationScript also could be custom authentication contract scripts.
 
-
-
 ##  Transaction Serialization
 
 Except for IP addresses and ports, all variable-length integer types in Neo are stored in the small-endian mode. The serialization operation takes the following order to serialize a transaction:
@@ -129,6 +152,7 @@ Except for IP addresses and ports, all variable-length integer types in Neo are 
 | `networkFee`      | -                                                            |
 | `validUntilBlock` | -                                                            |
 | `attributes`      | First serialize the array length using `WriteVarInt (length)', and then serialize the elements of the array separately |
+| `cosigners`      | First serialize the array length using `WriteVarInt (length)', and then serialize the elements of the array separately |
 | `script`          | First serialize the array length using `WriteVarInt (length)', and then serialize the elements of the array separately |
 | `witnesses`       | First serialize the array length using `WriteVarInt (length)', and then serialize the elements of the array separately |
 
@@ -146,6 +170,7 @@ Except for IP addresses and ports, all variable-length integer types in Neo are 
 Transaction signature is to sign the data of the transaction itself (not including signature-attached data, namely witness) by using ECDSA digital signature algorithm, and then add it to `witnesses` in transaction object.
 
 Transaction example: 
+
 ```Json
 {
     "hash": "0x55d0f1587bdda6a956fd381f96c2d7e3d9f9697e26f3a8d6ddfcb65d2a49848e",
@@ -156,10 +181,10 @@ Transaction example:
     "sys_fee": "1",
     "net_fee": "0.012633",
     "valid_until_block": 2104144,
-    "attributes": [
+    "cosigners" : [
         {
-            "usage": "Cosigner",
-            "data": "f071d5fc6d2e2978a45842f05b1ac970e87d1977"
+            "account": "0xe48dde213ee6e51cbc0a888339b335dc6122d401",
+            "scopes": 0
         }
     ],
     "script": "0400e1f5051493966ad1f10948af8617f982c7a3daac58ac3d5a14f071d5fc6d2e2978a45842f05b1ac970e87d197753c1087472616e736665721415caa04214310670d5e5a398e147e0dbed98cf4368627d5b52f1",
