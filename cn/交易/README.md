@@ -10,11 +10,13 @@
         - [systemFee](#systemfee)
         - [networkFee](#networkfee)
         - [attributes](#attributes)
-            - [usage](#属性使用类型)
+            - [*usage*](#usage)
+        - [cosigners](#cosigners)
+            - [Scopes](#scopes)
         - [script](#script)
         - [witnesses](#witnesses)
-            - [InvocationScript](#调用脚本)
-            - [VerificationScript](#验证脚本)
+            - [*调用脚本*](#调用脚本)
+            - [*验证脚本*](#验证脚本)
     - [交易序列化](#交易序列化)
     - [交易签名](#交易签名)
 
@@ -51,6 +53,7 @@ Neo中的交易是带签名的数据包，是操作Neo网络的唯一方式。Ne
 | `systemFee`    | long   | 支付给网络的资源费用     |
 | `networkFee`    | long   | 支付给验证人打包交易的费用    |
 | `attributes` | tx_attr[]   | 交易所具备的额外特性  |
+| `cosigners` | Cosigner[]   | 限制签名的作用范围  |
 | `script`     | byte[]   | 交易的合约脚本 |
 | `witnesses`  | Witness[]   | 用于验证交易的脚本列表    |
 
@@ -77,17 +80,39 @@ version属性允许对交易结构进行更新，使其具有向后兼容性。 
 | 字段| 类型| 说明|
 |----------|-------|------------------------|
 | `usage`  | uint8 | 属性使用类型                  |
-| `data`   | byte[] |   交易待校验脚本，当usage=0x20时，data的值类型必须是 UIint160   |
+| `data`   | byte[] |   交易待校验脚本，当usage=0x20时，data的值类型必须是 UInt160   |
 
 #### *usage*
 以下使用类型可以包括在交易的attributes中。
 
 | 值    | 名称| 说明| 类型|
 |---------------|-------------|---------------|--------------|
-| `0x20`           | `Cosigner`    |  签名验证          | `byte`   |
 | `0x81`           | `Url`          | 外部介绍信息地址    | `byte`  |
 
 ​每个交易最多可以添加16个属性。
+
+### cosigners
+
+当前交易签名是全局有效的，为了让用户能更细粒度地控制签名的作用范围，NEO3中对交易结构中的cosigners字段进行了变更，可实现签名只限于验证指定合约的功能。
+
+| 字段 | 说明|  类型|
+|--------------|------------------| --|
+| `Account`   | 账户脚本哈希  |  `UInt160` |
+| `Scopes` | 指定签名的作用范围   |  `WitnessScope` |
+| `AllowedContracts`  |  签名可验证的合约脚本数组   | `UInt160[]` |
+| `AllowedGroups` | 签名可验证的合约组公钥 | `ECPoint[]` |
+
+#### Scopes
+
+Scopes字段定义了签名的作用范围，包括以下四种类型：
+
+| 值    | 名称| 说明| 类型|
+|---------------|-------------|---------------|--------------|
+| `0x00`           | `Global`          | 签名全局有效，neo2的默认值，保证向后兼容性   | `byte`  |
+| `0x01`           | `CalledByEntry`          | 签名只限于直接调用的Entry脚本    | `byte`  |
+| `0x10`           | `CustomContracts`          | 签名只限于用户指定的合约脚本    | `byte`  |
+| `0x20`           | `CustomGroups`          | 签名对组内的合约有效    | `byte`  |
+
 
 ### script
   虚拟机所执行的合约脚本。
