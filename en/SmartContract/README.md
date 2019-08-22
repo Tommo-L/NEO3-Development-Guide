@@ -1650,7 +1650,7 @@ public static bool Main(string method, params object[] args){
 }
 void update(byte[] newScript, string manifest)
 {
-Contract.Update(newScript, manifest);
+  Contract.Update(newScript, manifest);
 }
 ```
 
