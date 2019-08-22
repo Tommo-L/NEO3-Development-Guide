@@ -400,8 +400,8 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
             byte[] from  = "AesUJTLg93cWMTSzp2snxpBJSCets89ebM".ToScriptHash();
             byte[] to    = "AMhbbwR8r6LuTx5okkZudvvp3LW6Fh1Y7o".ToScriptHash();
             BigInterger value = new BigInteger(100000000);
-            string name = Contract.Call(neoScriptHash.HexToBytes(), "transfer", new Object[]{from, to, value.AsByteArray()});
-            return name;
+            bool result = Contract.Call(neoScriptHash.HexToBytes(), "transfer", new Object[]{from, to, value.AsByteArray()});
+            return result;
           }
       }  
   }
@@ -423,6 +423,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   生成脚本的C#代码为：
   ```
   ScriptBuilder sb = new ScriptBuilder()
+  UInt160 scriptHash = UInt160.Parse("0x43cf98eddbe047e198a3e5d57006311442a0ca15");
   UInt160 from = UInt160.Parse("0xfd59e6a0e3eee5cd9cea7233f01e1cc9c8b23502");
   UInt160 to = UInt160.Parse("0x4101b2a928fd88e1d976fd23c2db25a822338a08");
   long value = 1000000000;
@@ -432,6 +433,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   sb.Emit(OpCode.PUSH3);
   sb.Emit(OpCode.PACK);
   sb.EmitPush("transfer");
+  sb.EmitPush(scriptHash);
   sb.EmitSysCall(InteropService.System_Contract_Call);
   byte[] script = sb.ToArray();
   ```
@@ -504,6 +506,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   生成脚本的C#代码为：
   ```
   ScriptBuilder sb = new ScriptBuilder()
+  UInt160 scriptHash = UInt160.Parse("0x43cf98eddbe047e198a3e5d57006311442a0ca15");
   UInt160 account = UInt160.Parse("0xb16c70b94928ddb62f5793fbc98d6245ee308ecd");
   int height = 1000000
   sb.EmitPush(height);
@@ -511,6 +514,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   sb.Emit(OpCode.PUSH2);
   sb.Emit(OpCode.PACK);
   sb.EmitPush("unClaimGas");
+  sb.EmitPush(scriptHash);
   sb.EmitSysCall(InteropService.System_Contract_Call);
   byte[] script = sb.ToArray();
   ```
@@ -1060,6 +1064,7 @@ SYSCALL     0x627d5b52
 C#代码为：
 ```csharp
 ScriptBuilder sb = new ScriptBuilder()
+UInt160 scriptHash = UInt160.Parse("0x43cf98eddbe047e198a3e5d57006311442a0ca15");
 sb.EmitPush(0);
 sb.Emit(OpCode.NEWARRAY);
 sb.EmitPush("name");
@@ -1653,7 +1658,7 @@ public static bool Main(string method, params object[] args){
 }
 void update(byte[] newScript, string manifest)
 {
-Contract.Update(newScript, manifest);
+    Contract.Update(newScript, manifest);
 }
 ```
 
