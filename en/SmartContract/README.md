@@ -244,7 +244,7 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
   sb.EmitPush(0);
   sb.Emit(OpCode.NEWARRAY);
   sb.EmitPush("name");
-  sb.EmitPush(scriptHash);
+  sb.EmitPush(scriptHash.ToArray());
   sb.EmitSysCall(InteropService.System_Contract_Call);
   byte[] script = sb.ToArray();
   ```
@@ -425,7 +425,7 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
   sb.Emit(OpCode.PUSH3);
   sb.Emit(OpCode.PACK);
   sb.EmitPush("transfer");
-  sb.EmitPush(scriptHash);
+  sb.EmitPush(scriptHash.ToArray());
   sb.EmitSysCall(InteropService.System_Contract_Call);
   byte[] script = sb.ToArray();
   ```
@@ -506,7 +506,7 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
     sb.Emit(OpCode.PUSH2);
     sb.Emit(OpCode.PACK);
     sb.EmitPush("unClaimGas");
-    sb.EmitPush(scriptHash);
+    sb.EmitPush(scriptHash.ToArray());
     sb.EmitSysCall(InteropService.System_Contract_Call);
     byte[] script = sb.ToArray();
     ```
@@ -1619,7 +1619,7 @@ public static ScriptBuilder EmitAppCall(this ScriptBuilder sb, UInt160 scriptHas
   sb.EmitPush(args.Length);
   sb.Emit(OpCode.PACK);
   sb.EmitPush(operation);
-  sb.EmitPush(scriptHash);
+  sb.EmitPush(scriptHash.ToArray());
   sb.EmitSysCall(InteropService.System_Contract_Call);
   return sb;
 }
