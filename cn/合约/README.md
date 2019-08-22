@@ -11,8 +11,6 @@
             - [NeoToken](#neotoken)
             - [GasToken](#gastoken)
             - [PolicyContract](#PolicyContract)
-        - [原生合约 部署](#原生合约-部署)
-        - [原生合约 调用](#原生合约-调用)
     - [互操作服务](#互操作服务)
         - [互操作服务原理](#互操作服务原理)
         - [互操作服务使用](#互操作服务使用)
