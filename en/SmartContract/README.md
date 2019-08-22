@@ -244,7 +244,7 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
   sb.EmitPush(0);
   sb.Emit(OpCode.NEWARRAY);
   sb.EmitPush("name");
-  sb.EmitPush(scriptHash.ToArray());
+  sb.EmitPush(scriptHash);
   sb.EmitSysCall(InteropService.System_Contract_Call);
   byte[] script = sb.ToArray();
   ```
@@ -379,25 +379,25 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
   </table>
   Example in C# contract
 
-    ```csharp
-    using Neo.SmartContract.Framework;
-    using Neo.SmartContract.Framework.System;
+  ```csharp
+  using Neo.SmartContract.Framework;
+  using Neo.SmartContract.Framework.System;
 
-    public static object Main(string method, object[] args)
-    {
-      private static string neoScriptHash = "0x43cf98eddbe047e198a3e5d57006311442a0ca15";
-        if (Runtime.Trigger == TriggerType.Application)
-        {
-            if (method == "transferNeo") {
-              byte[] from  = "AesUJTLg93cWMTSzp2snxpBJSCets89ebM".ToScriptHash();
-              byte[] to    = "AMhbbwR8r6LuTx5okkZudvvp3LW6Fh1Y7o".ToScriptHash();
-              BigInterger value = new BigInteger(100000000);
-              string name = Contract.Call(neoScriptHash.HexToBytes(), "transfer", new Object[]{from, to, value.AsByteArray()});
-              return name;
-            }
-        }  
-    }
-    ```
+  public static object Main(string method, object[] args)
+  {
+    private static string neoScriptHash = "0x43cf98eddbe047e198a3e5d57006311442a0ca15";
+      if (Runtime.Trigger == TriggerType.Application)
+      {
+          if (method == "transferNeo") {
+            byte[] from  = "AesUJTLg93cWMTSzp2snxpBJSCets89ebM".ToScriptHash();
+            byte[] to    = "AMhbbwR8r6LuTx5okkZudvvp3LW6Fh1Y7o".ToScriptHash();
+            BigInterger value = new BigInteger(100000000);
+            bool result = Contract.Call(neoScriptHash.HexToBytes(), "transfer", new Object[]{from, to, value.AsByteArray()});
+            return result;
+          }
+      }  
+  }
+  ```
   Build Script
 
   Using System.Contract.Call to invoke contract:
@@ -415,6 +415,7 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
   C# code to build the script：
   ```
   ScriptBuilder sb = new ScriptBuilder()
+  UInt160 scriptHash = UInt160.Parse("0x43cf98eddbe047e198a3e5d57006311442a0ca15");
   UInt160 from = UInt160.Parse("0xfd59e6a0e3eee5cd9cea7233f01e1cc9c8b23502");
   UInt160 to = UInt160.Parse("0x4101b2a928fd88e1d976fd23c2db25a822338a08");
   long value = 1000000000;
@@ -424,6 +425,7 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
   sb.Emit(OpCode.PUSH3);
   sb.Emit(OpCode.PACK);
   sb.EmitPush("transfer");
+  sb.EmitPush(scriptHash);
   sb.EmitSysCall(InteropService.System_Contract_Call);
   byte[] script = sb.ToArray();
   ```
@@ -463,22 +465,22 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
   Example in C# contract
 
     ```csharp
-    using Neo.SmartContract.Framework;
-    using Neo.SmartContract.Framework.System;
+  using Neo.SmartContract.Framework;
+  using Neo.SmartContract.Framework.System;
 
-    public static object Main(string method, object[] args)
-    {
-      private static string neoScriptHash = "0x43cf98eddbe047e198a3e5d57006311442a0ca15";
-        if (Runtime.Trigger == TriggerType.Application)
-        {
-            if (method == "accountUnClaimGas") {
-              byte[] account = "AXx1A21wcoXuVxxxggkQChxQP5EGYe6zsN".ToScriptHash();
-              int height = 1000000;
-              string name = Contract.Call(neoScriptHash.HexToBytes(), "unClaimGas", new Object[]{account, height});
-              return name;
-            }
-        }  
-    }
+  public static object Main(string method, object[] args)
+  {
+    private static string neoScriptHash = "0x43cf98eddbe047e198a3e5d57006311442a0ca15";
+      if (Runtime.Trigger == TriggerType.Application)
+      {
+          if (method == "accountUnClaimGas") {
+            byte[] account = "AXx1A21wcoXuVxxxggkQChxQP5EGYe6zsN".ToScriptHash();
+            int height = 1000000;
+            int gas = Contract.Call(neoScriptHash.HexToBytes(), "unClaimGas", new Object[]{account, height});
+            return gas;
+          }
+      }  
+  }
     ```
   Build Script
 
@@ -496,6 +498,7 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
     C# code to build the script：
     ```
     ScriptBuilder sb = new ScriptBuilder()
+    UInt160 scriptHash = UInt160.Parse("0x43cf98eddbe047e198a3e5d57006311442a0ca15");
     UInt160 account = UInt160.Parse("0xb16c70b94928ddb62f5793fbc98d6245ee308ecd");
     int height = 1000000
     sb.EmitPush(height);
@@ -503,6 +506,7 @@ Referred to as NEO, it acts as the governance token which is used to enforce the
     sb.Emit(OpCode.PUSH2);
     sb.Emit(OpCode.PACK);
     sb.EmitPush("unClaimGas");
+    sb.EmitPush(scriptHash);
     sb.EmitSysCall(InteropService.System_Contract_Call);
     byte[] script = sb.ToArray();
     ```

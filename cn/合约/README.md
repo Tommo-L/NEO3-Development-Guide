@@ -248,7 +248,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   sb.EmitPush(0);
   sb.Emit(OpCode.NEWARRAY);
   sb.EmitPush("name");
-  sb.EmitPush(scriptHash.ToArray());
+  sb.EmitPush(scriptHash);
   sb.EmitSysCall(InteropService.System_Contract_Call);
   byte[] script = sb.ToArray();
   ```
@@ -484,8 +484,8 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
           if (method == "accountUnClaimGas") {
             byte[] account = "AXx1A21wcoXuVxxxggkQChxQP5EGYe6zsN".ToScriptHash();
             int height = 1000000;
-            string name = Contract.Call(neoScriptHash.HexToBytes(), "unClaimGas", new Object[]{account, height});
-            return name;
+            int gas = Contract.Call(neoScriptHash.HexToBytes(), "unClaimGas", new Object[]{account, height});
+            return gas;
           }
       }  
   }
