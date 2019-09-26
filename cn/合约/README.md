@@ -11,8 +11,6 @@
             - [NeoToken](#neotoken)
             - [GasToken](#gastoken)
             - [PolicyContract](#PolicyContract)
-        - [原生合约 部署](#原生合约-部署)
-        - [原生合约 调用](#原生合约-调用)
     - [互操作服务](#互操作服务)
         - [互操作服务原理](#互操作服务原理)
         - [互操作服务使用](#互操作服务使用)
@@ -216,25 +214,6 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   </table>
   在合约中调用示例
 
-  1.直接使用互操作服务
-
-  ```csharp
-  using Neo.SmartContract.Framework;
-  using Neo.SmartContract.Framework.Neo;
-
-  public static object Main(string method, object[] args)
-  {
-      if (Runtime.Trigger == TriggerType.Application)
-      {
-          if (method == "neoName") {
-            string name = Neo.Native.Tokens.Neo("name", new object[]());
-            return name;
-          }
-      }  
-  }
-  ```
-  2.使用合约脚本哈希
-
   ```csharp
   using Neo.SmartContract.Framework;
   using Neo.SmartContract.Framework.System;
@@ -253,27 +232,6 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   ```
   拼接脚本示例
 
-
-  1.使用互操作服务
-  NeoToken注册的互操作服务哈希为0x45c49284,所以脚本为
-  ```
-  PUSH0
-  NEWARRAY
-  PUSHBYTES4 6e616d65
-  SYSCALL 45c49284
-  ```
-  生成脚本的C#代码为：
-
-  ```
-  ScriptBuilder sb = new ScriptBuilder()
-  sb.EmitPush(0);
-  sb.Emit(OpCode.NEWARRAY);
-  sb.EmitPush("name");
-  sb.EmitSysCall(Neo.Native.Tokens.NEO);
-  byte[] script = sb.ToArray();
-  ```
-
-  2.使用合约脚本哈希
   通过System.Contract.Call来调用合约脚本为:
   ```
   PUSH0
@@ -290,7 +248,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   sb.EmitPush(0);
   sb.Emit(OpCode.NEWARRAY);
   sb.EmitPush("name");
-  sb.EmitPush(scriptHash.ToArray());
+  sb.EmitPush(scriptHash);
   sb.EmitSysCall(InteropService.System_Contract_Call);
   byte[] script = sb.ToArray();
   ```
@@ -429,25 +387,6 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   </table>
   在合约中调用示例
 
-  1.直接使用互操作服务
-
-  ```csharp
-  using Neo.SmartContract.Framework;
-  using Neo.SmartContract.Framework.Neo;
-
-  public static object Main(string method, object[] args)
-  {
-      if (Runtime.Trigger == TriggerType.Application)
-      {
-          if (method == "transferNeo") {
-            string name = Neo.Native.Tokens.Neo("transfer", args);
-            return name;
-          }
-      }  
-  }
-  ```
-  2.使用合约脚本哈希
-
   ```csharp
   using Neo.SmartContract.Framework;
   using Neo.SmartContract.Framework.System;
@@ -461,44 +400,14 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
             byte[] from  = "AesUJTLg93cWMTSzp2snxpBJSCets89ebM".ToScriptHash();
             byte[] to    = "AMhbbwR8r6LuTx5okkZudvvp3LW6Fh1Y7o".ToScriptHash();
             BigInterger value = new BigInteger(100000000);
-            string name = Contract.Call(neoScriptHash.HexToBytes(), "transfer", new Object[]{from, to, value.AsByteArray()});
-            return name;
+            bool result = Contract.Call(neoScriptHash.HexToBytes(), "transfer", new Object[]{from, to, value.AsByteArray()});
+            return result;
           }
       }  
   }
   ```
   拼接脚本示例
 
-
-  1.使用互操作服务
-  NeoToken注册的互操作服务哈希为0x45c49284,所以脚本为
-  ```
-  PUSHBYTE4  00e1f505
-  PUSHBYTE20 4101b2a928fd88e1d976fd23c2db25a822338a08
-  PUSHBYTE20 fd59e6a0e3eee5cd9cea7233f01e1cc9c8b23502
-  PUSH3
-  PACK
-  PUSHBYTES4 7472616e73666572
-  SYSCALL 45c49284
-  ```
-  生成脚本的C#代码为：
-
-  ```
-  ScriptBuilder sb = new ScriptBuilder()
-  UInt160 from = UInt160.Parse("0xfd59e6a0e3eee5cd9cea7233f01e1cc9c8b23502");
-  UInt160 to = UInt160.Parse("0x4101b2a928fd88e1d976fd23c2db25a822338a08");
-  long value = 1000000000;
-  sb.EmitPush(value);
-  sb.EmitPush(to);
-  sb.EmitPush(from);
-  sb.Emit(OpCode.PUSH3);
-  sb.Emit(OpCode.PACK);
-  sb.EmitPush("transfer");
-  sb.EmitSysCall(Neo.Native.Tokens.NEO);
-  byte[] script = sb.ToArray();
-  ```
-
-  2.使用合约脚本哈希
   通过System.Contract.Call来调用合约脚本为:
   ```
   PUSHBYTE4   00e1f505
@@ -514,6 +423,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   生成脚本的C#代码为：
   ```
   ScriptBuilder sb = new ScriptBuilder()
+  UInt160 scriptHash = UInt160.Parse("0x43cf98eddbe047e198a3e5d57006311442a0ca15");
   UInt160 from = UInt160.Parse("0xfd59e6a0e3eee5cd9cea7233f01e1cc9c8b23502");
   UInt160 to = UInt160.Parse("0x4101b2a928fd88e1d976fd23c2db25a822338a08");
   long value = 1000000000;
@@ -523,6 +433,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   sb.Emit(OpCode.PUSH3);
   sb.Emit(OpCode.PACK);
   sb.EmitPush("transfer");
+  sb.EmitPush(scriptHash);
   sb.EmitSysCall(InteropService.System_Contract_Call);
   byte[] script = sb.ToArray();
   ```
@@ -561,27 +472,6 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   </table>
   在合约中调用示例
 
-  1.直接使用互操作服务
-
-  ```csharp
-  using Neo.SmartContract.Framework;
-  using Neo.SmartContract.Framework.Neo;
-
-  public static object Main(string method, object[] args)
-  {
-      if (Runtime.Trigger == TriggerType.Application)
-      {
-          if (method == "accountUnClaimGas") {
-            byte[] account = "AXx1A21wcoXuVxxxggkQChxQP5EGYe6zsN".ToScriptHash();
-            int height = 1000000;
-            int gas = Neo.Native.Tokens.Neo("unClaimGas", new Object[]{account, height});
-            return name;
-          }
-      }  
-  }
-  ```
-  2.使用合约脚本哈希
-
   ```csharp
   using Neo.SmartContract.Framework;
   using Neo.SmartContract.Framework.System;
@@ -594,41 +484,14 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
           if (method == "accountUnClaimGas") {
             byte[] account = "AXx1A21wcoXuVxxxggkQChxQP5EGYe6zsN".ToScriptHash();
             int height = 1000000;
-            string name = Contract.Call(neoScriptHash.HexToBytes(), "unClaimGas", new Object[]{account, height});
-            return name;
+            int gas = Contract.Call(neoScriptHash.HexToBytes(), "unClaimGas", new Object[]{account, height});
+            return gas;
           }
       }  
   }
   ```
   拼接脚本示例
 
-
-  1.使用互操作服务
-  NeoToken注册的互操作服务哈希为0x45c49284,所以脚本为
-  ```
-  PUSHBYTE3   40420f
-  PUSHBYTE20  b16c70b94928ddb62f5793fbc98d6245ee308ecd
-  PUSH2
-  PACK
-  PUSHBYTES4  756e436c61696d476173
-  SYSCALL     45c49284
-  ```
-  生成脚本的C#代码为：
-
-  ```
-  ScriptBuilder sb = new ScriptBuilder()
-  UInt160 account = UInt160.Parse("0xb16c70b94928ddb62f5793fbc98d6245ee308ecd");
-  int height = 1000000
-  sb.EmitPush(height);
-  sb.EmitPush(account);
-  sb.Emit(OpCode.PUSH2);
-  sb.Emit(OpCode.PACK);
-  sb.EmitPush("unClaimGas");
-  sb.EmitSysCall(Neo.Native.Tokens.NEO);
-  byte[] script = sb.ToArray();
-  ```
-
-  2.使用合约脚本哈希
   通过System.Contract.Call来调用合约脚本为:
   ```
   PUSHBYTE3   40420f
@@ -643,6 +506,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   生成脚本的C#代码为：
   ```
   ScriptBuilder sb = new ScriptBuilder()
+  UInt160 scriptHash = UInt160.Parse("0x43cf98eddbe047e198a3e5d57006311442a0ca15");
   UInt160 account = UInt160.Parse("0xb16c70b94928ddb62f5793fbc98d6245ee308ecd");
   int height = 1000000
   sb.EmitPush(height);
@@ -650,6 +514,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
   sb.Emit(OpCode.PUSH2);
   sb.Emit(OpCode.PACK);
   sb.EmitPush("unClaimGas");
+  sb.EmitPush(scriptHash);
   sb.EmitSysCall(InteropService.System_Contract_Call);
   byte[] script = sb.ToArray();
   ```
@@ -1199,6 +1064,7 @@ SYSCALL     0x627d5b52
 C#代码为：
 ```csharp
 ScriptBuilder sb = new ScriptBuilder()
+UInt160 scriptHash = UInt160.Parse("0x43cf98eddbe047e198a3e5d57006311442a0ca15");
 sb.EmitPush(0);
 sb.Emit(OpCode.NEWARRAY);
 sb.EmitPush("name");
@@ -1700,43 +1566,6 @@ namespace MyContract
 
 ## 网路资源访问
 ## 合约调用
-### 直接通过互操作服务调用原生合约
-**仅支持原生合约的调用**。每个原生合约都会注册一个互操作接口，互操作接口名称为其ServiceName，都属于Neo.Native命名空间。每个原生合约对应的ServiceName如下：
-
-|原生合约|服务名称|
-|---|---|
-|NeoToken|Neo.Native.Tokens.NEO|
-|GasToken|Neo.Native.Tokens.GAS|
-|PolicyToken|NeoNeo.Native.Policy|
-
-例如在C#编写智能合约中，如果需要调用GAS转账就可以如下编写：
-
-```csharp
-using Neo.SmartContract.Framework;
-using Neo.SmartContract.Framework.Neo;
-
-namespace MyContract
-{
-  public class MyContract: SmartContract
-  {
-    public static object main(string method, object[] args)
-    {
-      if (method == "test") {
-        if (args.Length < 3) return false;
-        return Native.Tokens.GAS("transfer", args);
-      }
-    }
-  }
-}
-```
-互操作服务在C#合约以及脚本中的使用请参考[查看互操作服务使用](#互操作服务使用)  
-原生合约的ScriptHash都是固定的，可以像调用其他普通合约一样用System.Contract.Call互操作接口和原生合约的ScriptHash调用。现有原生合约的ScriptHash如下：
-
-|原生合约|脚本哈希|
-|---|---|
-|NeoToken| 0x43cf98eddbe047e198a3e5d57006311442a0ca15 |
-|GasToken|0xa1760976db5fcdfab2a9930e8f6ce875b2d18225|
-|PolicyToken|0x9c5699b260bd468e2160dd5d45dfd2686bba8b77|
 ### 在合约中调用其他合约
 合约中通过开发框架提供的互操作接口[System.Contract.Call](#contract-call)来调用其他合约
 例如在C#中可以如下方式调用：
@@ -1829,7 +1658,7 @@ public static bool Main(string method, params object[] args){
 }
 void update(byte[] newScript, string manifest)
 {
-Contract.Update(newScript, manifest);
+    Contract.Update(newScript, manifest);
 }
 ```
 
