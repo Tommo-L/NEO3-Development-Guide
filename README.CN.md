@@ -66,7 +66,7 @@
 ### 虚拟机
 
 - 新增
-    - [DUPFROMALTSTACKBOTTOM](cn/虚拟机#栈操作)
+    - [DUPFROMALTSTACKBOTTOM](cn/虚拟机#栈操作), `ISNULL`, `PUSHNULL`
 - 删除
     - `APPCALL`, `TAILCALL`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `CALL_I`, `CALL_E`, `CALL_ED, `CALL_ET`, `CALL_EDT` 等OpCodes。
 

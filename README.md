@@ -68,7 +68,7 @@
 ### NeoVM
 
 - ADD
-    -  OpCode [DUPFROMALTSTACKBOTTOM](en/NeoVM#stack-operation)
+    -  OpCode [DUPFROMALTSTACKBOTTOM](en/NeoVM#stack-operation), `ISNULL`, `PUSHNULL`
 
 - DELETE
     - Discard the following opcodes: `APPCALL`, `TAILCALL`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `CALL_I`, `CALL_E`, `CALL_ED, `CALL_ET, `CALL_EDT`, etc.

@@ -10,6 +10,96 @@
     - [Interoperable service layer](#interoperable-service-layer)
     - [Built-in data types](#built-in-data-types)
     - [Instructions](#instructions)
+        - [Contrant](#contrant)
+            - [PUSH0](#push0)
+            - [PUSHBYTES](#pushbytes)
+            - [PUSHDATA](#pushdata)
+            - [PUSHNULL](#pushnull)
+            - [PUSHM1](#pushm1)
+            - [PUSHN](#pushn)
+        - [Flow Control](#flow-control)
+            - [NOP](#nop)
+            - [JMP](#jmp)
+            - [JMPIF](#jmpif)
+            - [JMPIFNOT](#jmpifnot)
+            - [CALL](#call)
+            - [RET](#ret)
+            - [SYSCALL](#syscall)
+        - [Stack Operation](#stack-operation)
+            - [DUPFROMALTSTACKBOTTOM](#dupfromaltstackbottom)
+            - [DUPFROMALTSTACK](#dupfromaltstack)
+            - [TOALTSTACK](#toaltstack)
+            - [FROMALTSTACK](#fromaltstack)
+            - [ISNULL](#isnull)
+            - [XDROP](#xdrop)
+            - [XSWAP](#xswap)
+            - [XTUCK](#xtuck)
+            - [DEPTH](#depth)
+            - [DROP](#drop)
+            - [DUP](#dup)
+            - [NIP](#nip)
+            - [OVER](#over)
+            - [PICK](#pick)
+            - [ROLL](#roll)
+            - [ROT](#rot)
+            - [SWAP](#swap)
+            - [TUCK](#tuck)
+        - [String Operation](#string-operation)
+            - [CAT](#cat)
+            - [SUBSTR](#substr)
+            - [LEFT](#left)
+            - [RIGHT](#right)
+            - [SIZE](#size)
+        - [Logical Operation](#logical-operation)
+            - [INVERT](#invert)
+            - [AND](#and)
+            - [OR](#or)
+            - [XOR](#xor)
+            - [EQUAL](#equal)
+        - [Arithmetic Operation](#arithmetic-operation)
+            - [INC](#inc)
+            - [DEC](#dec)
+            - [SIGN](#sign)
+            - [NEGATE](#negate)
+            - [ABS](#abs)
+            - [NOT](#not)
+            - [NZ](#nz)
+            - [ADD](#add)
+            - [SUB](#sub)
+            - [MUL](#mul)
+            - [DIV](#div)
+            - [MOD](#mod)
+            - [SHL](#shl)
+            - [SHR](#shr)
+            - [BOOLAND](#booland)
+            - [BOOLOR](#boolor)
+            - [NUMEQUAL](#numequal)
+            - [NUMNOTEQUAL](#numnotequal)
+            - [LT](#lt)
+            - [GT](#gt)
+            - [LTE](#lte)
+            - [GTE](#gte)
+            - [MIN](#min)
+            - [MAX](#max)
+            - [WITHIN](#within)
+        - [Advanced Data Structure](#advanced-data-structure)
+        - [ARRAYSIZE](#arraysize)
+            - [PACK](#pack)
+            - [UNPACK](#unpack)
+            - [PICKITEM](#pickitem)
+            - [SETITEM\*](#setitem\)
+            - [NEWARRAY](#newarray)
+            - [NEWSTRUCT](#newstruct)
+            - [NEWMAP](#newmap)
+            - [APPEND*](#append)
+            - [REVERSE*](#reverse)
+            - [REMOVE*](#remove)
+            - [HASKEY](#haskey)
+            - [KEYS](#keys)
+            - [VALUES](#values)
+        - [Exception Processing](#exception-processing)
+            - [THROW](#throw)
+            - [THROWIFNOT](#throwifnot)
 
 <!-- /TOC -->
 
@@ -21,7 +111,7 @@ For example, in JVM or CLR of .Net, source code will be compiled into relevant b
 ## Changes in NEO3
 
 - ADD
-    -  OpCode: [DUPFROMALTSTACKBOTTOM](#stack-operation)
+    -  OpCode: [DUPFROMALTSTACKBOTTOM](#stack-operation), `ISNULL`, `PUSHNULL`
 
 - DELETE
     - `APPCALL`, `TAILCALL`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `CALL_I`, `CALL_E`, `CALL_ED`, `CALL_ET`, `CALL_EDT`
@@ -138,6 +228,13 @@ The constant instructions mainly complete the function of pushing constants or a
 | Fee: | 0.00000180 GAS, 0.00013000 GAS, 0.00110000 GAS                    |
 | Function:   | Push a byte array into the `EvaluationStack`, the length of which is specified by 1\|2\|4 bytes after this instruction.  |
 
+#### PUSHNULL
+
+| Instruction   | PUSHNULL                                   |
+|----------|------------------------------------------|
+| Bytecode | 0x50                                     |
+| Function:   | Push NULL value into the `EvaluationStack`. |
+
 #### PUSHM1
 
 | Instruction   | PUSHM1                                   |
@@ -251,6 +348,13 @@ Copy, remove and swap the elements of the stack.
 | Bytecode: | 0x6C                                     |
 | Fee: | 0.00000060 GAS                                                        |
 | Function:   | Remove the top element of the `AltStack`, and push it into the `EvaluationStack`. |
+
+#### ISNULL
+
+| Instruction   | ISNULL                             |
+|----------|------------------------------------------|
+| Bytecode | 0x70                                     |
+| Function   | Return true if the input is NULL; otherwise, return false |
 
 #### XDROP
 
