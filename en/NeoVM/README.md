@@ -233,6 +233,7 @@ The constant instructions mainly complete the function of pushing constants or a
 | Instruction   | PUSHNULL                                   |
 |----------|------------------------------------------|
 | Bytecode | 0x50                                     |
+| Fee: | 0.00000030 GAS                               |
 | Function:   | Push NULL value into the `EvaluationStack`. |
 
 #### PUSHM1
@@ -354,6 +355,7 @@ Copy, remove and swap the elements of the stack.
 | Instruction   | ISNULL                             |
 |----------|------------------------------------------|
 | Bytecode | 0x70                                     |
+| Fee: | 0.00000060 GAS                               |
 | Function   | Return true if the input is NULL; otherwise, return false |
 
 #### XDROP
