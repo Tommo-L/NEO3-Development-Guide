@@ -9,6 +9,96 @@
     - [互操作接口](#互操作接口)
     - [内置数据类型](#内置数据类型)
     - [指令集](#指令集)
+        - [常数](#常数)
+            - [PUSH0](#push0)
+            - [PUSHBYTES](#pushbytes)
+            - [PUSHDATA](#pushdata)
+            - [PUSHNULL](#pushnull)
+            - [PUSHM1](#pushm1)
+            - [PUSHN](#pushn)
+        - [流程控制](#流程控制)
+            - [NOP](#nop)
+            - [JMP](#jmp)
+            - [JMPIF](#jmpif)
+            - [JMPIFNOT](#jmpifnot)
+            - [CALL](#call)
+            - [RET](#ret)
+            - [SYSCALL](#syscall)
+        - [栈操作](#栈操作)
+            - [DUPFROMALTSTACKBOTTOM](#dupfromaltstackbottom)
+            - [DUPFROMALTSTACK](#dupfromaltstack)
+            - [TOALTSTACK](#toaltstack)
+            - [FROMALTSTACK](#fromaltstack)
+            - [ISNULL](#isnull)
+            - [XDROP](#xdrop)
+            - [XSWAP](#xswap)
+            - [XTUCK](#xtuck)
+            - [DEPTH](#depth)
+            - [DROP](#drop)
+            - [DUP](#dup)
+            - [NIP](#nip)
+            - [OVER](#over)
+            - [PICK](#pick)
+            - [ROLL](#roll)
+            - [ROT](#rot)
+            - [SWAP](#swap)
+            - [TUCK](#tuck)
+        - [字符串操作](#字符串操作)
+            - [CAT](#cat)
+            - [SUBSTR](#substr)
+            - [LEFT](#left)
+            - [RIGHT](#right)
+            - [SIZE](#size)
+        - [逻辑运算](#逻辑运算)
+            - [INVERT](#invert)
+            - [AND](#and)
+            - [OR](#or)
+            - [XOR](#xor)
+            - [EQUAL](#equal)
+        - [算术运算](#算术运算)
+            - [INC](#inc)
+            - [DEC](#dec)
+            - [SIGN](#sign)
+            - [NEGATE](#negate)
+            - [ABS](#abs)
+            - [NOT](#not)
+            - [NZ](#nz)
+            - [ADD](#add)
+            - [SUB](#sub)
+            - [MUL](#mul)
+            - [DIV](#div)
+            - [MOD](#mod)
+            - [SHL](#shl)
+            - [SHR](#shr)
+            - [BOOLAND](#booland)
+            - [BOOLOR](#boolor)
+            - [NUMEQUAL](#numequal)
+            - [NUMNOTEQUAL](#numnotequal)
+            - [LT](#lt)
+            - [GT](#gt)
+            - [LTE](#lte)
+            - [GTE](#gte)
+            - [MIN](#min)
+            - [MAX](#max)
+            - [WITHIN](#within)
+        - [高级数据结构](#高级数据结构)
+            - [ARRAYSIZE](#arraysize)
+            - [PACK](#pack)
+            - [UNPACK](#unpack)
+            - [PICKITEM](#pickitem)
+            - [SETITEM*](#setitem)
+            - [NEWARRAY](#newarray)
+            - [NEWSTRUCT](#newstruct)
+            - [NEWMAP](#newmap)
+        - [APPEND*](#append)
+            - [REVERSE*](#reverse)
+            - [REMOVE*](#remove)
+            - [HASKEY](#haskey)
+            - [KEYS](#keys)
+            - [VALUES](#values)
+        - [异常处理](#异常处理)
+            - [THROW](#throw)
+            - [THROWIFNOT](#throwifnot)
 
 <!-- /TOC -->
 
@@ -19,7 +109,7 @@ NeoVM 是执行 Neo 智能合约代码的虚拟机。本文所讲述的虚拟机
 ## NEO3变更部分
 
 - 新增
-    - [DUPFROMALTSTACKBOTTOM](#栈操作)
+    - [DUPFROMALTSTACKBOTTOM](#栈操作), `ISNULL`, `PUSHNULL`
 - 删除
     - `APPCALL`, `TAILCALL`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `CALL_I`, `CALL_E`, `CALL_ED`, `CALL_ET`, `CALL_EDT`
 
@@ -132,6 +222,14 @@ NeoVM虚拟机一共实现了173个指令，类别如下：
 | 系统费： | 0.00000180 GAS, 0.00013000 GAS, 0.00110000 GAS                    |
 | 功能：   | 向计算栈中压入一个字节数组，其长度由本指令后的 1\|2\|4 字节指定。 |
 
+#### PUSHNULL
+
+| 指令：   | PUSHNULL                                   |
+|----------|------------------------------------------|
+| 字节码： | 0x50                                     |
+| 系统费: | 0.00000030 GAS                               |
+| 功能：   | 向计算栈中压入NULL值。 |
+
 #### PUSHM1
 
 | 指令：   | PUSHM1                                   |
@@ -216,7 +314,7 @@ NeoVM虚拟机一共实现了173个指令，类别如下：
 
 | 指令   | DUPFROMALTSTACKBOTTOM                          |
 |----------|------------------------------------------|
-| 字节码： | 0x69                                     |
+| 字节码： | 0x6E                                     |
 | 系统费： | 0.00000060 GAS                                                        |
 | 功能： | 复制备用栈栈底的元素，并将其压入计算栈。 |
 
@@ -243,6 +341,14 @@ NeoVM虚拟机一共实现了173个指令，类别如下：
 | 字节码： | 0x6C                                     |
 | 系统费： | 0.00000060 GAS                                                        |
 | 功能：   | 移除备用栈栈顶的元素，并将其压入计算栈。 |
+
+#### ISNULL
+
+| 指令：   | ISNULL                             |
+|----------|------------------------------------------|
+| 字节码： | 0x70                                     |
+| 系统费: | 0.00000060 GAS                               |
+| 功能：   | 输入为NULL时，返回true；否则，返回false |
 
 #### XDROP
 
