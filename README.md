@@ -61,9 +61,13 @@
     - [native contracts](en/SmartContract#native-contract): running in the native code rather than in the virtual machine, including NeoToken, GasToken and PolicyToken
     - [Accessing to network resources](en/SmartContract#accessing-to-internet-resources): to be added
     - [System Trigger](en/SmartContract#trigger): triggered when the node receives a new block and currently only triggers the execution of the native contract
+    - Interop Service: `System.Blockchain.GetTransactionFromBlock`
 
 - UPDATE
     - Reduce the [system fee](en/SmartContract#fees) for OpCode and interop services
+
+- DELETE
+    - Interop Service:`Neo.Header.GetVersion`, `Neo.Header.GetMerkleRoot`, `Neo.Header.GetNextConsensus`, `Neo.Transaction.GetScript`, `Neo.Transaction.GetWitnesses`, `Neo.Witness.GetVerificationScript`,  `Neo.Contract.GetScript`, `Neo.Contract.IsPayable`, `System.Blockchain.GetHeader`, `System.Header.GetIndex`, `System.Header.GetHash`, `System.Header.GetPrevHash`, `System.Header.GetTimestamp`, `System.Block.GetTransactionCount`, `System.Block.GetTransactions`, `System.Block.GetTransaction`, `System.Transaction.GetHash`
 
 ### NeoVM
 

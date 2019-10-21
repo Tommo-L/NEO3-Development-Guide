@@ -8,17 +8,66 @@
         - [Introduction](#introduction)
             - [NeoToken](#neotoken)
             - [GasToken](#gastoken)
-            - [PolicyContract](#policyContract)
+            - [PolicyContract](#policycontract)
         - [NativeContract Deployment](#nativecontract-deployment)
-        - [NativeContract Invocation](#nativecontract-invocation)
     - [Interop Service](#interop-service)
         - [Principle of Interop Service](#principle-of-interop-service)
         - [Usage of Interop Service](#usage-of-interop-service)
-          - [System](#system-part) 
-          - [Neo](#neo-part)
+        - [System Part](#system-part)
+            - [System.ExecutionEngine.GetScriptContainer](#systemexecutionenginegetscriptcontainer)
+            - [System.ExecutionEngine.GetExecutingScriptHash](#systemexecutionenginegetexecutingscripthash)
+            - [System.ExecutionEngine.GetCallingScriptHash](#systemexecutionenginegetcallingscripthash)
+            - [System.ExecutionEngine.GetEntryScriptHash](#systemexecutionenginegetentryscripthash)
+            - [System.Runtime.Platform](#systemruntimeplatform)
+            - [System.Runtime.GetTrigger](#systemruntimegettrigger)
+            - [System.Runtime.CheckWitness](#systemruntimecheckwitness)
+            - [System.Runtime.Notify](#systemruntimenotify)
+            - [System.Runtime.Log](#systemruntimelog)
+            - [System.Runtime.GetTime](#systemruntimegettime)
+            - [System.Runtime.Serialize](#systemruntimeserialize)
+            - [System.Runtime.Deserialize](#systemruntimedeserialize)
+            - [System.Runtime.GetInvocationCounter](#systemruntimegetinvocationcounter)
+            - [System.Runtime.GetNotifications](#systemruntimegetnotifications)
+            - [System.Crypto.Verify](#systemcryptoverify)
+            - [System.Blockchain.GetHeight](#systemblockchaingetheight)
+            - [System.Blockchain.GetBlock](#systemblockchaingetblock)
+            - [System.Blockchain.GetTransaction](#systemblockchaingettransaction)
+            - [System.Blockchain.GetTransactionHeight](#systemblockchaingettransactionheight)
+            - [System.Blockchain.GetTransactionFromBlock](#systemblockchaingettransactionfromblock)
+            - [System.Blockchain.GetContract](#systemblockchaingetcontract)
+            - [System.Contract.Call](#systemcontractcall)
+            - [System.Contract.Destroy](#systemcontractdestroy)
+            - [System.Storage.GetContext](#systemstoragegetcontext)
+            - [System.Storage.GetReadOnlyContext](#systemstoragegetreadonlycontext)
+            - [System.Storage.Get](#systemstorageget)
+            - [System.Storage.Put](#systemstorageput)
+            - [System.Storage.PutEx](#systemstorageputex)
+            - [System.Storage.Delete](#systemstoragedelete)
+            - [System.StorageContext.AsReadOnly](#systemstoragecontextasreadonly)
+        - [Neo Part](#neo-part)
+            - [Neo.Native.Deploy](#neonativedeploy)
+            - [Neo.Crypto.CheckSig](#neocryptochecksig)
+            - [Neo.Crypto.CheckMultiSig](#neocryptocheckmultisig)
+            - [Neo.Account.IsStandard](#neoaccountisstandard)
+            - [Neo.Contract.Create](#neocontractcreate)
+            - [Neo.Contract.Update](#neocontractupdate)
+            - [Neo.Storage.Find](#neostoragefind)
+            - [Neo.Enumerator.Create](#neoenumeratorcreate)
+            - [Neo.Enumerator.Next](#neoenumeratornext)
+            - [Neo.Enumerator.Value](#neoenumeratorvalue)
+            - [Neo.Enumerator.Concat](#neoenumeratorconcat)
+            - [Neo.Iterator.Create](#neoiteratorcreate)
+            - [Neo.Iterator.Key](#neoiteratorkey)
+            - [Neo.Iterator.Keys](#neoiteratorkeys)
+            - [Neo.Iterator.Values](#neoiteratorvalues)
+            - [Neo.Iterator.Concat](#neoiteratorconcat)
+            - [Neo.Json.Serialize](#neojsonserialize)
+            - [Neo.Json.Deserialize](#neojsondeserialize)
     - [Fees](#fees)
     - [Accessing to Internet Resources](#accessing-to-internet-resources)
     - [Contract Invocation](#contract-invocation)
+        - [Invoke another contract in contract](#invoke-another-contract-in-contract)
+        - [Invoke contract in script](#invoke-contract-in-script)
     - [Contract Upgrade](#contract-upgrade)
     - [Contract Destroying](#contract-destroying)
 
@@ -34,9 +83,13 @@ All transactions in NEO3 are the invocation of the smart contract. In addition t
     - [native contracts](#native-contract): running in the native code rather than in the virtual machine, including NeoToken, GasToken and PolicyToken
     - [Accessing to network resources](#accessing-to-internet-resources): to be added
     - [System Trigger](#trigger): triggered when the node receives a new block and currently only triggers the execution of the native contract
+    - Interop Service: `System.Blockchain.GetTransactionFromBlock`
     
 - UPDATE
     - Reduce the [system fee](#fees) for OpCode and interop services
+
+- DELETE
+    - Interop Service:`Neo.Header.GetVersion`, `Neo.Header.GetMerkleRoot`, `Neo.Header.GetNextConsensus`, `Neo.Transaction.GetScript`, `Neo.Transaction.GetWitnesses`, `Neo.Witness.GetVerificationScript`,  `Neo.Contract.GetScript`, `Neo.Contract.IsPayable`, `System.Blockchain.GetHeader`, `System.Header.GetIndex`, `System.Header.GetHash`, `System.Header.GetPrevHash`, `System.Header.GetTimestamp`, `System.Block.GetTransactionCount`, `System.Block.GetTransactions`, `System.Block.GetTransaction`, `System.Transaction.GetHash`
 
 ## Manifest
 Now each contract is required to provide a manifest file to describe its properties, including Groups, Features, ABI, Permissions, Trusts, SafeMethods, as shown below:
@@ -1185,13 +1238,6 @@ Interop services are divided into System part and Neo part. The specific interfa
 |--|--|
 | C# Function | uint GetHeight() |
 
-#### System.Blockchain.GetHeader
-
-| Description | Get the current block header|
-|--|--|
-| C# Function | Header GetHeader(uint height) |
-|| Header GetHeader(byte[] hash)  |
-
 #### System.Blockchain.GetBlock
 
 | Description | Get a block by block height or block hash |
@@ -1211,59 +1257,17 @@ Interop services are divided into System part and Neo part. The specific interfa
 |--|--|
 | C# Function | int GetTransactionHeight(byte[] hash) |
 
+#### System.Blockchain.GetTransactionFromBlock
+
+| Description | Get transaction by the transaction ID in block |
+|--|--|
+| C# Function | Transaction GetTransaction(byte[] hash) |
+
 #### System.Blockchain.GetContract
 
 | Description | Get contract by scripthash |
 |--|--|
 | C# Function | Contract GetContract(byte[] scriptHash) |
-
-#### System.Header.GetIndex
-
-| Description | Get block index from block header |
-|--|--|
-| C# Function | uint Index |
-
-#### System.Header.GetHash
-
-| Description | Get block hash from block header |
-|--|--|
-| C# Function | byte[] Hash |
-
-#### System.Header.GetPrevHash
-
-| Description | Get hash of the previous block from block header |
-|--|--|
-| C# Function | byte[] PreHash |
-
-#### System.Header.GetTimestamp
-
-| Description | Get timestamp from block header |
-|--|--|
-| C# Function | byte[] Timestamp |
-
-#### System.Block.GetTransactionCount
-
-| Description | Get the number of transactions included in the block |
-|--|--|
-| C# Function | int GetTransactionCount |
-
-#### System.Block.GetTransactions
-
-| Description | Get all transactions included in the block |
-|--|--|
-| C# Function | Transaction[] GetTransactions() |
-
-#### System.Block.GetTransaction
-
-| Description | Get a transaction in the block by transaction index |
-|--|--|
-| C# Function | Transaction[] GetTransaction(int index) |
-
-#### System.Transaction.GetHash
-
-| Description | Get hash of the transaction |
-|--|--|
-| C# Function | byte[] Hash |
 
 #### System.Contract.Call 
 
@@ -1345,42 +1349,6 @@ Interop services are divided into System part and Neo part. The specific interfa
 |--|--|
 | C# Function | bool CheckMultiSig(byte[][] signatures, byte[][] pubKeys) |
 
-#### Neo.Header.GetVersion
-
-| Description | Get version from block header |
-|--|--|
-| C# Function | uint Version |
-
-#### Neo.Header.GetMerkleRoot
-
-| Description | Get MerkleRoot built with all included transactions from block header |
-|--|--|
-| C# Function | byte[] MerkleRoot |
-
-#### Neo.Header.GetNextConsensus
-
-| Description | Get the script hash of the next-round validators' multi-signature contract |
-|--|--|
-| C# Function | byte[] NextConsensus |
-
-#### Neo.Transaction.GetScript
-
-| Description | Get the script in the transaction |
-|--|--|
-| C# Function | byte[] Script |
-
-#### Neo.Transaction.GetWitnesses
-
-| Description | Get witnesses in the transaction |
-|--|--|
-| C# Function | Witness[] GetWitnesses(this Transaction transaction) |
-
-#### Neo.Witness.GetVerificationScript
-
-| Description | Get verification script in the transaction |
-|--|--|
-| C# Function | byte[] VerificationScript |
-
 #### Neo.Account.IsStandard
 
 | Description | Check if the account is standard |
@@ -1400,18 +1368,6 @@ Interop services are divided into System part and Neo part. The specific interfa
 |--|--|
 | C# Function | Contract Create(byte[] script, string manifest) |
 | Explanation | The size of the script contract cannot exceed 1MB and it cannot be deployed before. The size of the <br/> manifest cannot exceed 2KB. The old contract will be destroyed after the upgrade. |
-
-#### Neo.Contract.GetScript
-
-| Description | Get script of the contract |
-|--|--|
-| C# Function | byte[] Script |
-
-#### Neo.Contract.IsPayable
-
-| Description | Check if the contract is able to receive assets |
-|--|--|
-| C# Function | bool IsPayable(this Contract contract) |
 
 #### Neo.Storage.Find
 
@@ -1505,19 +1461,10 @@ Interop services are divided into System part and Neo part. The specific interfa
 | System.Runtime.GetInvocationCounter | 0.000004  |
 | System.Crypto.Verify | 0.01  |
 | System.Blockchain.GetHeight | 0.000004  |
-| System.Blockchain.GetHeader | 0.00007  |
 | System.Blockchain.GetBlock | 0.025  |
 | System.Blockchain.GetTransaction | 0.01  |
 | System.Blockchain.GetTransactionHeight | 0.01  |
 | System.Blockchain.GetContract | 0.01  |
-| System.Header.GetIndex | 0.000004  |
-| System.Header.GetHash | 0.000004  |
-| System.Header.GetPrevHash | 0.000004  |
-| System.Header.GetTimestamp | 0.000004  |
-| System.Block.GetTransactionCount | 0.000004  |
-| System.Block.GetTransactions | 0.0001  |
-| System.Block.GetTransaction | 0.000004  |
-| System.Transaction.GetHash | 0.000004  |
 | System.Contract.Call | 0.01  |
 | System.Contract.Destroy | 0.01  |
 | System.Storage.GetContext | 0.000004  |
@@ -1530,17 +1477,9 @@ Interop services are divided into System part and Neo part. The specific interfa
 | Neo.Native.Deploy | 0 |
 | Neo.Crypto.CheckSig| 0.01  |
 | Neo.Crypto.CheckMultiSig| 0.01 * n |
-| Neo.Header.GetVersion| 0.000004  |
-| Neo.Header.GetMerkleRoot| 0.000004  |
-| Neo.Header.GetNextConsensus| 0.000004  |
-| Neo.Transaction.GetScript| 0.000004  |
-| Neo.Transaction.GetWitnesses| 0.0001  |
-| Neo.Witness.GetVerificationScript| 0.000004  |
 | Neo.Account.IsStandard| 0.0003  |
 | Neo.Contract.Create| (Script.Size + Manifest.Size) * GasPerByte |
 | Neo.Contract.Update| (Script.Size + Manifest.Size) * GasPerByte |
-| Neo.Contract.GetScript| 0.000004  |
-| Neo.Contract.IsPayable| 0.000004  |
 | Neo.Storage.Find| 0.01  |
 | Neo.Enumerator.Create| 0.000004  |
 | Neo.Enumerator.Next| 0.01  |
