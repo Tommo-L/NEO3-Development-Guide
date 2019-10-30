@@ -18,7 +18,7 @@
     - 返回结果：[getblock](api/getblock.md)，[getblockheader](api/getblockheader.md)，[getrawtransaction](api/getrawtransaction.md)，[getversion](api/getversion.md)，[getcontractstate](api/getcontractstate.md)
 
 - 删除
-    - `claimgas`, `dumpprivkey`, `getaccountstate`, `getapplicationlog`, `getassetstate`, `getbalance`, `getclaimable`, `getmetricblocktimestamp`, `getnep5balances`, `getnep5transfers`, `getnewaddress`, `gettxout`, `getunclaimed`, `getunclaimedgas`, `getunspents`, `getwalletheight`, `importprivkey`, `invoke`, `listaddress`, `sendfrom`, `sendtoaddress`, `sendmany` 
+    - `claimgas`, `dumpprivkey`, `getaccountstate`, `getapplicationlog`, `getassetstate`, `getbalance`, `getclaimable`, `getmetricblocktimestamp`, `getnep5balances`, `getnep5transfers`, `getnewaddress`, `gettxout`, `getunclaimed`, `getunclaimedgas`, `getunspents`, `getwalletheight`, `importprivkey`, `invoke`, `listaddress`, `sendfrom`, `sendtoaddress`, `sendmany`
 
 
 ## API 参考
@@ -49,7 +49,7 @@
     ...
   ```
 
-* **默认打开钱包:** 如果要调用与钱包相关的 API，也需要先修改配置文件 `config.json`，将:
+* **默认打开钱包:** 如果设置启动neo-cli时自动打开钱包，也需要先修改配置文件 `config.json`，将:
   - unlockwallet 改为 true 的状态，
   - 并填写对象钱包的文件名和密码，如下所示：
   ```json
