@@ -120,9 +120,9 @@ JSON-RPC 服务器启动后，会监听 TCP 端口，默认端口如下。P2P �
 | [getwalletheight](/api/rpcwallets/getwalletheight.md) |  | 获取当前钱包索引高度 | |
 | [importprivkey](/api/rpcwallets/importprivkey.md) | \<key> | 导入私钥到钱包 | |
 | [listaddress](/api/rpcwallets/listaddress.md) |  | 列出当前钱包内的所有地址 | |
-| [sendfrom](/api/rpcwallets/sendfrom.md) | \<asset_id>\<from>\<to>\<value>\[fee]\[change_address] | 从指定地址，向指定地址转账 | |
-| [sendmany](/api/rpcwallets/sendmany.md) | \<outputs_array>\[fee]\[change_address] | 批量转账命令 | |
-| [sendtoaddress](/api/rpcwallets/sendtoaddress.md) | \<asset_id>\<address>\<value>\[fee]\[change_address] | 向指定地址转账 | |
+| [sendfrom](/api/rpcwallets/sendfrom.md) | \<asset_id>\<from>\<to>\<value> | 从指定地址，向指定地址转账 | |
+| [sendmany](/api/rpcwallets/sendmany.md) | \<outputs_array> | 在一笔交易中向指定地址发起多笔转账 | |
+| [sendtoaddress](/api/rpcwallets/sendtoaddress.md) | \<asset_id>\<address>\<value> | 向指定地址转账 | |
 
 
 

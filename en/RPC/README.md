@@ -49,7 +49,7 @@ Neo-CLI provides a set of API interfaces for obtaining blockchain data from a no
   }                                      
   ```
 
-- **Open wallet by default**: To invoke APIs related to the wallet component, you also need to make the following changes in `config.json` before starting a node:
+- **Open wallet by default**: If set to open wallet automatically when launching neo-cli, you also need to make the following changes in `config.json` before starting a node:
 
   - Change the attribute `IsActive` of the object `UnlockWallet` to `true`.
   - Specify the file name and password of the desired wallet.
@@ -65,9 +65,9 @@ Neo-CLI provides a set of API interfaces for obtaining blockchain data from a no
   ...
   ```
 
-At this point, on the condition of the NEO-CLI launched, the client will automatically open the specified wallet and download the wallet index after the full block synchronization. 
+At this point, on the condition of the NEO-CLI launched, the client will automatically open the specified wallet and download the wallet index after the full block synchronization.
 
-### Listening ports 
+### Listening ports
 
 After the JSON-RPC server starts, it will monitor the following ports corresponding to the MainNet and TestNet:
 
@@ -116,16 +116,15 @@ For P2P and WebSocket port information, please refer to [Node Introduction](../.
 | [getbalance](api/rpccwallets/getbalance.md)           | \<asset_id>                                            | Returns the balance of the corresponding asset in the wallet |        |
 | [getnewaddress](/api/rpcwallets/getnewaddress.md)     |                                                        | Creates a new address                                        |        |
 | [getunclaimedgas](/api/rpcwallets/getunclaimedgas.md) |                                                        | Gets the amount of unclaimed GAS in the wallet               |        |
-| [getwalletheight](/api/rpcwallets/getwalletheight.md) |                                                        | Obtains the current wallet index height                      |        |
 | [importprivkey](/api/rpcwallets/importprivkey.md)     | \<key>                                                 | Imports the private key to the wallet                        |        |
 | [listaddress](/api/rpcwallets/listaddress.md)         |                                                        | Lists all the addresses in the current wallet                |        |
-| [sendfrom](/api/rpcwallets/sendfrom.md)               | \<asset_id>\<from>\<to>\<value>\[fee]\[change_address] | Transfer from the specified address to the destination address |        |
-| [sendmany](/api/rpcwallets/sendmany.md)               | \<outputs_array>\[fee]\[change_address]                | Bulk transfer order, and you can specify a change address.   |        |
-| [sendtoaddress](/api/rpcwallets/sendtoaddress.md)     | \<asset_id>\<address>\<value>\[fee]\[change_address]   | Transfers to the specified address.                          |        |
+| [sendfrom](/api/rpcwallets/sendfrom.md)               | \<asset_id>\<from>\<to>\<value> | Transfer from the specified address to the destination address |        |
+| [sendmany](/api/rpcwallets/sendmany.md)               | \<outputs_array>              | Initiate multiple transfers to designated addresses in a transaction   |        |
+| [sendtoaddress](/api/rpcwallets/sendtoaddress.md)     | \<asset_id>\<address>\<value>  | Transfers to the specified address.                          |        |
 
 
 
-### An example of GET request 
+### An example of GET request
 
 A typical format of JSON-RPC GET request is as follows:
 
@@ -147,7 +146,7 @@ After sending the request, you will get the following response:
 }
 ```
 
-### An example of POST request 
+### An example of POST request
 
 A typical format of JSON-RPC Post request is as follows:
 

@@ -11,7 +11,7 @@ Transfers to the specified address.
 {
   "jsonrpc": "2.0",
   "method": "sendtoaddress",
-  "params": [asset_id,address,value, fee, change_address],
+  "params": [asset_id,address,value],
   "id": 1
 }
 ```
@@ -23,8 +23,6 @@ Transfers to the specified address.
 * asset_id： Asset ID (asset identifier),  the script hash of NEP-5 contract
 * address：Payment address
 * value：Amount transferred
-* fee：Optional parameter. Paying the handling fee helps elevate the priority of the network to process the transfer. It defaults to 0, and can be set to a minimum of 0.00000001.
-* change_address: Change address, optional parameter, default is the first standard address in the wallet.
 
 
 
