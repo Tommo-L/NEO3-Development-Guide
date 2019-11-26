@@ -173,31 +173,31 @@ witnesses属性用于验证交易的有效性和完整性。Witness即“见证�
 ## 交易签名
 交易签名是对交易本身的数据（不包含签名数据，即witnesses部分）进行ECDSA方法签名，然后填入交易体中的`witnesses`。
 
-交易数据结构示例：
+交易数据结构示例，其中script与witnesses字段使用Base64替代原有的Hexstring编码：
 
 ```Json
 {
-    "hash": "0x55d0f1587bdda6a956fd381f96c2d7e3d9f9697e26f3a8d6ddfcb65d2a49848e",
-    "size": 263,
-    "version": 0,
-    "nonce": 886120104,
-    "sender": "AdhEBzaBZujuj5kEiwvKmMVy5ydqj3AC3V",
-    "sys_fee": "1",
-    "net_fee": "0.012633",
-    "valid_until_block": 2104144,
-    "cosigners" : [
-        {
-            "account": "0xe48dde213ee6e51cbc0a888339b335dc6122d401",
-            "scopes": 0
-        }
-    ],
-    "script": "0400e1f5051493966ad1f10948af8617f982c7a3daac58ac3d5a14f071d5fc6d2e2978a45842f05b1ac970e87d197753c1087472616e736665721415caa04214310670d5e5a398e147e0dbed98cf4368627d5b52f1",
-    "witnesses": [
-        {
-            "invocation": "40f065cae84459d7299ace9fb4e1429eeccb9e2769f68acfb0804e2c033047c0abece062ee83f4beb5b1bdd5a31891f5927b8cd108e40cdd7f68b7b1c48e4daf3d",
-            "verification": "512102e683c2d21d007780ca256d211048eea862250517a592eb25d2ba828723d04af35168c7c34cba"
-        }
-    ]
+  "hash": "0x2b03f7a8db3649c9e2cb6d429dd358819b3fd536825d2a698e19de237583e60a",
+  "size": 57,
+  "version": 0,
+  "nonce": 0,
+  "sender": "Abf2qMs1pzQb8kYk9RuxtUb9jtRKJVuBJt",
+  "sys_fee": "0",
+  "net_fee": "0",
+  "valid_until_block": 0,
+  "attributes": [],
+  "cosigners": [],
+  "script": "aBI+f+g=",
+  "witnesses": [
+    {
+      "invocation": "",
+      "verification": "UQ=="
+    }
+  ],
+  "blockhash": "0x7d581e115ebe1c512eef985fd52d75336acb77826dafacc3281399a0e6204958",
+  "confirmations": 1,
+  "blocktime": 1468595301000,
+  "vmState": "HALT"
 }
 ```
 
