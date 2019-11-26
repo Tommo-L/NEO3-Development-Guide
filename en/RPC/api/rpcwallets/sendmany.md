@@ -10,8 +10,8 @@ Bulk transfer order, and you can specify a change address.
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "sendtoaddress",
-  "params": [outputs_array,fee, change_address],
+  "method": "sendmany",
+  "params": [outputs_array],
   "id": 1
 }
 ```
@@ -29,10 +29,6 @@ Bulk transfer order, and you can specify a change address.
   * `asset`：Asset ID（asset identifier）
   * `value`：Transfer amount
   * `address`：destination address.
-
-* `fee`：Optional parameter. Paying the handling fee helps elevate the priority of the network to process the transfer. It defaults to 0, and can be set to a minimum of 0.00000001.
-
-* `change_address`：Change address, optional parameter, default is the first standard address in the wallet.
 
 
 
