@@ -205,30 +205,30 @@ NEP6 wallet file meets the NEP6 standard, and the file suffix is `.json`. The JS
 
 ```json
 {
-    "name": null,
-    "version": "1.0",
-    "scrypt": {
-        "n": 16384,
-        "r": 8,
-        "p": 8
-    },
-    "accounts": [{
-        "address": "AdokvD62BsFiQYVhzvCgdUTRu6JCtLPdRG",
-        "label": null,
-        "isDefault": false,
-        "lock": false,
-        "key": "6PYS1WSk7XTjj85MruDPpta9cm2Ra9i2jPJKSz65XeHsyZAX46phtEdwbJ",
-        "contract": {
-            "script": "2103ef891df4c0b7eefb937d21ea0fb88cde8e0d82a7ff11872b5e7047969dafb4eb68747476aa",
-            "parameters": [{
-                "name": "signature",
-                "type": "Signature"
-            }],
-            "deployed": false
-        },
-        "extra": null
-    }],
-    "extra": null
+	"name": null,
+	"version": "3.0",
+	"scrypt": {
+		"n": 16384,
+		"r": 8,
+		"p": 8
+	},
+	"accounts": [{
+		"address": "Nhet9QtFPWzBNB7sRXcRPPbMdjVmkYWCC5",
+		"label": null,
+		"isDefault": false,
+		"lock": false,
+		"key": "6PYV2baXHjFYhEN8z1M9ca6Tmj6v1MmugtFeEfVfEL1vUQxMVpPHCtr7bW",
+		"contract": {
+			"script": "IQNCaDWy3nPIdBMO4YprNZasTMXDs\u002BjS2iue5GxBTltOp1BoCpBq1A==",
+			"parameters": [{
+				"name": "signature",
+				"type": "Signature"
+			}],
+			"deployed": false
+		},
+		"extra": null
+	}],
+	"extra": null
 }
 ```
 

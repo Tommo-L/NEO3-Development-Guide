@@ -12,8 +12,8 @@
             - [普通地址](#普通地址)
             - [多方签名地址](#多方签名地址)
     - [钱包文件](#钱包文件)
-        - [DB3文件](#db3文件)
-        - [NEP6 文件](#nep6-文件)
+        - [DB3 钱包文件](#db3-钱包文件)
+        - [NEP6 钱包文件](#nep6-钱包文件)
             - [加密方法](#加密方法)
             - [解密方法](#解密方法)
     - [签名](#签名)
@@ -200,20 +200,20 @@ NEP6钱包文件是Neo满足NEP6标准的钱包存储数据所使用存储文件
 ```json
 {
 	"name": null,
-	"version": "1.0",
+	"version": "3.0",
 	"scrypt": {
 		"n": 16384,
 		"r": 8,
 		"p": 8
 	},
 	"accounts": [{
-		"address": "AdokvD62BsFiQYVhzvCgdUTRu6JCtLPdRG",
+		"address": "Nhet9QtFPWzBNB7sRXcRPPbMdjVmkYWCC5",
 		"label": null,
 		"isDefault": false,
 		"lock": false,
-		"key": "6PYS1WSk7XTjj85MruDPpta9cm2Ra9i2jPJKSz65XeHsyZAX46phtEdwbJ",
+		"key": "6PYV2baXHjFYhEN8z1M9ca6Tmj6v1MmugtFeEfVfEL1vUQxMVpPHCtr7bW",
 		"contract": {
-			"script": "2103ef891df4c0b7eefb937d21ea0fb88cde8e0d82a7ff11872b5e7047969dafb4eb68747476aa",
+			"script": "IQNCaDWy3nPIdBMO4YprNZasTMXDs\u002BjS2iue5GxBTltOp1BoCpBq1A==",
 			"parameters": [{
 				"name": "signature",
 				"type": "Signature"
