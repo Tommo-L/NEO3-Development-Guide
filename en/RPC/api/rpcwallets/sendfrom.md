@@ -10,8 +10,8 @@ Transfer from the specified address to the destination address.
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "sendtoaddress",
-  "params": [asset_id, from, to, value,fee, change_address],
+  "method": "sendfrom",
+  "params": [asset_id, from, to, value],
   "id": 1
 }
 ```
@@ -24,8 +24,6 @@ Transfer from the specified address to the destination address.
 * from: transfering address.
 * to: destination address.
 * value：Transfer amount
-* fee：Optional parameter. Paying the handling fee helps elevate the priority of the network to process the transfer. It defaults to 0, and can be set to a minimum of 0.00000001.
-* change_address：Change address, optional parameter, default is the first standard address in the wallet.
 
 
 

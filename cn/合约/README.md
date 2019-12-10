@@ -2,23 +2,73 @@
 
 <!-- TOC -->
 
-- [智能合约](#智能合约-1)
+- [智能合约](#智能合约)
     - [NEO3变更部分](#neo3变更部分)
     - [Manifest](#manifest)
     - [触发器](#触发器)
     - [原生合约](#原生合约)
         - [介绍](#介绍)
-            - [NeoToken](#neotoken)
-            - [GasToken](#gastoken)
-            - [PolicyContract](#PolicyContract)
+        - [**NeoToken**](#neotoken)
+        - [**GasToken**](#gastoken)
+        - [**PolicyContract**](#policycontract)
     - [互操作服务](#互操作服务)
         - [互操作服务原理](#互操作服务原理)
         - [互操作服务使用](#互操作服务使用)
-          - [System](#system部分)
-          - [Neo](#neo部分)
+        - [System部分](#system部分)
+            - [System.ExecutionEngine.GetScriptContainer](#systemexecutionenginegetscriptcontainer)
+            - [System.ExecutionEngine.GetExecutingScriptHash](#systemexecutionenginegetexecutingscripthash)
+            - [System.ExecutionEngine.GetCallingScriptHash](#systemexecutionenginegetcallingscripthash)
+            - [System.ExecutionEngine.GetEntryScriptHash](#systemexecutionenginegetentryscripthash)
+            - [System.Runtime.Platform](#systemruntimeplatform)
+            - [System.Runtime.GetTrigger](#systemruntimegettrigger)
+            - [System.Runtime.CheckWitness](#systemruntimecheckwitness)
+            - [System.Runtime.Notify](#systemruntimenotify)
+            - [System.Runtime.Log](#systemruntimelog)
+            - [System.Runtime.GetTime](#systemruntimegettime)
+            - [System.Runtime.Serialize](#systemruntimeserialize)
+            - [System.Runtime.Deserialize](#systemruntimedeserialize)
+            - [System.Runtime.GetInvocationCounter](#systemruntimegetinvocationcounter)
+            - [System.Runtime.GetNotifications](#systemruntimegetnotifications)
+            - [System.Crypto.Verify](#systemcryptoverify)
+            - [System.Blockchain.GetHeight](#systemblockchaingetheight)
+            - [System.Blockchain.GetBlock](#systemblockchaingetblock)
+            - [System.Blockchain.GetTransaction](#systemblockchaingettransaction)
+            - [System.Blockchain.GetTransactionHeight](#systemblockchaingettransactionheight)
+            - [System.Blockchain.GetTransactionFromBlock](#systemblockchaingettransactionfromblock)
+            - [System.Blockchain.GetContract](#systemblockchaingetcontract)
+            - [System.Contract.Call](#systemcontractcall)
+            - [System.Contract.Destroy](#systemcontractdestroy)
+            - [System.Storage.GetContext](#systemstoragegetcontext)
+            - [System.Storage.GetReadOnlyContext](#systemstoragegetreadonlycontext)
+            - [System.Storage.Get](#systemstorageget)
+            - [System.Storage.Put](#systemstorageput)
+            - [System.Storage.PutEx](#systemstorageputex)
+            - [System.Storage.Delete](#systemstoragedelete)
+            - [System.StorageContext.AsReadOnly](#systemstoragecontextasreadonly)
+        - [Neo部分](#neo部分)
+            - [Neo.Native.Deploy](#neonativedeploy)
+            - [Neo.Crypto.CheckSig](#neocryptochecksig)
+            - [Neo.Crypto.CheckMultiSig](#neocryptocheckmultisig)
+            - [Neo.Account.IsStandard](#neoaccountisstandard)
+            - [Neo.Contract.Create](#neocontractcreate)
+            - [Neo.Contract.Update](#neocontractupdate)
+            - [Neo.Storage.Find](#neostoragefind)
+            - [Neo.Enumerator.Create](#neoenumeratorcreate)
+            - [Neo.Enumerator.Next](#neoenumeratornext)
+            - [Neo.Enumerator.Value](#neoenumeratorvalue)
+            - [Neo.Enumerator.Concat](#neoenumeratorconcat)
+            - [Neo.Iterator.Create](#neoiteratorcreate)
+            - [Neo.Iterator.Key](#neoiteratorkey)
+            - [Neo.Iterator.Keys](#neoiteratorkeys)
+            - [Neo.Iterator.Values](#neoiteratorvalues)
+            - [Neo.Iterator.Concat](#neoiteratorconcat)
+            - [Neo.Json.Serialize](#neojsonserialize)
+            - [Neo.Json.Deserialize](#neojsondeserialize)
     - [费用](#费用)
     - [网路资源访问](#网路资源访问)
     - [合约调用](#合约调用)
+        - [在合约中调用其他合约](#在合约中调用其他合约)
+        - [脚本中调用合约](#脚本中调用合约)
     - [合约升级](#合约升级)
     - [合约销毁](#合约销毁)
 
@@ -33,9 +83,14 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
     - [原生合约](#原生合约)：不通过虚拟机执行，而直接运行在Neo原生代码中，目前包括：NeoToken，GasToken，以及PolicyContract。
     - [网络资源访问](#网路资源访问)： 待补充。
     - [system 触发器](#触发器)：用于节点收到新区块后，触发原生合约的执行。
+    - 互操作服务接口：`System.Blockchain.GetTransactionFromBlock`
 
 - 更新
     - 降低了合约执行互操作接口所对应的[系统费用](#费用)。
+
+- 删除
+    - 互操作服务接口：`Neo.Header.GetVersion`, `Neo.Header.GetMerkleRoot`, `Neo.Header.GetNextConsensus`, `Neo.Transaction.GetScript`, `Neo.Transaction.GetWitnesses`, `Neo.Witness.GetVerificationScript`,  `Neo.Contract.GetScript`, `Neo.Contract.IsPayable`, `System.Blockchain.GetHeader`, `System.Header.GetIndex`, `System.Header.GetHash`, `System.Header.GetPrevHash`, `System.Header.GetTimestamp`, `System.Block.GetTransactionCount`, `System.Block.GetTransactions`, `System.Block.GetTransaction`, `System.Transaction.GetHash`
+    
 ## Manifest
 > **NEO3 变更**: 新添加了Manifest文件，随avm文件一起部署到Neo区块链
 
@@ -1181,7 +1236,7 @@ namespace MyContract
 
 | Description | 获取某合约执行的所有通知 |
 |--|--|
-| C# Function | StackItem[][] GetNotifications(Hash160 scriptHash) |
+| C# 函数 | StackItem[][] GetNotifications(Hash160 scriptHash) |
 
 #### System.Crypto.Verify
 
@@ -1194,13 +1249,6 @@ namespace MyContract
 | 功能描述 | 获取当前区块的高度 |
 |--|--|
 | C#函数 | uint GetHeight() |
-
-#### System.Blockchain.GetHeader
-
-| 功能描述 | 获取当前区块的区块头 |
-|--|--|
-| C#函数 | Header GetHeader(uint height) |
-|| Header GetHeader(byte[] hash)  |
 
 #### System.Blockchain.GetBlock
 
@@ -1221,59 +1269,17 @@ namespace MyContract
 |--|--|
 | C#函数 | int GetTransactionHeight(byte[] hash) |
 
+#### System.Blockchain.GetTransactionFromBlock
+
+| 功能描述 | 根据区块中交易ID获取交易 |
+|--|--|
+| C#函数 | Transaction GetTransaction(byte[] hash) |
+
 #### System.Blockchain.GetContract
 
 | 功能描述 | 根据合约哈希获取合约 |
 |--|--|
 | C#函数 | Contract GetContract(byte[] scriptHash) |
-
-#### System.Header.GetIndex
-
-| 功能描述 | 从区块头中获得区块高度 |
-|--|--|
-| C#函数 | uint Index |
-
-#### System.Header.GetHash
-
-| 功能描述 | 从区块头中获得区块哈希 |
-|--|--|
-| C#函数 | byte[] Hash |
-
-#### System.Header.GetPrevHash
-
-| 功能描述 | 从区块头中获得前一个区块的哈希 |
-|--|--|
-| C#函数 | byte[] PreHash |
-
-#### System.Header.GetTimestamp
-
-| 功能描述 | 从区块头中获得时间戳 |
-|--|--|
-| C#函数 | byte[] Timestamp |
-
-#### System.Block.GetTransactionCount
-
-| 功能描述 | 获取区块中的交易数 |
-|--|--|
-| C#函数 | int GetTransactionCount |
-
-#### System.Block.GetTransactions
-
-| 功能描述 | 获取区块中的所有交易 |
-|--|--|
-| C#函数 | Transaction[] GetTransactions() |
-
-#### System.Block.GetTransaction
-
-| 功能描述 | 根据索引获取区块中某个交易 |
-|--|--|
-| C#函数 | Transaction[] GetTransaction(int index) |
-
-#### System.Transaction.GetHash
-
-| 功能描述 | 获取交易的哈希 |
-|--|--|
-| C#函数 | byte[] Hash |
 
 #### System.Contract.Call 
 
@@ -1355,42 +1361,6 @@ namespace MyContract
 |--|--|
 | C#函数 | bool CheckMultiSig(byte[][] signatures, byte[][] pubKeys) |
 
-#### Neo.Header.GetVersion
-
-| 功能描述 | 从区块头中获取区块版本 |
-|--|--|
-| C#函数 | uint Version |
-
-#### Neo.Header.GetMerkleRoot
-
-| 功能描述 | 从区块头中获取MerkleTree的Root |
-|--|--|
-| C#函数 | byte[] MerkleRoot |
-
-#### Neo.Header.GetNextConsensus
-
-| 功能描述 | 从区块头中获取下一个记账合约的散列 |
-|--|--|
-| C#函数 | byte[] NextConsensus |
-
-#### Neo.Transaction.GetScript
-
-| 功能描述 | 获取交易中的脚本 |
-|--|--|
-| C#函数 | byte[] Script |
-
-#### Neo.Transaction.GetWitnesses
-
-| 功能描述 | 获取交易中的见证人 |
-|--|--|
-| C#函数 | Witness[] GetWitnesses(this Transaction transaction) |
-
-#### Neo.Witness.GetVerificationScript
-
-| 功能描述 | 获取交易中的验证脚本 |
-|--|--|
-| C#函数 | byte[] VerificationScript |
-
 #### Neo.Account.IsStandard
 
 | 功能描述 | 判断是否是标准账户 |
@@ -1410,18 +1380,6 @@ namespace MyContract
 |--|--|
 | C#函数 | Contract Create(byte[] script, string manifest) |
 | 说明 | script合约内容不能超过1MB，不能是已经部署的合约；manifest内容不能超过2KB；<br/>升级后旧合约会被摧毁 |
-
-#### Neo.Contract.GetScript
-
-| 功能描述 | 获取合约的脚本 |
-|--|--|
-| C#函数 | byte[] Script |
-
-#### Neo.Contract.IsPayable
-
-| 功能描述 | 获取合约是否可以接收转账 |
-|--|--|
-| C#函数 | bool IsPayable(this Contract contract) |
 
 #### Neo.Storage.Find
 
@@ -1515,19 +1473,11 @@ namespace MyContract
 | System.Runtime.GetInvocationCounter | 0.000004  |
 | System.Crypto.Verify | 0.01  |
 | System.Blockchain.GetHeight | 0.000004  |
-| System.Blockchain.GetHeader | 0.00007  |
 | System.Blockchain.GetBlock | 0.025  |
 | System.Blockchain.GetTransaction | 0.01  |
 | System.Blockchain.GetTransactionHeight | 0.01  |
+| System.Blockchain.GetTransactionFromBlock | 0.01  |
 | System.Blockchain.GetContract | 0.01  |
-| System.Header.GetIndex | 0.000004  |
-| System.Header.GetHash | 0.000004  |
-| System.Header.GetPrevHash | 0.000004  |
-| System.Header.GetTimestamp | 0.000004  |
-| System.Block.GetTransactionCount | 0.000004  |
-| System.Block.GetTransactions | 0.0001  |
-| System.Block.GetTransaction | 0.000004  |
-| System.Transaction.GetHash | 0.000004  |
 | System.Contract.Call | 0.01  |
 | System.Contract.Destroy | 0.01  |
 | System.Storage.GetContext | 0.000004  |
@@ -1540,17 +1490,9 @@ namespace MyContract
 | Neo.Native.Deploy | 0 |
 | Neo.Crypto.CheckSig| 0.01  |
 | Neo.Crypto.CheckMultiSig| 0.01 * n |
-| Neo.Header.GetVersion| 0.000004  |
-| Neo.Header.GetMerkleRoot| 0.000004  |
-| Neo.Header.GetNextConsensus| 0.000004  |
-| Neo.Transaction.GetScript| 0.000004  |
-| Neo.Transaction.GetWitnesses| 0.0001  |
-| Neo.Witness.GetVerificationScript| 0.000004  |
 | Neo.Account.IsStandard| 0.0003  |
 | Neo.Contract.Create| (Script.Size + Manifest.Size) * GasPerByte |
 | Neo.Contract.Update| (Script.Size + Manifest.Size) * GasPerByte |
-| Neo.Contract.GetScript| 0.000004  |
-| Neo.Contract.IsPayable| 0.000004  |
 | Neo.Storage.Find| 0.01  |
 | Neo.Enumerator.Create| 0.000004  |
 | Neo.Enumerator.Next| 0.01  |
