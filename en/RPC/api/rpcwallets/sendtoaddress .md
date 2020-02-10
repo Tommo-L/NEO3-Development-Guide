@@ -2,8 +2,7 @@
 
 Transfers to the specified address.
 
-> - You need to open the wallet in the Neo-CLI node before you execute this command.
-> - This method is provided by the plugin [RpcWallet](https://github.com/neo-project/neo-plugins/releases) . You need to install the plugin before you can invoke the method.
+> You should call the `openwallet` method to open the wallet first.
 
 
 

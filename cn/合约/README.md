@@ -15,7 +15,7 @@
         - [互操作服务原理](#互操作服务原理)
         - [互操作服务使用](#互操作服务使用)
         - [System部分](#system部分)
-            - [System.ExecutionEngine.GetScriptContainer](#systemexecutionenginegetscriptcontainer)
+            - [System.Binary.Serialize](#systembinaryserialize)
             - [System.ExecutionEngine.GetExecutingScriptHash](#systemexecutionenginegetexecutingscripthash)
             - [System.ExecutionEngine.GetCallingScriptHash](#systemexecutionenginegetcallingscripthash)
             - [System.ExecutionEngine.GetEntryScriptHash](#systemexecutionenginegetentryscripthash)
@@ -1154,11 +1154,11 @@ namespace MyContract
 
 ### System部分
 
-#### System.ExecutionEngine.GetScriptContainer  
+#### System.Binary.Serialize  
 
 | 功能描述 | 获取该智能合约的脚本容器|
 |--|--|
-| C#函数| byte[] GetScriptContainer() |
+| C#函数| byte[] Serialize(StackItem item, uint maxSize) |
 
 #### System.ExecutionEngine.GetExecutingScriptHash
 

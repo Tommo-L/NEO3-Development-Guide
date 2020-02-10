@@ -1,15 +1,19 @@
 ﻿# RPC
+<!-- TOC -->
 
-<!-- TOC -->
-- [API 参考](#API-参考)
-  - [修改配置文件](#修改配置文件)
-  - [监听端口](#监听端口)
-  - [命令列表](#命令列表)
-  - [GET 请求示例](#GET-请求示例)
-  - [POST 请求示例](#POST-请求示例)
-- [测试工具](#测试工具)
-- [其它](#其它)
-<!-- TOC -->
+- [RPC](#rpc)
+    - [NEO3变更部分](#neo3变更部分)
+    - [API 参考](#api-参考)
+        - [修改配置文件](#修改配置文件)
+        - [监听端口](#监听端口)
+        - [命令列表](#命令列表)
+        - [RpcServer.Wallet相关方法](#rpcserverwallet相关方法)
+        - [GET 请求示例](#get-请求示例)
+        - [POST 请求示例](#post-请求示例)
+    - [测试工具](#测试工具)
+    - [其它](#其它)
+
+<!-- /TOC -->
 
 ## NEO3变更部分
 
@@ -18,56 +22,45 @@
     - 返回结果：[getblock](api/getblock.md)，[getblockheader](api/getblockheader.md)，[getrawtransaction](api/getrawtransaction.md)，[getversion](api/getversion.md)，[getcontractstate](api/getcontractstate.md)
 
 - 删除
-    - `claimgas`, `dumpprivkey`, `getaccountstate`, `getapplicationlog`, `getassetstate`, `getbalance`, `getclaimable`, `getmetricblocktimestamp`, `getnep5balances`, `getnep5transfers`, `getnewaddress`, `gettxout`, `getunclaimed`, `getunclaimedgas`, `getunspents`, `getwalletheight`, `importprivkey`, `invoke`, `listaddress`, `sendfrom`, `sendtoaddress`, `sendmany`
+    - `claimgas`,  `getaccountstate`, `getassetstate`, `getclaimable`, `getmetricblocktimestamp`, `gettxout`, `getunspents`, `invoke`
 
 
 ## API 参考
 
-每个 Neo 节点 Neo-CLI 都可选的提供了一套 API 接口，用于从节点获取区块链数据，使得开发区块链应用变得十分方便。接口通过 [JSON-RPC](http://wiki.geekdream.com/Specification/json-rpc_2.0.html) 的方式提供，底层使用 HTTP/HTTPS 协议进行通讯。要启动一个提供 RPC 服务的节点，可运行以下命令：
+每个 Neo 节点 Neo-CLI 都可选的提供了一套 API 接口，用于从节点获取区块链数据，使得开发区块链应用变得十分方便。接口通过 [JSON-RPC](http://wiki.geekdream.com/Specification/json-rpc_2.0.html) 的方式提供，底层使用 HTTP/HTTPS 协议进行通讯。要启动一个提供 RPC 服务的节点，需要使用以下命令安装RpcServer插件：
 
-`dotnet neo-cli.dll /rpc`
+`install RpcServer`
 
-### 配置Neo-Cli
+### 修改配置文件
 
-* **HTTPS 配置**：若要通过 HTTPS 的方式访问 RPC 服务器，需要在启动节点前修改配置文件 `config.json`，并设置域名、证书和密码：
+* **HTTPS 配置**：若要通过 HTTPS 的方式访问 RPC 服务器，需要在安装插件前修改`RpcServer`插件的配置文件 `config.json`，并设置域名、证书和密码：
 
   ```json
+  
   {
-    "ApplicationConfiguration": {
-      "Paths": {
-        "Chain": "Chain"
-      },
-      "P2P": {
-        "Port": 10333,
-        "WsPort": 10334
-      },
-      "RPC": {
-        "Port": 10331,
-        "SslCert": "YourSslCertFile.xxx",
-        "SslCertPassword": "YourPassword"
-      }
-    ...
+  "PluginConfiguration": {
+    "BindAddress": "127.0.0.1",
+    "Port": 10332,
+    "SslCert": "YourSslCertFile.xxx",
+    "SslCertPassword": "YourPassword",
+    "TrustedAuthorities": [],
+    "RpcUser": "",
+    "RpcPass": "",
+    "MaxGasInvoke": 10,
+    "MaxFee": 0.1,
+    "MaxConcurrentConnections": 40,
+    "DisabledMethods": []
+  }
+  
   ```
 
-* **默认打开钱包:** 如果设置启动neo-cli时自动打开钱包，也需要先修改配置文件 `config.json`，将:
-  - unlockwallet 改为 true 的状态，
-  - 并填写对象钱包的文件名和密码，如下所示：
-  ```json
-  ...
-  "UnlockWallet": {
-        "Path": "YourWallet.json",
-        "Password": "YourPassword",
-        "StartConsensus": false,
-        "IsActive": true
-      }
-  ...
-  ```
+* **开启钱包:** 如果需要通过RPC调用钱包相关的服务，首先需要调用`openwallet`方法打开钱包.
 
-  完成配置后打开 NEO-CLI，客户端会在同步到最新区块后自动打开已配置的钱包并进行钱包索引同步。
+  完成配置后重启 NEO-CLI，则可开始使用RPC服务。
 
 ### 监听端口
 
-JSON-RPC 服务器启动后，会监听 TCP 端口，默认端口如下。P2P 和 WebSocket 的端口详见 [Neo 节点介绍](https://docs.neo.org/zh-cn/node/introduction.html)。
+JSON-RPC 服务器启动后，会监听 TCP 端口，默认端口如下。P2P 和 WebSocket 的端口详见 [Neo 节点介绍](https://docs.neo.org/docs/zh-cn/node/introduction.html)。
 
 |                | 主网（Main Net） | 测试网（Test Net） |
 | -------------- | ------------ | ------------- |
@@ -75,8 +68,8 @@ JSON-RPC 服务器启动后，会监听 TCP 端口，默认端口如下。P2P �
 | JSON-RPC HTTP  | 10332        | 20332         |
 
 ### 命令列表
-> **NEO3 变更**：
->
+**NEO3 变更**：
+
 >调用方式更新：getblockheader，getrawmempool
 >
 >返回结果更新：getblock，getblockheader，getrawtransaction，getversion，getcontractstate
@@ -85,11 +78,11 @@ JSON-RPC 服务器启动后，会监听 TCP 端口，默认端口如下。P2P �
 | ----------- | ---------- | ------------- | -------- |
 | [getbestblockhash](api/getbestblockhash.md) |                                          | 获取主链中高度最大的区块的散列              |          |
 | [getblock](api/getblock.md)              | \<hash> [verbose=0]                      | 根据指定的散列值，返回对应的区块信息           |          |
-| | \<index> [verbose=0]                     | 根据指定的索引，返回对应的区块信息            |          |
+|[getblock](api/getblock2.md) | \<index> [verbose=0]                     | 根据指定的索引，返回对应的区块信息            |          |
 | [getblockcount](api/getblockcount.md)    |                                          | 获取主链中区块的数量                   |          |
 | [getblockhash](api/getblockhash.md)      | \<index>                                 | 根据指定的索引，返回对应区块的散列值           |          |
 | [getblockheader](api/getblockheader.md) | \<hash> [verbose=0] | 根据指定的散列值，返回对应的区块头信息。 | |
-| | \<index> [verbose=0] | 根据指定的索引，返回对应的区块头信息。 | |
+| [getblockheader](api/getblockheader2.md)| \<index> [verbose=0] | 根据指定的索引，返回对应的区块头信息。 | |
 | [getblocksysfee](api/getblocksysfee.md)  | \<index>                                 | 根据指定的索引，返回截止到该区块前的系统手续费      |          |
 | [getconnectioncount](api/getconnectioncount.md) |                                          | 获取节点当前的连接数                   |          |
 | [getcontractstate](api/getcontractstate.md) | \<script_hash>                           | 根据合约脚本散列，查询合约信息              |          |
@@ -106,23 +99,26 @@ JSON-RPC 服务器启动后，会监听 TCP 端口，默认端口如下。P2P �
 | [sendrawtransaction](api/sendrawtransaction.md) | \<hex>                                   | 广播交易                         |          |
 | [submitblock](api/submitblock.md) | \<hex>                                   | 提交新的区块                       | 需要成为共识节点 |
 | [validateaddress](api/validateaddress.md) | \<address>                               | 验证地址是否是正确的 Neo 地址            |          |
+| [getapplicationlog](api/getapplicationlog.md) | \<txid>                               | 根据指定的交易ID 获取合约日志            |          |  
+| [getnep5transfers](api/getnep5transfers.md) | \<address> \<timestamp>                               | 返回指定地址内的所有 NEP-5 交易记录            |          | 
+| [getnep5balances](api/getnep5balances.md) | \<address>                               | 返回指定地址内的所有 NEP-5 资产余额            |          | 
 
-
-
-### RpcWallet 插件
+### RpcServer.Wallet相关方法
 
 | 方法           | 参数      | 说明        | 备注       |
 | ----------- | ---------- | ------------- | -------- |
+| closewallet | | 关闭已打开的钱包 |  |
+| [openwallet](api/rpcwallets/openwallet.md) | \<path>\<password> | 打开指定路径下的钱包 |  |
 | [dumpprivkey ](api/rpcwallets/dumpprivkey.md) | \<address> | 导出指定地址的私钥 |  |
-| [getbalance](api/rpccwallets/getbalance.md) | \<asset_id> | 查询资产余额 | |
-| [getnewaddress](/api/rpcwallets/getnewaddress.md) |  | 创建一个新的地址 | |
-| [getunclaimedgas](/api/rpcwallets/getunclaimedgas.md) |  | 显示钱包中未提取的 GAS 数量 | |
-| [getwalletheight](/api/rpcwallets/getwalletheight.md) |  | 获取当前钱包索引高度 | |
-| [importprivkey](/api/rpcwallets/importprivkey.md) | \<key> | 导入私钥到钱包 | |
-| [listaddress](/api/rpcwallets/listaddress.md) |  | 列出当前钱包内的所有地址 | |
-| [sendfrom](/api/rpcwallets/sendfrom.md) | \<asset_id>\<from>\<to>\<value> | 从指定地址，向指定地址转账 | |
-| [sendmany](/api/rpcwallets/sendmany.md) | \<outputs_array> | 在一笔交易中向指定地址发起多笔转账 | |
-| [sendtoaddress](/api/rpcwallets/sendtoaddress.md) | \<asset_id>\<address>\<value> | 向指定地址转账 | |
+| [getbalance](api/rpcwallets/getbalance.md) | \<asset_id> | 查询资产余额 | |
+| [getnewaddress](api/rpcwallets/getnewaddress.md) |  | 创建一个新的地址 | |
+| [getunclaimedgas](api/rpcwallets/getunclaimedgas.md) |  | 显示钱包中未提取的 GAS 数量 | |
+| [getwalletheight](api/rpcwallets/getwalletheight.md) |  | 获取当前钱包索引高度 | |
+| [importprivkey](api/rpcwallets/importprivkey.md) | \<key> | 导入私钥到钱包 | |
+| [listaddress](api/rpcwallets/listaddress.md) |  | 列出当前钱包内的所有地址 | |
+| [sendfrom](api/rpcwallets/sendfrom.md) | \<asset_id>\<from>\<to>\<value> | 从指定地址，向指定地址转账 | |
+| [sendmany](api/rpcwallets/sendmany.md) | \<outputs_array> | 在一笔交易中向指定地址发起多笔转账 | |
+| [sendtoaddress](api/rpcwallets/sendtoaddress.md) | \<asset_id>\<address>\<value> | 向指定地址转账 | |
 
 
 

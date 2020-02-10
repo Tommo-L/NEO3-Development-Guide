@@ -2,9 +2,7 @@
 
 Obtains the current wallet index height.
 
-> This method is provided by the plugin [RpcWallet](https://github.com/neo-project/neo-plugins/releases) . 
->
-> You need to install the plugin before you can invoke the method.
+> You should call the `openwallet` method to open the wallet first.
 
 
 

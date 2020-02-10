@@ -52,7 +52,7 @@
     - Returns: [getblock](en/RPC/api/getblock.md)，[getblockheader](en/RPC/api/getblockheader.md)，[getrawtransaction](en/RPC/api/getrawtransaction.md)，[getversion](en/RPC/api/getversion.md)，[getcontractstate](en/RPC/api/getcontractstate.md)
 
 - DELETE
-    - Discard the following commands: `claimgas`, `dumpprivkey`, `getaccountstate`, `getapplicationlog`, `getassetstate`, `getbalance`, `getclaimable`, `getmetricblocktimestamp`, `getnep5balances`, `getnep5transfers`, `getnewaddress`, `gettxout`, `getunclaimed`, `getunclaimedgas`, `getunspents`, `getwalletheight`, `importprivkey`, `invoke`, `listaddress`, `sendfrom`, `sendtoaddress`, `sendmany`, etc.
+    - Discard the following commands: `claimgas`,  `getaccountstate`, `getassetstate`, `getclaimable`, `getmetricblocktimestamp`, `gettxout`, `getunspents`, `invoke`, etc.
 
 ### Smart Contracts
 
