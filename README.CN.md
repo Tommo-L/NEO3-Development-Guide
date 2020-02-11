@@ -1,8 +1,15 @@
 ﻿<div align="center">  
 <h1>NEO3 开发指南</h1>
-<img src="images/neo-rebranding.png" alt="NEO3 Development Guide" height="150">
+<p align="center">
+  <a href="https://neo.org/">
+      <img
+      src="https://neo3.azureedge.net/images/logo%20files-dark.svg"
+      width="250px" alt="neo-logo">
+  </a>
+</p>
 <p>NEO3 开发指南， 协助NEO3早期基础工具开发者完成NEO3底层建设</p>
 </div>
+
 
 ## 目录 
 - [钱包](cn/钱包)
@@ -70,9 +77,10 @@
 ### 虚拟机
 
 - 新增
-    - [DUPFROMALTSTACKBOTTOM](cn/虚拟机#栈操作), `ISNULL`, `PUSHNULL`
+    - `PUSHINT`, `JMP_L`, `JMPIF_L`, `JMPIFNOT_L`, `JMPEQ`, `JMPEQ_L`, `JMPNE`, `JMPNE_L`, `JMPGT`, `JMPGT_L`, 
+    `JMPGE`, `JMPGE_L`, `JMPLT`, `JMPLT_L`, `JMPLE`, `JMPLE_L`, `CALL_L`, `CALLA`, `THROWIF`, `CLEAR`, `REVERSE3`, `REVERSE4`, `REVERSEN` 等。
 - 删除
-    - `APPCALL`, `TAILCALL`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `CALL_I`, `CALL_E`, `CALL_ED, `CALL_ET`, `CALL_EDT` 等OpCodes。
+    - `PUSHF`, `PUSHBYTES1`, `PUSHBYTES75`, `APPCALL`, `TAILCALL`, `XTUCK`, `XSWAP`, `FROMALTSTACK`, `TOALTSTACK`, `DUPFROMALTSTACK`, `SIZE`, `LTE`, `GTE`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `ARRAYSIZE`, `CALL_I`, `CALL_E`, `CALL_ED`, `CALL_ET`, `CALL_EDT`。
 
 
 *点击[此处](README.md)查看README英文版*

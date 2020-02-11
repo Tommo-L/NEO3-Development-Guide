@@ -1,6 +1,12 @@
 ﻿﻿<div align="center">  
 <h1>NEO3 Development Guide</h1>
-<img src="images/neo-rebranding.png" alt="NEO3 Development Guide" height="150">
+<p align="center">
+  <a href="https://neo.org/">
+      <img
+      src="https://neo3.azureedge.net/images/logo%20files-dark.svg"
+      width="250px" alt="neo-logo">
+  </a>
+</p>
 
 <p>A development guide for basic tool developers of NEO3 to facilitate the underlying construction</p>
 </div>
@@ -72,10 +78,11 @@
 ### NeoVM
 
 - ADD
-    -  OpCode [DUPFROMALTSTACKBOTTOM](en/NeoVM#stack-operation), `ISNULL`, `PUSHNULL`
+    -  `PUSHINT`, `JMP_L`, `JMPIF_L`, `JMPIFNOT_L`, `JMPEQ`, `JMPEQ_L`, `JMPNE`, `JMPNE_L`, `JMPGT`, `JMPGT_L`, 
+    `JMPGE`, `JMPGE_L`, `JMPLT`, `JMPLT_L`, `JMPLE`, `JMPLE_L`, `CALL_L`, `CALLA`, `THROWIF`, `CLEAR`, `REVERSE3`, `REVERSE4`, `REVERSEN`, etc.
 
 - DELETE
-    - Discard the following opcodes: `APPCALL`, `TAILCALL`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `CALL_I`, `CALL_E`, `CALL_ED, `CALL_ET, `CALL_EDT`, etc.
+    - Discard the following opcodes: `PUSHF`, `PUSHBYTES1`, `PUSHBYTES75`, `APPCALL`, `TAILCALL`, `XTUCK`, `XSWAP`, `FROMALTSTACK`, `TOALTSTACK`, `DUPFROMALTSTACK`, `SIZE`, `LTE`, `GTE`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `ARRAYSIZE`, `CALL_I`, `CALL_E`, `CALL_ED`, `CALL_ET`, `CALL_EDT`.
 
 *Click [here](README.CN.md) to see the Chinese edition of the README*
 
