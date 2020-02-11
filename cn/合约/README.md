@@ -16,55 +16,54 @@
         - [互操作服务使用](#互操作服务使用)
         - [System部分](#system部分)
             - [System.Binary.Serialize](#systembinaryserialize)
-            - [System.ExecutionEngine.GetExecutingScriptHash](#systemexecutionenginegetexecutingscripthash)
-            - [System.ExecutionEngine.GetCallingScriptHash](#systemexecutionenginegetcallingscripthash)
-            - [System.ExecutionEngine.GetEntryScriptHash](#systemexecutionenginegetentryscripthash)
-            - [System.Runtime.Platform](#systemruntimeplatform)
-            - [System.Runtime.GetTrigger](#systemruntimegettrigger)
-            - [System.Runtime.CheckWitness](#systemruntimecheckwitness)
-            - [System.Runtime.Notify](#systemruntimenotify)
-            - [System.Runtime.Log](#systemruntimelog)
-            - [System.Runtime.GetTime](#systemruntimegettime)
-            - [System.Runtime.Serialize](#systemruntimeserialize)
-            - [System.Runtime.Deserialize](#systemruntimedeserialize)
-            - [System.Runtime.GetInvocationCounter](#systemruntimegetinvocationcounter)
-            - [System.Runtime.GetNotifications](#systemruntimegetnotifications)
-            - [System.Crypto.Verify](#systemcryptoverify)
+            - [System.Binary.Deserialize](#systembinarydeserialize)
             - [System.Blockchain.GetHeight](#systemblockchaingetheight)
             - [System.Blockchain.GetBlock](#systemblockchaingetblock)
             - [System.Blockchain.GetTransaction](#systemblockchaingettransaction)
             - [System.Blockchain.GetTransactionHeight](#systemblockchaingettransactionheight)
             - [System.Blockchain.GetTransactionFromBlock](#systemblockchaingettransactionfromblock)
             - [System.Blockchain.GetContract](#systemblockchaingetcontract)
-            - [System.Contract.Call](#systemcontractcall)
+            - [System.Contract.Create](#systemcontractcreate)
+            - [System.Contract.Update](#systemcontractupdate)
             - [System.Contract.Destroy](#systemcontractdestroy)
+            - [System.Contract.Call](#systemcontractcall)
+            - [System.Contract.CallEx](#systemcontractcallex)
+            - [System.Contract.IsStandard](#systemcontractisstandard)
+            - [System.Enumerator.Create](#systemenumeratorcreate)
+            - [System.Enumerator.Next](#systemenumeratornext)
+            - [System.Enumerator.Value](#systemenumeratorvalue)
+            - [System.Enumerator.Concat](#systemenumeratorconcat)
+            - [System.Iterator.Create](#systemiteratorcreate)
+            - [System.Iterator.Key](#systemiteratorkey)
+            - [System.Iterator.Keys](#systemiteratorkeys)
+            - [System.Iterator.Values](#systemiteratorvalues)
+            - [System.Iterator.Concat](#systemiteratorconcat)
+            - [System.Json.Serialize](#systemjsonserialize)
+            - [System.Json.Deserialize](#systemjsondeserialize)
+            - [System.Runtime.Platform](#systemruntimeplatform)
+            - [System.Runtime.GetTrigger](#systemruntimegettrigger)
+            - [System.Runtime.GetTime](#systemruntimegettime)
+            - [System.Runtime.GetScriptContainer](#systemruntimegetscriptcontainer)
+            - [System.Runtime.GetExecutingScriptHash](#systemruntimegetexecutingscripthash)
+            - [System.Runtime.GetCallingScriptHash](#systemruntimegetcallingscripthash)
+            - [System.Runtime.GetEntryScriptHash](#systemruntimegetentryscripthash)
+            - [System.Runtime.CheckWitness](#systemruntimecheckwitness)
+            - [System.Runtime.GetInvocationCounter](#systemruntimegetinvocationcounter)
+            - [System.Runtime.Log](#systemruntimelog)
+            - [System.Runtime.Notify](#systemruntimenotify)
+            - [System.Runtime.GetNotifications](#systemruntimegetnotifications)
             - [System.Storage.GetContext](#systemstoragegetcontext)
             - [System.Storage.GetReadOnlyContext](#systemstoragegetreadonlycontext)
             - [System.Storage.Get](#systemstorageget)
+            - [System.Storage.Find](#systemstoragefind)
             - [System.Storage.Put](#systemstorageput)
             - [System.Storage.PutEx](#systemstorageputex)
             - [System.Storage.Delete](#systemstoragedelete)
             - [System.StorageContext.AsReadOnly](#systemstoragecontextasreadonly)
         - [Neo部分](#neo部分)
             - [Neo.Native.Deploy](#neonativedeploy)
-            - [Neo.Crypto.CheckSig](#neocryptochecksig)
-            - [Neo.Crypto.CheckMultiSig](#neocryptocheckmultisig)
-            - [Neo.Account.IsStandard](#neoaccountisstandard)
-            - [Neo.Contract.Create](#neocontractcreate)
-            - [Neo.Contract.Update](#neocontractupdate)
-            - [Neo.Storage.Find](#neostoragefind)
-            - [Neo.Enumerator.Create](#neoenumeratorcreate)
-            - [Neo.Enumerator.Next](#neoenumeratornext)
-            - [Neo.Enumerator.Value](#neoenumeratorvalue)
-            - [Neo.Enumerator.Concat](#neoenumeratorconcat)
-            - [Neo.Iterator.Create](#neoiteratorcreate)
-            - [Neo.Iterator.Key](#neoiteratorkey)
-            - [Neo.Iterator.Keys](#neoiteratorkeys)
-            - [Neo.Iterator.Values](#neoiteratorvalues)
-            - [Neo.Iterator.Concat](#neoiteratorconcat)
-            - [Neo.Json.Serialize](#neojsonserialize)
-            - [Neo.Json.Deserialize](#neojsondeserialize)
-    - [费用](#费用)
+            - [Neo.Crypto.ECDsaVerify](#neocryptoecdsaverify)
+            - [Neo.Crypto.ECDsaCheckMultiSig](#neocryptoecdsacheckmultisig)
     - [网路资源访问](#网路资源访问)
     - [合约调用](#合约调用)
         - [在合约中调用其他合约](#在合约中调用其他合约)
@@ -79,20 +78,21 @@
 NEO3中所有交易都是智能合约的调用，除了一些互操作指令和OpCode的调整，NEO3中比较大的特性包括：
 
 - 新增
-    - [Manifest文件](#manifest)：用于描述合约的特征，随avm文件一起部署到Neo区块链。
+    - [Manifest文件](#manifest)：用于描述合约的特征，随nef文件一起部署到Neo区块链。
     - [原生合约](#原生合约)：不通过虚拟机执行，而直接运行在Neo原生代码中，目前包括：NeoToken，GasToken，以及PolicyContract。
     - [网络资源访问](#网路资源访问)： 待补充。
     - [system 触发器](#触发器)：用于节点收到新区块后，触发原生合约的执行。
-    - 互操作服务接口：`System.Blockchain.GetTransactionFromBlock`
-
+    - 互操作服务接口：`System.Binary.Serialize`, `System.Binary.Deserialize`, `System.Contract.Create`, `System.Contract.Update`, `System.Contract.Call`, `System.Contract.CallEx`, `System.Contract.IsStandard`, 
+    `System.Enumerator.Create`, `System.Enumerator.Next`, `System.Enumerator.Value`, `System.Enumerator.Concat`, `System.Iterator.Create`, `System.Iterator.Key`, `System.Iterator.Keys`, `System.Iterator.Values`, `System.Iterator.Concat`, `System.Json.Serialize`, `System.Json.Deserialize`, `System.Runtime.GetScriptContainer`, `System.Runtime.GetScriptContainer`,`System.Runtime.GetExecutingScriptHash`, `System.Runtime.GetCallingScriptHash`, `System.Runtime.GetEntryScriptHash`, `System.Runtime.GetInvocationCounter`, `System.Runtime.GetNotifications`, `System.Storage.Find`, `Neo.Native.Deploy`, `Neo.Crypto.ECDsaVerify`, `Neo.Crypto.ECDsaCheckMultiSig`.
 - 更新
     - 降低了合约执行互操作接口所对应的[系统费用](#费用)。
 
 - 删除
-    - 互操作服务接口：`Neo.Header.GetVersion`, `Neo.Header.GetMerkleRoot`, `Neo.Header.GetNextConsensus`, `Neo.Transaction.GetScript`, `Neo.Transaction.GetWitnesses`, `Neo.Witness.GetVerificationScript`,  `Neo.Contract.GetScript`, `Neo.Contract.IsPayable`, `System.Blockchain.GetHeader`, `System.Header.GetIndex`, `System.Header.GetHash`, `System.Header.GetPrevHash`, `System.Header.GetTimestamp`, `System.Block.GetTransactionCount`, `System.Block.GetTransactions`, `System.Block.GetTransaction`, `System.Transaction.GetHash`
+    - 互操作服务接口：`System.ExecutionEngine.GetScriptContainer`, `System.ExecutionEngine.GetExecutingScriptHash`, `System.ExecutionEngine.GetCallingScriptHash`, `System.ExecutionEngine.GetEntryScriptHash`, `System.Runtime.Serialize`, `System.Runtime.Deserialize`, `System.Header.GetIndex`, `System.Header.GetHash`, `System.Header.GetPrevHash`, `System.Header.GetTimestamp`, `System.Block.GetTransactionCount`, `System.Block.GetTransactions`, `System.Block.GetTransaction`, `System.Transaction.GetHash`, `System.Contract.GetStorageContext`, 
+    `Neo.Runtime.GetTrigger`, `Neo.Runtime.CheckWitness`, `Neo.Runtime.Notify`, `Neo.Runtime.Log`, `Neo.Runtime.GetTime`, `Neo.Runtime.Serialize`, `Neo.Runtime.Deserialize`, `Neo.Blockchain.GetHeight`, `Neo.Blockchain.GetHeader`, `Neo.Blockchain.GetBlock`, `Neo.Blockchain.GetTransaction`, `Neo.Blockchain.GetTransactionHeight`, `Neo.Blockchain.GetAccount`, `Neo.Blockchain.GetValidators`, `Neo.Blockchain.GetAsset`, `Neo.Blockchain.GetContract`, `Neo.Header.GetHash`, `Neo.Header.GetVersion`, `Neo.Header.GetPrevHash`, `Neo.Header.GetMerkleRoot`, `Neo.Header.GetTimestamp`, `Neo.Header.GetIndex`,  `Neo.Header.GetConsensusData`, `Neo.Header.GetNextConsensus`, `Neo.Block.GetTransactionCount` , `Neo.Block.GetTransactions`, `Neo.Block.GetTransaction`, `Neo.Transaction.GetHash`, `Neo.Transaction.GetType`,  `Neo.Transaction.GetAttributes`, `Neo.Transaction.GetInputs`, `Neo.Transaction.GetOutputs`, `Neo.Transaction.GetReferences`, `Neo.Transaction.GetUnspentCoins`, `Neo.Transaction.GetWitnesses`, `Neo.InvocationTransaction.GetScript`, `Neo.Witness.GetVerificationScript`, `Neo.Attribute.GetUsage`, `Neo.Attribute.GetData`, `Neo.Input.GetHash`, `Neo.Input.GetIndex`, `Neo.Output.GetAssetId`, `Neo.Output.GetValue`, `Neo.Output.GetScriptHash`, `Neo.Account.GetScriptHash` , `Neo.Account.GetVotes`, `Neo.Account.GetBalance`, `Neo.Account.IsStandard`, `Neo.Asset.Create`, `Neo.Asset.Renew`, `Neo.Asset.GetAssetId` , `Neo.Asset.GetAssetType`, `Neo.Asset.GetAmount`, `Neo.Asset.GetAvailable`, `Neo.Asset.GetPrecision`, `Neo.Asset.GetOwner`, `Neo.Asset.GetAdmin`, `Neo.Asset.GetIssuer`, `Neo.Contract.Create`, `Neo.Contract.Migrate`, `Neo.Contract.Destroy`, `Neo.Contract.GetScript`, `Neo.Contract.IsPayable`, `Neo.Contract.GetStorageContext`, `Neo.Storage.GetContext` , `Neo.Storage.GetReadOnlyContext`,  `Neo.Storage.Get`, `Neo.Storage.Put`, `Neo.Storage.Delete`, `Neo.Storage.Find`, `Neo.StorageContext.AsReadOnly`, `Neo.Enumerator.Create`, `Neo.Enumerator.Next`, `Neo.Enumerator.Value`, `Neo.Enumerator.Concat`, `Neo.Iterator.Create`, `Neo.Iterator.Key`, `Neo.Iterator.Keys`, `Neo.Iterator.Values`, `Neo.Iterator.Concat`. 
     
 ## Manifest
-> **NEO3 变更**: 新添加了Manifest文件，随avm文件一起部署到Neo区块链
+> **NEO3 变更**: 新添加了Manifest文件，随nef文件一起部署到Neo区块链
 
 现在每个合约都需要对应的manifest文件描述其属性，其内容包括：Groups， Features， ABI，Permissions， Trusts， SafeMethods。
 
@@ -1156,355 +1156,279 @@ namespace MyContract
 
 #### System.Binary.Serialize  
 
-| 功能描述 | 获取该智能合约的脚本容器|
-|--|--|
-| C#函数| byte[] Serialize(StackItem item, uint maxSize) |
-
-#### System.ExecutionEngine.GetExecutingScriptHash
-
-| 功能描述 | 获取正在执行的智能合约的脚本哈希 |
-|--|--|
-| C#函数| byte[] GetExecutingScriptHash() |
-
-#### System.ExecutionEngine.GetCallingScriptHash
-
-| 功能描述 | 获取智能合约调用者的脚本哈希 |
-|--|--|
-| C#函数| byte[] GetExecutingScriptHash() |
-
-#### System.ExecutionEngine.GetEntryScriptHash
-
-| 功能描述 | 获得该智能合约的入口点（合约调用链的起点）的脚本散列 |
+| 功能描述 | 将栈元素序列化为字节数组|
 |--|-- |
-| C#函数| byte[] GetEntryScriptHash() |
+| 费用 (GAS) | 0.001 |
 
-#### System.Runtime.Platform
+#### System.Binary.Deserialize  
 
-| 功能描述 | 获取当前执行智能合约的平台信息 |
-|--|--|
-| C#函数| string Platform() |
-
-#### System.Runtime.GetTrigger
-
-| 功能描述 | 获取该智能合约的触发条件 |
-|--|--|
-| C#函数 | TriggerType Trigger() |
-
-#### System.Runtime.CheckWitness
-
-| 功能描述 | 验证调用该合约的容器是否被指定账户脚本哈希签名 |
-|--|--|
-| C#函数 | bool CheckWitness(byte[] hashOrPubKey) |
-
-#### System.Runtime.Notify
-
-| 功能描述 | 向执行智能合约的程序发送通知 |
-|--|--|
-| C#函数 | bool Notify(params object[] state) |
-
-#### System.Runtime.Log
-
-| 功能描述 | 向执行智能合约的程序发送通知 |
-|--|--|
-| C#函数 | void Log(string message) |
-
-#### System.Runtime.GetTime
-
-| 功能描述 | 获取当前区块的时间戳 |
-|--|--|
-| C#函数 | uint Time |
-
-#### System.Runtime.Serialize
-
-| 功能描述 | 序列化 |
-|--|--|
-| C#函数 | object Deserialize(this byte[] source) |
-
-#### System.Runtime.Deserialize
-
-| 功能描述 | 反系列化 |
-|--|--|
-| C#函数 | byte[] Serialize(this object source) |
-
-#### System.Runtime.GetInvocationCounter
-
-| 功能描述 | 获取当前合约的调用次数 |
-|--|--|
-| C#函数 | int GetInvocationCounter() |
-
-#### System.Runtime.GetNotifications
-
-| Description | 获取某合约执行的所有通知 |
-|--|--|
-| C# 函数 | StackItem[][] GetNotifications(Hash160 scriptHash) |
-
-#### System.Crypto.Verify
-
-| 功能描述 | 使用公钥验证消息的签名 |
-|--|--|
-| C#函数 | bool Verify(object message, byte[] signature, byte[] pubKey) |
+| 功能描述 | 将字节数组反序列化为栈元素  |
+|--|-- |
+| 费用 (GAS) | 0.005 |
 
 #### System.Blockchain.GetHeight
 
 | 功能描述 | 获取当前区块的高度 |
-|--|--|
-| C#函数 | uint GetHeight() |
+|--|-- |
+| 费用 (GAS) | 0.000004 |
 
 #### System.Blockchain.GetBlock
 
 | 功能描述 | 根据区块哈希或者区块高度获取区块 |
-|--|--|
-| C#函数 | Block GetBlock(uint height) |
-|| Block GetBlock(byte[] hash)  |
+|--|-- |
+| 费用 (GAS) | 0.025 |
 
 #### System.Blockchain.GetTransaction
 
 | 功能描述 | 根据交易ID获取交易 |
-|--|--|
-| C#函数 | Transaction GetTransaction(byte[] hash) |
+|--|-- |
+| 费用 (GAS) | 0.01 |
 
 #### System.Blockchain.GetTransactionHeight
 
 | 功能描述 | 根据交易ID获取交易所在的区块高度 |
-|--|--|
-| C#函数 | int GetTransactionHeight(byte[] hash) |
+|--|-- |
+| 费用 (GAS) | 0.01 |
 
 #### System.Blockchain.GetTransactionFromBlock
 
 | 功能描述 | 根据区块中交易ID获取交易 |
-|--|--|
-| C#函数 | Transaction GetTransaction(byte[] hash) |
+|--|-- |
+| 费用 (GAS) | 0.01 |
 
 #### System.Blockchain.GetContract
 
 | 功能描述 | 根据合约哈希获取合约 |
-|--|--|
-| C#函数 | Contract GetContract(byte[] scriptHash) |
+|--|-- |
+| 费用 (GAS) | 0.01 |
 
-#### System.Contract.Call 
+#### System.Contract.Create
+| 功能描述 | 部署合约 |
+|--|-- |
+| 说明 | script合约内容不能超过1MB，manifest内容不能超过2KB |
+| 费用 (GAS) | (Script.Size + Manifest.Size) * GasPerByte |
 
-| 功能描述 | 调用合约 |
-|--|--|
-| C#函数 | void Call(byte[] scriptHash, string method, object[] args) |
-|  | void Call(Contract contract, string method, object[] args) |
+#### System.Contract.Update
+| 功能描述 | 升级合约 |
+|--|-- |
+| 说明 | script合约内容不能超过1MB，不能是已经部署的合约；manifest内容不能超过2KB；<br/>升级后旧合约会被摧毁 |
+| 费用 (GAS) | (Script.Size + Manifest.Size) * GasPerByte |
 
 #### System.Contract.Destroy
 
 | 功能描述 | 销毁当前合约 |
-|--|--|
-| C#函数 | void Destroy() |
+|--|-- |
+| 费用 (GAS) | 0.01 |
+
+#### System.Contract.Call 
+
+| 功能描述 | 调用合约 |
+|--|-- |
+| 费用 (GAS) | 0.01 |
+
+#### System.Contract.CallEx
+| 功能描述 | 根据Flag调用合约 |
+|--|-- |
+| 费用 (GAS) | 0.01 |
+
+#### System.Contract.IsStandard
+| 功能描述 | 判断合约是否为标准的单签或多签合约 |
+|--|-- |
+| 费用 (GAS) | 0.0003 |
+
+#### System.Enumerator.Create
+| 功能描述 | 创建枚举器 |
+|--|-- |
+| 费用 (GAS) | 0.000004 |
+
+#### System.Enumerator.Next
+| 功能描述 | 检查枚举器是否有下一个元素 |
+|--|-- |
+| 费用 (GAS) | 0.01 |
+
+#### System.Enumerator.Value
+| 功能描述 | 获取枚举器当前元素 |
+|--|-- |
+| 费用 (GAS) | 0.000004 |
+
+#### System.Enumerator.Concat
+| 功能描述 | 合并枚举器 |
+|--|-- |
+| 费用 (GAS) | 0.000004 |
+
+#### System.Iterator.Create
+| 功能描述 | 创建迭代器 |
+|--|-- |
+| 费用 (GAS) | 0.000004 |
+
+#### System.Iterator.Key
+| 功能描述 | 获取迭代器当前Key值 |
+|--|-- |
+| 费用 (GAS) | 0.000004 |
+
+#### System.Iterator.Keys
+| 功能描述 | 获取迭代器所有Key的迭代器 |
+|--|-- |
+| 费用 (GAS) | 0.000004 |
+
+#### System.Iterator.Values
+| 功能描述 | 获取迭代器所有Value的迭代器 |
+|--|-- |
+| 费用 (GAS) | 0.000004 |
+
+#### System.Iterator.Concat
+| 功能描述 | 合并迭代器 |
+|--|-- |
+| 费用 (GAS) | 0.000004 |
+
+#### System.Json.Serialize
+| 功能描述 | 将栈元素序列化为字节数组 |
+|--|-- |
+| 费用 (GAS) | 0.001 |
+
+#### System.Json.Deserialize
+| 功能描述 | 将Json对象反序列化为栈元素 |
+|--|-- |
+| 费用 (GAS) | 0.005 |
+
+#### System.Runtime.Platform
+
+| 功能描述 | 获取当前执行智能合约的平台信息 |
+|--|-- |
+| 费用 (GAS) | 0.0000025 |
+
+#### System.Runtime.GetTrigger
+
+| 功能描述 | 获取该智能合约的触发条件 |
+|--|-- |
+| 费用 (GAS) | 0.0000025 |
+
+#### System.Runtime.GetTime
+
+| 功能描述 | 获取当前区块的时间戳 |
+|--|-- |
+| 费用 (GAS) | 0.0000025 |
+
+#### System.Runtime.GetScriptContainer
+| 功能描述 | 获取合约脚本容器 |
+|--|-- |
+| 费用 (GAS) | 0.0000025 |
+
+#### System.Runtime.GetExecutingScriptHash
+| 功能描述 | 获取当前执行的合约脚本哈希 |
+|--|-- |
+| 费用 (GAS) | 0.000004 |
+
+#### System.Runtime.GetCallingScriptHash
+| 功能描述 | 获取调用合约的脚本哈希 |
+|--|-- |
+| 费用 (GAS) | 0.000004 |
+
+#### System.Runtime.GetEntryScriptHash
+| 功能描述 | 获取入口合约的脚本哈希 |
+|--|-- |
+| 费用 (GAS) | 0.000004 |
+
+#### System.Runtime.CheckWitness
+
+| 功能描述 | 验证调用该合约的容器是否被指定账户脚本哈希签名 |
+|--|-- |
+| 费用 (GAS) | 0.0003 |
+
+#### System.Runtime.GetInvocationCounter
+
+| 功能描述 | 获取当前合约的调用次数 |
+|--|-- |
+| 费用 (GAS) | 0.000004 |
+
+#### System.Runtime.Log
+
+| 功能描述 | 向执行智能合约的程序发送通知 |
+|--|-- |
+| 费用 (GAS) | 0.005 |
+#### System.Runtime.Notify
+
+| 功能描述 | 向执行智能合约的程序发送通知 |
+|--|-- |
+| 费用 (GAS) | 0.01 |
+
+#### System.Runtime.GetNotifications
+
+| 功能描述 | 获取某合约执行的所有通知 |
+|--|-- |
+| 费用 (GAS) | 0.0001 |
 
 #### System.Storage.GetContext
 
-| 功能描述 | 获取当前合约存储去的上下文 |
-|--|--|
-| C#函数 | StorageContext GetContext() |
+| 功能描述 | 获取当前合约存储区的上下文 |
+|--|-- |
 | 说明 | StorageContext中的IsReadOnly为false |
+| 费用 (GAS) | 0.000004 |
 
 #### System.Storage.GetReadOnlyContext
 
-| 功能描述 | 以只读方式获取当前合约存储去的上下文 |
-|--|--|
-| C#函数 | StorageContext GetContext() |
+| 功能描述 | 以只读方式获取当前合约存储区的上下文 |
+|--|-- |
 | 说明 | StorageContext中的IsReadOnly为true |
+| 费用 (GAS) | 0.000004 |
 
 #### System.Storage.Get
 
 | 功能描述 | 根据Key值，从存储区获取对应的Value |
-|--|--|
-| C#函数 | byte[] Get(StorageContext context, byte[] key) |
+|--|-- |
+| 费用 (GAS) | 0.01 |
+
+#### System.Storage.Find
+
+| 功能描述 | 在当前存储上下文中存储区寻找指定前缀内容 |
+|--|-- |
+| 费用 (GAS) | 0.01 |
 
 #### System.Storage.Put
 
 | 功能描述 | 根据存储上下文，向存储区写入Key-Value |
-|--|--|
-| C#函数 | byte[] Get(StorageContext context, byte[] key, byte[] value) |
+|--|-- |
+| 费用 (GAS) | (Key.Size + Value.Size) * GasPerByte |
 
 #### System.Storage.PutEx
 
 | 功能描述 | 根据存储上下文，依据flag，向存储区写入Key-Value |
-|--|--|
-| C#函数 | byte[] Get(StorageContext context, byte[] key, byte[] value, StorageFlags flags) |
+|--|-- |
 | 说明 | StorageFlags表明了写入数据的属性，默认None，<br/>数据可以被读写。如果是Constant，数据被写入存储区后不能被修改也不能被删除|
+| 费用 (GAS) | (Key.Size + Value.Size) * GasPerByte |
 
 #### System.Storage.Delete
 
 | 功能描述 | 根据Key值，从存储区删除存储的Key-Value数据 |
-|--|--|
-| C#函数 | void Delete(StorageContext context, byte[] key) |
+|--|-- |
 | 说明 | 如果数据的StorageFlags包含Constant，不能被删除 |
+| 费用 (GAS) | 0.01 |
 
 #### System.StorageContext.AsReadOnly
 
 | 功能描述 | 将当前上下文修改为只读模式 |
-|--|--|
-| C#函数 | void AsReadOnly(this StorageContext context) |
-| 说明 |     将StorageContext中的IsReadOnly设置为true |
+|--|-- |
+| 说明 | 将StorageContext中的IsReadOnly设置为true |
+| 费用 (GAS) | 0.000004 |
 
 ### Neo部分
 
 #### Neo.Native.Deploy
 
 | 功能描述 | 部署并初始化所有原生合约 |
-|--|--|
+|--|-- |
 | 说明 | 只能在创世区块调用 |
+| 费用 (GAS) | 0 |
 
-#### Neo.Crypto.CheckSig
-
+#### Neo.Crypto.ECDsaVerify
 | 功能描述 | 根据公钥，验证当前脚本容器的签名 |
-|--|--|
-| C#函数 | bool CheckSig(byte[] signature, byte[] pubKey) |
+|--|-- |
+| 费用 (GAS) | 0.01 |
 
-#### Neo.Crypto.CheckMultiSig
-
-| 功能描述 | 根据公钥，验证当前脚本容器的签名 |
-|--|--|
-| C#函数 | bool CheckMultiSig(byte[][] signatures, byte[][] pubKeys) |
-
-#### Neo.Account.IsStandard
-
-| 功能描述 | 判断是否是标准账户 |
-|--|--|
-| C#函数 | bool IsStandard(byte[] scriptHash) |
-
-#### Neo.Contract.Create
-
-| 功能描述 | 部署合约 |
-|--|--|
-| C#函数 | Contract Create(byte[] script, string manifest) |
-| 说明 | script合约内容不能超过1MB，manifest内容不能超过2KB |
-
-#### Neo.Contract.Update 
-
-| 功能描述 | 升级合约 |
-|--|--|
-| C#函数 | Contract Create(byte[] script, string manifest) |
-| 说明 | script合约内容不能超过1MB，不能是已经部署的合约；manifest内容不能超过2KB；<br/>升级后旧合约会被摧毁 |
-
-#### Neo.Storage.Find
-
-功能描述 | 在当前存储上下文中存储区寻找指定前缀内容 |
-|--|--|
-| C#函数 | Iterator < byte[], byte[] > Find(StorageContext context, byte[] prefix) |
-
-#### Neo.Enumerator.Create
-
-| 功能描述 | 创建一个枚举器 |
-|--|--|
-| C#函数 | Enumerator Create(object[] array) |
-
-#### Neo.Enumerator.Next
-
-| 功能描述 | 获取枚举器的下一个元素 |
-|--|--|
-| C#函数 | bool Next(this Enumerator enumerator) |
-
-#### Neo.Enumerator.Value
-
-| 功能描述 | 获取枚举器当前值 |
-|--|--|
-| C#函数 | object Next(this Enumerator enumerator) |
-
-#### Neo.Enumerator.Concat
-
-| 功能描述 | 连接两个枚举器 |
-|--|--|
-| C#函数 | Enumerator Concat(Enumerator enumerator1, Enumerator enumerator2) |
-
-#### Neo.Iterator.Create
-
-| 功能描述 | 创建一个迭代器|
-|--|--|
-| C#函数 | Iterator Create(object[] array) |
-| | Iterator Create(Dictionary<object, object> map) |
-
-#### Neo.Iterator.Key
-
-| 功能描述 | 获取迭代器当前Key值 |
-|--|--|
-| C#函数 | object Key(this Iterator it) |
-
-#### Neo.Iterator.Keys
-
-| 功能描述 | 获取迭代器所有Key的迭代器 |
-|--|--|
-| C#函数 | Iterator Keys(this Iterator it) |
-
-#### Neo.Iterator.Values
-
-| 功能描述 | 获取迭代器所有Value的迭代器 |
-|--|--|
-| C#函数 | Iterator Values(this Iterator it) |
-
-#### Neo.Iterator.Concat
-
-| 功能描述 | 连接两个迭代器 |
-|--|--|
-| C#函数 | Iterator Concat(Iterator iterator1, Iterator iterator2) |
-
-#### Neo.Json.Serialize
-
-| 功能描述 | 序列化JSON字符串 |
-|--|--|
-| C#函数 | JObject Serialize(string jsonStr) |
-
-#### Neo.Json.Deserialize
-
-| 功能描述 | 反序列化为JSON字符串 |
-|--|--|
-| C#函数 | string Deserialize(JObject jsonObj) |
-
-## 费用
-
-| 互操作服务 | 费用 (GAS) |
-|--|--|
-| System.ExecutionEngine.GetScriptContainer | 0.0000025  |
-| System.ExecutionEngine.GetExecutingScriptHash| 0.000004  |
-| System.ExecutionEngine.GetCallingScriptHash | 0.000004  |
-| System.ExecutionEngine.GetEntryScriptHash | 0.000004  |
-| System.Runtime.Platform | 0.0000025  |
-| System.Runtime.GetTrigger | 0.0000025  |
-| System.Runtime.CheckWitness | 0.0003  |
-| System.Runtime.Notify | 0.0000025  |
-| System.Runtime.Log | 0.003  |
-| System.Runtime.GetTime | 0.0000025  |
-| System.Runtime.Serialize | 0.001  |
-| System.Runtime.Deserialize | 0.005  |
-| System.Runtime.GetInvocationCounter | 0.000004  |
-| System.Crypto.Verify | 0.01  |
-| System.Blockchain.GetHeight | 0.000004  |
-| System.Blockchain.GetBlock | 0.025  |
-| System.Blockchain.GetTransaction | 0.01  |
-| System.Blockchain.GetTransactionHeight | 0.01  |
-| System.Blockchain.GetTransactionFromBlock | 0.01  |
-| System.Blockchain.GetContract | 0.01  |
-| System.Contract.Call | 0.01  |
-| System.Contract.Destroy | 0.01  |
-| System.Storage.GetContext | 0.000004  |
-| System.Storage.GetReadOnlyContext | 0.000004  |
-| System.Storage.Get | 0.01  |
-| System.Storage.Put | (Key.Size + Value.Size) * GasPerByte |
-| System.Storage.PutEx | (Key.Size + Value.Size) * GasPerByte |
-| System.Storage.Delete | 0.01  |
-| System.StorageContext.AsReadOnly | 0.000004  |
-| Neo.Native.Deploy | 0 |
-| Neo.Crypto.CheckSig| 0.01  |
-| Neo.Crypto.CheckMultiSig| 0.01 * n |
-| Neo.Account.IsStandard| 0.0003  |
-| Neo.Contract.Create| (Script.Size + Manifest.Size) * GasPerByte |
-| Neo.Contract.Update| (Script.Size + Manifest.Size) * GasPerByte |
-| Neo.Storage.Find| 0.01  |
-| Neo.Enumerator.Create| 0.000004  |
-| Neo.Enumerator.Next| 0.01  |
-| Neo.Enumerator.Value| 0.000004  |
-| Neo.Enumerator.Concat| 0.000004  |
-| Neo.Iterator.Create| 0.000004  |
-| Neo.Iterator.Key| 0.000004  |
-| Neo.Iterator.Keys| 0.000004  |
-| Neo.Iterator.Values| 0.000004  |
-| Neo.Iterator.Concat| 0.000004  |
-| Neo.Json.Serialize| 0.001  |
-| Neo.Json.Deserialize| 0.005  |
+#### Neo.Crypto.ECDsaCheckMultiSig
+| 功能描述 | 根据公钥，验证当前脚本容器的多个签名 |
+|--|-- |
+| 费用 (GAS) | 0.01 * n |
 
 ## 网路资源访问
 ## 合约调用

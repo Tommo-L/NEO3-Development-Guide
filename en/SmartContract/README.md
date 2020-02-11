@@ -14,56 +14,55 @@
         - [Principle of Interop Service](#principle-of-interop-service)
         - [Usage of Interop Service](#usage-of-interop-service)
         - [System Part](#system-part)
-            - [System.ExecutionEngine.GetScriptContainer](#systemexecutionenginegetscriptcontainer)
-            - [System.ExecutionEngine.GetExecutingScriptHash](#systemexecutionenginegetexecutingscripthash)
-            - [System.ExecutionEngine.GetCallingScriptHash](#systemexecutionenginegetcallingscripthash)
-            - [System.ExecutionEngine.GetEntryScriptHash](#systemexecutionenginegetentryscripthash)
-            - [System.Runtime.Platform](#systemruntimeplatform)
-            - [System.Runtime.GetTrigger](#systemruntimegettrigger)
-            - [System.Runtime.CheckWitness](#systemruntimecheckwitness)
-            - [System.Runtime.Notify](#systemruntimenotify)
-            - [System.Runtime.Log](#systemruntimelog)
-            - [System.Runtime.GetTime](#systemruntimegettime)
-            - [System.Runtime.Serialize](#systemruntimeserialize)
-            - [System.Runtime.Deserialize](#systemruntimedeserialize)
-            - [System.Runtime.GetInvocationCounter](#systemruntimegetinvocationcounter)
-            - [System.Runtime.GetNotifications](#systemruntimegetnotifications)
-            - [System.Crypto.Verify](#systemcryptoverify)
+            - [System.Binary.Serialize](#systembinaryserialize)
+            - [System.Binary.Deserialize](#systembinarydeserialize)
             - [System.Blockchain.GetHeight](#systemblockchaingetheight)
             - [System.Blockchain.GetBlock](#systemblockchaingetblock)
             - [System.Blockchain.GetTransaction](#systemblockchaingettransaction)
             - [System.Blockchain.GetTransactionHeight](#systemblockchaingettransactionheight)
             - [System.Blockchain.GetTransactionFromBlock](#systemblockchaingettransactionfromblock)
             - [System.Blockchain.GetContract](#systemblockchaingetcontract)
-            - [System.Contract.Call](#systemcontractcall)
+            - [System.Contract.Create](#systemcontractcreate)
+            - [System.Contract.Update](#systemcontractupdate)
             - [System.Contract.Destroy](#systemcontractdestroy)
+            - [System.Contract.Call](#systemcontractcall)
+            - [System.Contract.CallEx](#systemcontractcallex)
+            - [System.Contract.IsStandard](#systemcontractisstandard)
+            - [System.Enumerator.Create](#systemenumeratorcreate)
+            - [System.Enumerator.Next](#systemenumeratornext)
+            - [System.Enumerator.Value](#systemenumeratorvalue)
+            - [System.Enumerator.Concat](#systemenumeratorconcat)
+            - [System.Iterator.Create](#systemiteratorcreate)
+            - [System.Iterator.Key](#systemiteratorkey)
+            - [System.Iterator.Keys](#systemiteratorkeys)
+            - [System.Iterator.Values](#systemiteratorvalues)
+            - [System.Iterator.Concat](#systemiteratorconcat)
+            - [System.Json.Serialize](#systemjsonserialize)
+            - [System.Json.Deserialize](#systemjsondeserialize)
+            - [System.Runtime.Platform](#systemruntimeplatform)
+            - [System.Runtime.GetTrigger](#systemruntimegettrigger)
+            - [System.Runtime.GetTime](#systemruntimegettime)
+            - [System.Runtime.GetScriptContainer](#systemruntimegetscriptcontainer)
+            - [System.Runtime.GetExecutingScriptHash](#systemruntimegetexecutingscripthash)
+            - [System.Runtime.GetCallingScriptHash](#systemruntimegetcallingscripthash)
+            - [System.Runtime.GetEntryScriptHash](#systemruntimegetentryscripthash)
+            - [System.Runtime.CheckWitness](#systemruntimecheckwitness)
+            - [System.Runtime.GetInvocationCounter](#systemruntimegetinvocationcounter)
+            - [System.Runtime.Log](#systemruntimelog)
+            - [System.Runtime.Notify](#systemruntimenotify)
+            - [System.Runtime.GetNotifications](#systemruntimegetnotifications)
             - [System.Storage.GetContext](#systemstoragegetcontext)
             - [System.Storage.GetReadOnlyContext](#systemstoragegetreadonlycontext)
             - [System.Storage.Get](#systemstorageget)
+            - [System.Storage.Find](#systemstoragefind)
             - [System.Storage.Put](#systemstorageput)
             - [System.Storage.PutEx](#systemstorageputex)
             - [System.Storage.Delete](#systemstoragedelete)
             - [System.StorageContext.AsReadOnly](#systemstoragecontextasreadonly)
         - [Neo Part](#neo-part)
             - [Neo.Native.Deploy](#neonativedeploy)
-            - [Neo.Crypto.CheckSig](#neocryptochecksig)
-            - [Neo.Crypto.CheckMultiSig](#neocryptocheckmultisig)
-            - [Neo.Account.IsStandard](#neoaccountisstandard)
-            - [Neo.Contract.Create](#neocontractcreate)
-            - [Neo.Contract.Update](#neocontractupdate)
-            - [Neo.Storage.Find](#neostoragefind)
-            - [Neo.Enumerator.Create](#neoenumeratorcreate)
-            - [Neo.Enumerator.Next](#neoenumeratornext)
-            - [Neo.Enumerator.Value](#neoenumeratorvalue)
-            - [Neo.Enumerator.Concat](#neoenumeratorconcat)
-            - [Neo.Iterator.Create](#neoiteratorcreate)
-            - [Neo.Iterator.Key](#neoiteratorkey)
-            - [Neo.Iterator.Keys](#neoiteratorkeys)
-            - [Neo.Iterator.Values](#neoiteratorvalues)
-            - [Neo.Iterator.Concat](#neoiteratorconcat)
-            - [Neo.Json.Serialize](#neojsonserialize)
-            - [Neo.Json.Deserialize](#neojsondeserialize)
-    - [Fees](#fees)
+            - [Neo.Crypto.ECDsaVerify](#neocryptoecdsaverify)
+            - [Neo.Crypto.ECDsaCheckMultiSig](#neocryptoecdsacheckmultisig)
     - [Accessing to Internet Resources](#accessing-to-internet-resources)
     - [Contract Invocation](#contract-invocation)
         - [Invoke another contract in contract](#invoke-another-contract-in-contract)
@@ -79,17 +78,19 @@
 All transactions in NEO3 are the invocation of the smart contract. In addition to some interop services and OpCode adjustments, NEO3 also features the following changes.
 
 - ADD 
-    - [Manifest](#manifest): used to describe the features of the contract and deployed with AVM files
+    - [Manifest](#manifest): used to describe the features of the contract and deployed with NEF files
     - [native contracts](#native-contract): running in the native code rather than in the virtual machine, including NeoToken, GasToken and PolicyToken
     - [Accessing to network resources](#accessing-to-internet-resources): to be added
     - [System Trigger](#trigger): triggered when the node receives a new block and currently only triggers the execution of the native contract
-    - Interop Service: `System.Blockchain.GetTransactionFromBlock`
+    - Interop Service: `System.Binary.Serialize`, `System.Binary.Deserialize`, `System.Contract.Create`, `System.Contract.Update`, `System.Contract.Call`, `System.Contract.CallEx`, `System.Contract.IsStandard`, 
+    `System.Enumerator.Create`, `System.Enumerator.Next`, `System.Enumerator.Value`, `System.Enumerator.Concat`, `System.Iterator.Create`, `System.Iterator.Key`, `System.Iterator.Keys`, `System.Iterator.Values`, `System.Iterator.Concat`, `System.Json.Serialize`, `System.Json.Deserialize`, `System.Runtime.GetScriptContainer`, `System.Runtime.GetScriptContainer`,`System.Runtime.GetExecutingScriptHash`, `System.Runtime.GetCallingScriptHash`, `System.Runtime.GetEntryScriptHash`, `System.Runtime.GetInvocationCounter`, `System.Runtime.GetNotifications`, `System.Storage.Find`, `Neo.Native.Deploy`, `Neo.Crypto.ECDsaVerify`, `Neo.Crypto.ECDsaCheckMultiSig`.
     
 - UPDATE
     - Reduce the [system fee](#fees) for OpCode and interop services
 
 - DELETE
-    - Interop Service:`Neo.Header.GetVersion`, `Neo.Header.GetMerkleRoot`, `Neo.Header.GetNextConsensus`, `Neo.Transaction.GetScript`, `Neo.Transaction.GetWitnesses`, `Neo.Witness.GetVerificationScript`,  `Neo.Contract.GetScript`, `Neo.Contract.IsPayable`, `System.Blockchain.GetHeader`, `System.Header.GetIndex`, `System.Header.GetHash`, `System.Header.GetPrevHash`, `System.Header.GetTimestamp`, `System.Block.GetTransactionCount`, `System.Block.GetTransactions`, `System.Block.GetTransaction`, `System.Transaction.GetHash`
+    - Interop Service:`System.ExecutionEngine.GetScriptContainer`, `System.ExecutionEngine.GetExecutingScriptHash`, `System.ExecutionEngine.GetCallingScriptHash`, `System.ExecutionEngine.GetEntryScriptHash`, `System.Runtime.Serialize`, `System.Runtime.Deserialize`, `System.Header.GetIndex`, `System.Header.GetHash`, `System.Header.GetPrevHash`, `System.Header.GetTimestamp`, `System.Block.GetTransactionCount`, `System.Block.GetTransactions`, `System.Block.GetTransaction`, `System.Transaction.GetHash`, `System.Contract.GetStorageContext`, 
+    `Neo.Runtime.GetTrigger`, `Neo.Runtime.CheckWitness`, `Neo.Runtime.Notify`, `Neo.Runtime.Log`, `Neo.Runtime.GetTime`, `Neo.Runtime.Serialize`, `Neo.Runtime.Deserialize`, `Neo.Blockchain.GetHeight`, `Neo.Blockchain.GetHeader`, `Neo.Blockchain.GetBlock`, `Neo.Blockchain.GetTransaction`, `Neo.Blockchain.GetTransactionHeight`, `Neo.Blockchain.GetAccount`, `Neo.Blockchain.GetValidators`, `Neo.Blockchain.GetAsset`, `Neo.Blockchain.GetContract`, `Neo.Header.GetHash`, `Neo.Header.GetVersion`, `Neo.Header.GetPrevHash`, `Neo.Header.GetMerkleRoot`, `Neo.Header.GetTimestamp`, `Neo.Header.GetIndex`,  `Neo.Header.GetConsensusData`, `Neo.Header.GetNextConsensus`, `Neo.Block.GetTransactionCount` , `Neo.Block.GetTransactions`, `Neo.Block.GetTransaction`, `Neo.Transaction.GetHash`, `Neo.Transaction.GetType`,  `Neo.Transaction.GetAttributes`, `Neo.Transaction.GetInputs`, `Neo.Transaction.GetOutputs`, `Neo.Transaction.GetReferences`, `Neo.Transaction.GetUnspentCoins`, `Neo.Transaction.GetWitnesses`, `Neo.InvocationTransaction.GetScript`, `Neo.Witness.GetVerificationScript`, `Neo.Attribute.GetUsage`, `Neo.Attribute.GetData`, `Neo.Input.GetHash`, `Neo.Input.GetIndex`, `Neo.Output.GetAssetId`, `Neo.Output.GetValue`, `Neo.Output.GetScriptHash`, `Neo.Account.GetScriptHash` , `Neo.Account.GetVotes`, `Neo.Account.GetBalance`, `Neo.Account.IsStandard`, `Neo.Asset.Create`, `Neo.Asset.Renew`, `Neo.Asset.GetAssetId` , `Neo.Asset.GetAssetType`, `Neo.Asset.GetAmount`, `Neo.Asset.GetAvailable`, `Neo.Asset.GetPrecision`, `Neo.Asset.GetOwner`, `Neo.Asset.GetAdmin`, `Neo.Asset.GetIssuer`, `Neo.Contract.Create`, `Neo.Contract.Migrate`, `Neo.Contract.Destroy`, `Neo.Contract.GetScript`, `Neo.Contract.IsPayable`, `Neo.Contract.GetStorageContext`, `Neo.Storage.GetContext` , `Neo.Storage.GetReadOnlyContext`,  `Neo.Storage.Get`, `Neo.Storage.Put`, `Neo.Storage.Delete`, `Neo.Storage.Find`, `Neo.StorageContext.AsReadOnly`, `Neo.Enumerator.Create`, `Neo.Enumerator.Next`, `Neo.Enumerator.Value`, `Neo.Enumerator.Concat`, `Neo.Iterator.Create`, `Neo.Iterator.Key`, `Neo.Iterator.Keys`, `Neo.Iterator.Values`, `Neo.Iterator.Concat`.
 
 ## Manifest
 Now each contract is required to provide a manifest file to describe its properties, including Groups, Features, ABI, Permissions, Trusts, SafeMethods, as shown below:
@@ -1142,357 +1143,281 @@ Interop services are divided into System part and Neo part. The specific interfa
 
 ### System Part
 
-#### System.ExecutionEngine.GetScriptContainer 
+#### System.Binary.Serialize  
 
-| Description | Get the script container of the smart contract |
-|--|--|
-| C# Function | byte[] GetScriptContainer() |
-
-#### System.ExecutionEngine.GetExecutingScriptHash
-
-| Description | Get the script hash of the contract being executed |
-|--|--|
-| C# Function| byte[] GetExecutingScriptHash() |
-
-#### System.ExecutionEngine.GetCallingScriptHash
-
-| Description | Get the script hash of the contract caller |
-|--|--|
-| C# Function| byte[] GetExecutingScriptHash() |
-
-#### System.ExecutionEngine.GetEntryScriptHash  
-
-| Description | Get the script hash of the entry point of the smart contract <br/>(the starting point of the contract invocation chain) |
+| Description | Convert StackItem to byte array|
 |--|-- |
-| C# Function| byte[] GetEntryScriptHash() |
+| Fee (GAS) | 0.001 |
 
-#### System.Runtime.Platform
+#### System.Binary.Deserialize  
 
-| Description | Get the platform information of the contract being executed |
-|--|--|
-| C# Function| string Platform() |
-
-#### System.Runtime.GetTrigger
-
-| Description | Get the triggering condition of the contract |
-|--|--|
-| C# Function | TriggerType Trigger() |
-
-#### System.Runtime.CheckWitness
-
-| Description |  Verify whether the container calling the contract is signed by the<br/>script hash of the specific account |
-|--|--|
-| C# Function | bool CheckWitness(byte[] hashOrPubKey) |
-
-#### System.Runtime.Notify
-
-| Description | Notify the client executing the contract |
-|--|--|
-| C# Function | bool Notify(params object[] state) |
-
-#### System.Runtime.Log
-
-| Description | Record the log |
-|--|--|
-| C# Function | void Log(string message) |
-
-#### System.Runtime.GetTime
-
-| Description | Get the timestamp of the current block |
-|--|--|
-| C# Function | uint Time |
-
-#### System.Runtime.Serialize
-
-| Description | Serialize an object |
-|--|--|
-| C# Function | byte[] Serialize(this object source) |
-
-#### System.Runtime.Deserialize
-
-| Description | Deserialize a byte array into object |
-|--|--|
-| C# Function |  object Deserialize(this byte[] source)|
-
-#### System.Runtime.GetInvocationCounter
-
-| Description | Get invocation count of the current contract |
-|--|--|
-| C# Function | int GetInvocationCounter() |
-
-#### System.Runtime.GetNotifications
-
-| Description | Get notifications of a contract |
-|--|--|
-| C# Function | StackItem[][] GetNotifications(Hash160 scriptHash) |
-
-#### System.Crypto.Verify
-
-| Description | Verify the signature of the message with the public key |
-|--|--|
-| C# Function | bool Verify(object message, byte[] signature, byte[] pubKey) |
+| Description | Convert byte array to StackItem  |
+|--|-- |
+| Fee (GAS) | 0.005 |
 
 #### System.Blockchain.GetHeight
 
-| Description | Get the current block height |
-|--|--|
-| C# Function | uint GetHeight() |
+| Description | Get the height of the current block|
+|--|-- |
+| Fee (GAS) | 0.000004 |
 
 #### System.Blockchain.GetBlock
 
-| Description | Get a block by block height or block hash |
-|--|--|
-| C# Function | Block GetBlock(uint height) |
-|| Block GetBlock(byte[] hash)  |
+| Description | Get a block with the hash or block height |
+|--|-- |
+| Fee (GAS) | 0.025 |
 
 #### System.Blockchain.GetTransaction
 
-| Description | Get transaction by transaction ID |
-|--|--|
-| C# Function | Transaction GetTransaction(byte[] hash) |
+| Description | Get a transaction with the txid |
+|--|-- |
+| Fee (GAS) | 0.01 |
 
 #### System.Blockchain.GetTransactionHeight
 
-| Description | Get the index of the block including the transaction by transaction ID |
-|--|--|
-| C# Function | int GetTransactionHeight(byte[] hash) |
+| Description | Get the height of the block where the transaction included with the txid|
+|--|-- |
+| Fee (GAS) | 0.01 |
 
 #### System.Blockchain.GetTransactionFromBlock
 
-| Description | Get transaction by the transaction ID in block |
-|--|--|
-| C# Function | Transaction GetTransaction(byte[] hash) |
+| Description | Get a transaction with the txid in the block |
+|--|-- |
+| Fee (GAS) | 0.01 |
 
 #### System.Blockchain.GetContract
 
-| Description | Get contract by scripthash |
-|--|--|
-| C# Function | Contract GetContract(byte[] scriptHash) |
+| Description | Get a contract with the hash |
+|--|-- |
+| Fee (GAS) | 0.01 |
+
+#### System.Contract.Create
+| Description | Deploy a contract |
+|--|-- |
+| Explanation | The size of the script contract cannot exceed 1MB and the size of the manifest cannot exceed 2KB |
+| Fee (GAS) | (Script.Size + Manifest.Size) * GasPerByte |
+
+#### System.Contract.Update
+| Description | Upgrade a contract |
+|--|-- |
+| Explanation | The size of the script contract cannot exceed 1MB and it cannot be deployed before. The size of the <br/> manifest cannot exceed 2KB. The old contract will be destroyed after the upgrade. |
+| Fee (GAS) | (Script.Size + Manifest.Size) * GasPerByte |
+
+#### System.Contract.Destroy
+
+| Description | Destroy a contract |
+|--|-- |
+| Fee (GAS) | 0.01 |
 
 #### System.Contract.Call 
 
 | Description | Invoke a contract |
-|--|--|
-| C# Function | void Call(byte[] scriptHash, string method, object[] args) |
-|  | void Call(Contract contract, string method, object[] args) |
+|--|-- |
+| Fee (GAS) | 0.01 |
 
-#### System.Contract.Destroy
+#### System.Contract.CallEx
+| Description | Invoke a contract with the Flag |
+|--|-- |
+| Fee (GAS) | 0.01 |
 
-| Description | Destroy current contract |
-|--|--|
-| C# Function | void Destroy() |
+#### System.Contract.IsStandard
+| Description | Check whether the contract is a standard contract |
+|--|-- |
+| Fee (GAS) | 0.0003 |
+
+#### System.Enumerator.Create
+| Description | Create a enumerator |
+|--|-- |
+| Fee (GAS) | 0.000004 |
+
+#### System.Enumerator.Next
+| Description | Check if the enumerator has more element |
+|--|-- |
+| Fee (GAS) | 0.01 |
+
+#### System.Enumerator.Value
+| Description | Get the current value of the enumerator |
+|--|-- |
+| Fee (GAS) | 0.000004 |
+
+#### System.Enumerator.Concat
+| Description | Concat two enumerators |
+|--|-- |
+| Fee (GAS) | 0.000004 |
+
+#### System.Iterator.Create
+| Description | Create an iterator |
+|--|-- |
+| Fee (GAS) | 0.000004 |
+
+#### System.Iterator.Key
+| Description | Get the current key of the iterator |
+|--|-- |
+| Fee (GAS) | 0.000004 |
+
+#### System.Iterator.Keys
+| Description | Get all keys of the iterator |
+|--|-- |
+| Fee (GAS) | 0.000004 |
+
+#### System.Iterator.Values
+| Description | Get all values of the iterator |
+|--|-- |
+| Fee (GAS) | 0.000004 |
+
+#### System.Iterator.Concat
+| Description | Concat two iterators |
+|--|-- |
+| Fee (GAS) | 0.000004 |
+
+#### System.Json.Serialize
+| Description | Serialize a stack item to byte array |
+|--|-- |
+| Fee (GAS) | 0.001 |
+
+#### System.Json.Deserialize
+| Description | Convert json object to stack item |
+|--|-- |
+| Fee (GAS) | 0.005 |
+
+#### System.Runtime.Platform
+
+| Description | Get the platform information of the contract being executed |
+|--|-- |
+| Fee (GAS) | 0.0000025 |
+
+#### System.Runtime.GetTrigger
+
+| Description | Get the triggering condition of the contract |
+|--|-- |
+| Fee (GAS) | 0.0000025 |
+
+#### System.Runtime.GetTime
+
+| Description | Get the timestamp of the current block |
+|--|-- |
+| Fee (GAS) | 0.0000025 |
+
+#### System.Runtime.GetScriptContainer
+| Description | Get the script container of the contract |
+|--|-- |
+| Fee (GAS) | 0.0000025 |
+
+#### System.Runtime.GetExecutingScriptHash
+| Description | Get the script hash of the executing contract|
+|--|-- |
+| Fee (GAS) | 0.000004 |
+
+#### System.Runtime.GetCallingScriptHash
+| Description | Get the script hash of the calling contract |
+|--|-- |
+| Fee (GAS) | 0.000004 |
+
+#### System.Runtime.GetEntryScriptHash
+| Description | Get the script hash of the entry contract |
+|--|-- |
+| Fee (GAS) | 0.000004 |
+
+#### System.Runtime.CheckWitness
+
+| Description | Verify whether the container calling the contract is signed by the<br/>script hash of the specific account |
+|--|-- |
+| Fee (GAS) | 0.0003 |
+
+#### System.Runtime.GetInvocationCounter
+
+| Description | Get invocation count of the current contract |
+|--|-- |
+| Fee (GAS) | 0.000004 |
+
+#### System.Runtime.Log
+
+| Description | Record the log  |
+|--|-- |
+| Fee (GAS) | 0.005 |
+#### System.Runtime.Notify
+
+| Description | Notify the client executing the contract |
+|--|-- |
+| Fee (GAS) | 0.01 |
+
+#### System.Runtime.GetNotifications
+
+| Description | Get notifications of a contract |
+|--|-- |
+| Fee (GAS) | 0.0001 |
 
 #### System.Storage.GetContext
 
 | Description | Get storage context of the current contract |
-|--|--|
-| C# Function | StorageContext GetContext() |
+|--|-- |
 | Explanation | the IsReadOnly flag of StorageContext is false |
+| Fee (GAS) | 0.000004 |
 
 #### System.Storage.GetReadOnlyContext
 
 | Description | Get storage context of the current contract in read-only mode |
-|--|--|
-| C# Function | StorageContext GetContext() |
-| Explanation | the IsReadOnly flag of StorageContext is true |
+|--|-- |
+| Explanation | the IsReadOnly flag of StorageContext is true  |
+| Fee (GAS) | 0.000004 |
 
 #### System.Storage.Get
 
 | Description | Get value from the storage by key |
-|--|--|
-| C# Function | byte[] Get(StorageContext context, byte[] key) |
+|--|-- |
+| Fee (GAS) | 0.01 |
+
+#### System.Storage.Find
+
+| Description | Find the data in the storage area of the current storage context with the specified prefix |
+|--|-- |
+| Fee (GAS) | 0.01 |
 
 #### System.Storage.Put
 
 | Description | Put key-value into storage based on the storage context |
-|--|--|
-| C# Function | byte[] Get(StorageContext context, byte[] key, byte[] value) |
+|--|-- |
+| Fee (GAS) | (Key.Size + Value.Size) * GasPerByte |
 
 #### System.Storage.PutEx
 
-| Description | Put Key-Value into the storage based on the storage context and the flag |
-|--|--|
-| C# Function | byte[] Get(StorageContext context, byte[] key, byte[] value, StorageFlags flags) |
+| Description | Put Key-Value into the storage based on the storage context and the flag|
+|--|-- |
 | Explanation | The parameter StorageFlags defines the attribute of the written data. The default value <br/>is None, indicating that data can be read and written. If it is Constant, the data cannot be <br/>modified or deleted once it is written to the storage area.|
+| Fee (GAS) | (Key.Size + Value.Size) * GasPerByte |
 
 #### System.Storage.Delete
 
-| Description | Delete the stored Key-Value data from the storage area by the Key|
-|--|--|
-| C# Function | void Delete(StorageContext context, byte[] key) |
-| Explanation | Data cannot be deleted if its StorageFlags is Constant|
+| Description | Delete the stored Key-Value data from the storage area by the Key |
+|--|-- |
+| Explanation |  Data cannot be deleted if its StorageFlags is Constant |
+| Fee (GAS) | 0.01 |
 
 #### System.StorageContext.AsReadOnly
 
 | Description | Set the current context to read-only mode |
-|--|--|
-| C# Function | void AsReadOnly(this StorageContext context) |
+|--|-- |
 | Explanation | Set the IsReadOnly flag of the StorageContext to true |
+| Fee (GAS) | 0.000004 |
 
 ### Neo Part
 
 #### Neo.Native.Deploy
 
 | Description | Deploy and initialize all native contracts |
-|--|--|
+|--|-- |
 | Explanation | It can only be invoked in the genesis block |
+| Fee (GAS) | 0 |
 
-#### Neo.Crypto.CheckSig
-
+#### Neo.Crypto.ECDsaVerify
 | Description | Verify signature of the current script container by public key |
-|--|--|
-| C# Function | bool CheckSig(byte[] signature, byte[] pubKey) |
+|--|-- |
+| Fee (GAS) | 0.01 |
 
-#### Neo.Crypto.CheckMultiSig
-
+#### Neo.Crypto.ECDsaCheckMultiSig
 | Description | Verify the multiple signature of the current script container by public key |
-|--|--|
-| C# Function | bool CheckMultiSig(byte[][] signatures, byte[][] pubKeys) |
-
-#### Neo.Account.IsStandard
-
-| Description | Check if the account is standard |
-|--|--|
-| C# Function | bool IsStandard(byte[] scriptHash) |
-
-#### Neo.Contract.Create
-
-| Description | Create a contract |
-|--|--|
-| C# Function | Contract Create(byte[] script, string manifest) |
-| Explanation | The size of the script contract cannot exceed 1MB and the size of the manifest cannot exceed 2KB |
-
-#### Neo.Contract.Update
-
-| Description | Update a contract |
-|--|--|
-| C# Function | Contract Create(byte[] script, string manifest) |
-| Explanation | The size of the script contract cannot exceed 1MB and it cannot be deployed before. The size of the <br/> manifest cannot exceed 2KB. The old contract will be destroyed after the upgrade. |
-
-#### Neo.Storage.Find
-
-|Description | Find the data in the storage area of the current storage context with the specified prefix | 
-|--|--|
-| C# Function | Iterator < byte[], byte[] > Find(StorageContext context, byte[] prefix) |
-
-#### Neo.Enumerator.Create
-
-| Description | Create an enumerator |
-|--|--|
-| C# Function | Enumerator Create(object[] array) |
-
-#### Neo.Enumerator.Next
-
-| Description | Check if the enumerator has more element|
-|--|--|
-| C# Function | bool Next(this Enumerator enumerator) |
-
-#### Neo.Enumerator.Value
-
-| Description | Get the current value of the enumerator |
-|--|--|
-| C# Function | object Value(this Enumerator enumerator) |
-
-#### Neo.Enumerator.Concat
-
-| Description | Concat two enumerators |
-|--|--|
-| C# Function | Enumerator Concat(Enumerator enumerator1, Enumerator enumerator2) |
-
-#### Neo.Iterator.Create
-
-| Description | Create an iterator |
-|--|--|
-| C# Function | Iterator Create(object[] array) |
-| | Iterator Create(Dictionary<object, object> map) |
-
-#### Neo.Iterator.Key
-
-| Description | Get the current key of the iterator |
-|--|--|
-| C# Function | object Key(this Iterator it) |
-
-#### Neo.Iterator.Keys
-
-| Description | Get all keys of the iterator |
-|--|--|
-| C# Function | Iterator Keys(this Iterator it) |
-
-#### Neo.Iterator.Values
-
-| Description | Get all values of the iterator |
-|--|--|
-| C# Function | Iterator Values(this Iterator it) |
-
-#### Neo.Iterator.Concat
-
-| Description | Concat two iterators |
-|--|--|
-| C# Function | Iterator Concat(Iterator iterator1, Iterator iterator2) |
-
-#### Neo.Json.Serialize
-
-| Description | Serialize a string to Json object |
-|--|--|
-| C# Function | JObject Serialize(string jsonStr) |
-
-#### Neo.Json.Deserialize
-
-| Description | Deserialize a json object to string |
-|--|--|
-| C# Function | string Deserialize(JObject jsonObj) |
-
-## Fees
-
-| Interop Service | Fee (GAS) |
-|--|--|
-| System.ExecutionEngine.GetScriptContainer | 0.0000025  |
-| System.ExecutionEngine.GetExecutingScriptHash| 0.000004  |
-| System.ExecutionEngine.GetCallingScriptHash | 0.000004  |
-| System.ExecutionEngine.GetEntryScriptHash | 0.000004  |
-| System.Runtime.Platform | 0.0000025  |
-| System.Runtime.GetTrigger | 0.0000025  |
-| System.Runtime.CheckWitness | 0.0003  |
-| System.Runtime.Notify | 0.0000025  |
-| System.Runtime.Log | 0.003  |
-| System.Runtime.GetTime | 0.0000025  |
-| System.Runtime.Serialize | 0.001  |
-| System.Runtime.Deserialize | 0.005  |
-| System.Runtime.GetInvocationCounter | 0.000004  |
-| System.Crypto.Verify | 0.01  |
-| System.Blockchain.GetHeight | 0.000004  |
-| System.Blockchain.GetBlock | 0.025  |
-| System.Blockchain.GetTransaction | 0.01  |
-| System.Blockchain.GetTransactionHeight | 0.01  |
-| System.Blockchain.GetContract | 0.01  |
-| System.Contract.Call | 0.01  |
-| System.Contract.Destroy | 0.01  |
-| System.Storage.GetContext | 0.000004  |
-| System.Storage.GetReadOnlyContext | 0.000004  |
-| System.Storage.Get | 0.01  |
-| System.Storage.Put | (Key.Size + Value.Size) * GasPerByte |
-| System.Storage.PutEx | (Key.Size + Value.Size) * GasPerByte |
-| System.Storage.Delete | 0.01  |
-| System.StorageContext.AsReadOnly | 0.000004  |
-| Neo.Native.Deploy | 0 |
-| Neo.Crypto.CheckSig| 0.01  |
-| Neo.Crypto.CheckMultiSig| 0.01 * n |
-| Neo.Account.IsStandard| 0.0003  |
-| Neo.Contract.Create| (Script.Size + Manifest.Size) * GasPerByte |
-| Neo.Contract.Update| (Script.Size + Manifest.Size) * GasPerByte |
-| Neo.Storage.Find| 0.01  |
-| Neo.Enumerator.Create| 0.000004  |
-| Neo.Enumerator.Next| 0.01  |
-| Neo.Enumerator.Value| 0.000004  |
-| Neo.Enumerator.Concat| 0.000004  |
-| Neo.Iterator.Create| 0.000004  |
-| Neo.Iterator.Key| 0.000004  |
-| Neo.Iterator.Keys| 0.000004  |
-| Neo.Iterator.Values| 0.000004  |
-| Neo.Iterator.Concat| 0.000004  |
-| Neo.Json.Serialize| 0.001  |
-| Neo.Json.Deserialize| 0.005  |
-
+|--|-- |
+| Fee (GAS) | 0.01 * n |
 
 ## Accessing to Internet Resources
 ## Contract Invocation
