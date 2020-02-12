@@ -2,7 +2,7 @@
 
 Return the contract log based on the specified txid. The complete contract logs are stored under the ApplicationLogs directory.
 
-> This method is provided by the plugin ApplicationLogs . You need to install the plugin before you can invoke the method.
+> You must install the plugins [ApplicationLogs](https://github.com/neo-project/neo-modules/releases) and [LevelDBStore](https://github.com/neo-project/neo-modules/releases) before you can invoke the method.
 
 ```json
 {

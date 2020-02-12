@@ -2,7 +2,7 @@
 
 根据指定的交易 ID 获取合约日志。完整的合约日志会记录到 ApplicationLogs 目录。
 
-> 此方法由插件提供，需要安装 ApplicationLogs 插件才可以调用。
+> 此方法由插件提供，需要安装 [ApplicationLogs](https://github.com/neo-project/neo-modules/releases) 和[LevelDBStore](https://github.com/neo-project/neo-modules/releases)插件才可以调用。
 
 ```json
 {

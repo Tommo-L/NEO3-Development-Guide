@@ -107,13 +107,12 @@ JSON-RPC 服务器启动后，会监听 TCP 端口，默认端口如下。P2P �
 
 | 方法           | 参数      | 说明        | 备注       |
 | ----------- | ---------- | ------------- | -------- |
-| closewallet | | 关闭已打开的钱包 |  |
+| [closewallet](api/rpcwallets/closewallet.md) | | 关闭已打开的钱包 |  |
 | [openwallet](api/rpcwallets/openwallet.md) | \<path>\<password> | 打开指定路径下的钱包 |  |
 | [dumpprivkey ](api/rpcwallets/dumpprivkey.md) | \<address> | 导出指定地址的私钥 |  |
 | [getbalance](api/rpcwallets/getbalance.md) | \<asset_id> | 查询资产余额 | |
 | [getnewaddress](api/rpcwallets/getnewaddress.md) |  | 创建一个新的地址 | |
 | [getunclaimedgas](api/rpcwallets/getunclaimedgas.md) |  | 显示钱包中未提取的 GAS 数量 | |
-| [getwalletheight](api/rpcwallets/getwalletheight.md) |  | 获取当前钱包索引高度 | |
 | [importprivkey](api/rpcwallets/importprivkey.md) | \<key> | 导入私钥到钱包 | |
 | [listaddress](api/rpcwallets/listaddress.md) |  | 列出当前钱包内的所有地址 | |
 | [sendfrom](api/rpcwallets/sendfrom.md) | \<asset_id>\<from>\<to>\<value> | 从指定地址，向指定地址转账 | |

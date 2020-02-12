@@ -2,7 +2,7 @@
 
 Return all the NEP-5 transaction information occurred in the specified address.
 
-> This method is provided by the plugin RpcNep5Tracker. You need to install the plugin before you can invoke the method.
+> You must install the plugin [RpcNep5Tracker](https://github.com/neo-project/neo-plugins/releases) and [LevelDBStore](https://github.com/neo-project/neo-modules/releases) before you can invoke the method.
 
 ```json
 {

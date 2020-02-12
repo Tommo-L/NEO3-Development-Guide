@@ -2,7 +2,8 @@
 
 Exports the private key of the specified address.
 
-> You should call the `openwallet` method to open the wallet first.
+> 1. Install the plugin [RpcServer](https://github.com/neo-project/neo-plugins/releases) 
+> 2. Call the RPC method `openwallet` to open the wallet first.
 
 
 

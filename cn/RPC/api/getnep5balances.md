@@ -2,7 +2,7 @@
 
 返回指定地址内的所有 NEP-5 交易记录。
 
-> 此方法由插件提供，需要安装 RpcNep5Tracker 插件才可以调用。
+> 此方法由插件提供，需要安装 [RpcNep5Tracker](https://github.com/neo-project/neo-plugins/releases) 和[LevelDBStore](https://github.com/neo-project/neo-modules/releases) 插件才可以调用。
 
 ```json
 {

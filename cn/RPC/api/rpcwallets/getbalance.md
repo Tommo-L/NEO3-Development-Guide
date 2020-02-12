@@ -2,7 +2,8 @@
 
 根据指定的资产编号，返回钱包中对应资产的余额信息。该方法适用于符合 [NEP-5](https://github.com/neo-project/proposals/blob/master/nep-5.mediawiki) 标准的合约资产。
 
-> 执行此命令前需要先调用`openwallet`方法打开钱包。
+> - 执行此命令前需要 RPC 调用 openwallet 方法来打开钱包
+> - 此方法由插件提供，需要安装 [RpcServer](https://github.com/neo-project/neo-modules/releases) 插件才可以调用
 
 ```json
 {

@@ -103,17 +103,17 @@ For P2P and WebSocket port information, please refer to [Node Introduction](../.
 
 | Command                                               | Parameter                                              | Description                                                  | Remark |
 | ----------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------ | ------ |
-| closewallet       |                                             | Close the wallet            |        |
+| [closewallet](api/rpcwallets/closewallet.md)       |                                             | Close the wallet            |        |
 | [openwallet](api/rpcwallets/openwallet.md)         | \<address>                                             | Open the wallet in the specified path             |        |
 | [dumpprivkey ](api/rpcwallets/dumpprivkey.md)         | \<address>                                             | Exports the private key of the specified address             |        |
-| [getbalance](api/rpccwallets/getbalance.md)           | \<asset_id>                                            | Returns the balance of the corresponding asset in the wallet |        |
-| [getnewaddress](/api/rpcwallets/getnewaddress.md)     |                                                        | Creates a new address                                        |        |
-| [getunclaimedgas](/api/rpcwallets/getunclaimedgas.md) |                                                        | Gets the amount of unclaimed GAS in the wallet               |        |
-| [importprivkey](/api/rpcwallets/importprivkey.md)     | \<key>                                                 | Imports the private key to the wallet                        |        |
-| [listaddress](/api/rpcwallets/listaddress.md)         |                                                        | Lists all the addresses in the current wallet                |        |
-| [sendfrom](/api/rpcwallets/sendfrom.md)               | \<asset_id>\<from>\<to>\<value> | Transfer from the specified address to the destination address |        |
-| [sendmany](/api/rpcwallets/sendmany.md)               | \<outputs_array>              | Initiate multiple transfers to designated addresses in a transaction   |        |
-| [sendtoaddress](/api/rpcwallets/sendtoaddress.md)     | \<asset_id>\<address>\<value>  | Transfers to the specified address.                          |        |
+| [getbalance](api/rpcwallets/getbalance.md)           | \<asset_id>                                            | Returns the balance of the corresponding asset in the wallet |        |
+| [getnewaddress](api/rpcwallets/getnewaddress.md)     |                                                        | Creates a new address                                        |        |
+| [getunclaimedgas](api/rpcwallets/getunclaimedgas.md) |                                                        | Gets the amount of unclaimed GAS in the wallet               |        |
+| [importprivkey](api/rpcwallets/importprivkey.md)     | \<key>                                                 | Imports the private key to the wallet                        |        |
+| [listaddress](api/rpcwallets/listaddress.md)         |                                                        | Lists all the addresses in the current wallet                |        |
+| [sendfrom](api/rpcwallets/sendfrom.md)               | \<asset_id>\<from>\<to>\<value> | Transfer from the specified address to the destination address |        |
+| [sendmany](api/rpcwallets/sendmany.md)               | \<outputs_array>              | Initiate multiple transfers to designated addresses in a transaction   |        |
+| [sendtoaddress](api/rpcwallets/sendtoaddress.md)     | \<asset_id>\<address>\<value>  | Transfers to the specified address.                          |        |
 
 
 

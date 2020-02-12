@@ -2,7 +2,8 @@
 
 Returns the balance of the corresponding asset in the wallet, based on the specified asset number. This method applies to the contract assets that conform to NEP-5 standards.
 
-> You should call the `openwallet` method to open the wallet first.
+> 1. Install the plugin [RpcServer](https://github.com/neo-project/neo-plugins/releases) 
+> 2. Call the RPC method `openwallet` to open the wallet first.
 
 
 

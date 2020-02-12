@@ -1,11 +1,13 @@
-﻿# getunclaimedgas Method
+# closewallet Method
 
-Gets the amount of unclaimed GAS in the wallet.
+Closes the current wallet.
 
+> [!Note]
+>
+> Before you can invoke this method you must:
+>
 > 1. Install the plugin [RpcServer](https://github.com/neo-project/neo-plugins/releases) 
 > 2. Call the RPC method `openwallet` to open the wallet first.
-
-
 
 ## Example
 
@@ -14,7 +16,7 @@ Request body:
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "getunclaimedgas",
+  "method": "closewallet",
   "params": [],
   "id": 1
 }
@@ -26,13 +28,11 @@ Response body:
 {
     "jsonrpc": "2.0",
     "id": 1,
-    "result": {
-        "available": "0.140771",
-        "unavailable": "0.096224"
-    }
+    "result": true
 }
 ```
 
-Response description:
+Response Description:
 
-Returns the unclaimed GAS amount.
+true: The wallet is closed successfully.
+Others: failure
