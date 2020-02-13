@@ -1426,6 +1426,12 @@ namespace MyContract
 #### Neo.Native.Tokens.NEO
 | 方法名 | 功能描述 | 费用（Gas）|
 |--|-- |--|
+|name|获取名称, 即：NEO|0|
+|symbol|获取符号, 即: neo|0|
+|decimals|获取精度|0|
+|totalSupply|获取总发行量|0.01|
+|balanceOf|获取余额|0.01|
+|transfer|转账|0.08|
 |registerValidator| 注册为验证人|0.05|
 |vote| 投票|5|
 |getRegisteredValidators| 获取已注册的验证人列表|1|
@@ -1435,6 +1441,12 @@ namespace MyContract
 #### Neo.Native.Tokens.GAS
 | 方法名 | 功能描述 | 费用（Gas）|
 |--|-- |--|
+|name|获取名称, GAS|0|
+|symbol|获取符号, 即: gas|0|
+|decimals|获取精度|0|
+|totalSupply|获取总发行量|0.01|
+|balanceOf|获取余额|0.01|
+|transfer|转账|0.08|
 |getSysFeeAmount| 获取系统手续费|0.01|
 
 #### Neo.Native.Policy

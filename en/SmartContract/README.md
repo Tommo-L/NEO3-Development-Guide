@@ -1415,6 +1415,12 @@ Interop services are divided into System part and Neo part. The specific interfa
 #### Neo.Native.Tokens.NEO
 | Method Name | Description | Fee (GAS)|
 |--|-- |--|
+|name|Get token name, ie: NEO|0|
+|symbol|Get token symbol, ie: neo|0|
+|decimals|Get decimals|0|
+|totalSupply|Get the total supply|0.01|
+|balanceOf|Get balance of the token|0.01|
+|transfer|Transfer the token|0.08|
 |registerValidator| Register to be a validator|0.05|
 |vote| Vote|5|
 |getRegisteredValidators| Get registered validators |1|
@@ -1424,6 +1430,12 @@ Interop services are divided into System part and Neo part. The specific interfa
 #### Neo.Native.Tokens.GAS
 | Method Name | Description | Fee (GAS)|
 |--|-- |--|
+|name|Get token name, ie: GAS|0|
+|symbol|Get token symbol, ie: gas|0|
+|decimals|Get decimals|0|
+|totalSupply|Get the total supply|0.01|
+|balanceOf|Get balance of the token|0.01|
+|transfer|Transfer the token|0.08|
 |getSysFeeAmount| Get the amount of the system fee|0.01|
 
 #### Neo.Native.Policy
