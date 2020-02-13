@@ -62,6 +62,9 @@
             - [System.StorageContext.AsReadOnly](#systemstoragecontextasreadonly)
         - [Neo部分](#neo部分)
             - [Neo.Native.Deploy](#neonativedeploy)
+            - [Neo.Native.Tokens.NEO](#neonativetokensneo)
+            - [Neo.Native.Tokens.GAS](#neonativetokensgas)
+            - [Neo.Native.Policy](#neonativepolicy)
             - [Neo.Crypto.ECDsaVerify](#neocryptoecdsaverify)
             - [Neo.Crypto.ECDsaCheckMultiSig](#neocryptoecdsacheckmultisig)
     - [网路资源访问](#网路资源访问)
@@ -83,7 +86,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
     - [网络资源访问](#网路资源访问)： 待补充。
     - [system 触发器](#触发器)：用于节点收到新区块后，触发原生合约的执行。
     - 互操作服务接口：`System.Binary.Serialize`, `System.Binary.Deserialize`, `System.Contract.Create`, `System.Contract.Update`, `System.Contract.Call`, `System.Contract.CallEx`, `System.Contract.IsStandard`, 
-    `System.Enumerator.Create`, `System.Enumerator.Next`, `System.Enumerator.Value`, `System.Enumerator.Concat`, `System.Iterator.Create`, `System.Iterator.Key`, `System.Iterator.Keys`, `System.Iterator.Values`, `System.Iterator.Concat`, `System.Json.Serialize`, `System.Json.Deserialize`, `System.Runtime.GetScriptContainer`, `System.Runtime.GetScriptContainer`,`System.Runtime.GetExecutingScriptHash`, `System.Runtime.GetCallingScriptHash`, `System.Runtime.GetEntryScriptHash`, `System.Runtime.GetInvocationCounter`, `System.Runtime.GetNotifications`, `System.Storage.Find`, `Neo.Native.Deploy`, `Neo.Crypto.ECDsaVerify`, `Neo.Crypto.ECDsaCheckMultiSig`.
+    `System.Enumerator.Create`, `System.Enumerator.Next`, `System.Enumerator.Value`, `System.Enumerator.Concat`, `System.Iterator.Create`, `System.Iterator.Key`, `System.Iterator.Keys`, `System.Iterator.Values`, `System.Iterator.Concat`, `System.Json.Serialize`, `System.Json.Deserialize`, `System.Runtime.GetScriptContainer`, `System.Runtime.GetScriptContainer`,`System.Runtime.GetExecutingScriptHash`, `System.Runtime.GetCallingScriptHash`, `System.Runtime.GetEntryScriptHash`, `System.Runtime.GetInvocationCounter`, `System.Runtime.GetNotifications`, `System.Storage.Find`, `Neo.Native.Deploy`, `Neo.Native.Tokens.NEO`, `Neo.Native.Tokens.GAS`, `Neo.Native.Policy`, `Neo.Crypto.ECDsaVerify`, `Neo.Crypto.ECDsaCheckMultiSig`.
 - 更新
     - 降低了合约执行互操作接口所对应的[系统费用](#费用)。
 
@@ -1419,6 +1422,33 @@ namespace MyContract
 |--|-- |
 | 说明 | 只能在创世区块调用 |
 | 费用 (GAS) | 0 |
+
+#### Neo.Native.Tokens.NEO
+| 方法名 | 功能描述 | 费用（Gas）|
+|--|-- |--|
+|registerValidator| 注册为验证人|0.05|
+|vote| 投票|5|
+|getRegisteredValidators| 获取已注册的验证人列表|1|
+|getValidators| 获取验证人列表|1|
+|unclaimedGas| 获取未领取的Gas数|0.03|
+
+#### Neo.Native.Tokens.GAS
+| 方法名 | 功能描述 | 费用（Gas）|
+|--|-- |--|
+|getSysFeeAmount| 获取系统手续费|0.01|
+
+#### Neo.Native.Policy
+| 方法名 | 功能描述 | 费用（Gas）|
+|--|-- |--|
+|getMaxTransactionsPerBlock| 获取每区块最大交易数|0.01|
+|getMaxBlockSize|获取最大的区块大小|0.01|
+|getFeePerByte|获取每字节手续费|0.01|
+|setMaxBlockSize|设置最大的区块大小|0.03|
+|getBlockedAccounts|获取黑名单账户|0.01|
+|setMaxTransactionsPerBlock|设置每区块最大交易数|0.03|
+|setFeePerByte|设置每字节手续费|0.03|
+|blockAccount|设置黑名单账户|0.03|
+|unblockAccount|解除黑名单账户|0.03|
 
 #### Neo.Crypto.ECDsaVerify
 | 功能描述 | 根据公钥，验证当前脚本容器的签名 |

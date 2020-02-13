@@ -67,10 +67,10 @@
     - [native contracts](en/SmartContract#native-contract): running in the native code rather than in the virtual machine, including NeoToken, GasToken and PolicyToken
     - [Accessing to network resources](en/SmartContract#accessing-to-internet-resources): to be added
     - [System Trigger](en/SmartContract#trigger): triggered when the node receives a new block and currently only triggers the execution of the native contract
-    - Interop Service: `System.Binary.Serialize`, `System.Binary.Deserialize`, `System.Contract.Create`, `System.Contract.Update`, `System.Contract.Call`, `System.Contract.CallEx`, `System.Contract.IsStandard`, etc.
+    - Interop Service: `System.Binary.Serialize`, `System.Binary.Deserialize`, `System.Contract.Create`, `System.Contract.Update`, `System.Contract.Call`, `System.Contract.CallEx`, `System.Contract.IsStandard`, `Neo.Native.Tokens.NEO`, `Neo.Native.Tokens.GAS`, `Neo.Native.Policy`, etc.
 
 - UPDATE
-    - Reduce the [system fee](en/SmartContract#fees) for OpCode and interop services
+    - Reduce the [system fee](en/SmartContract#fees) for OpCode and interop services,
 
 - DELETE
     - Interop Service: `Neo.Runtime.GetTrigger`, `Neo.Runtime.CheckWitness`, `Neo.Runtime.Notify`, `Neo.Runtime.Log`, `Neo.Runtime.GetTime`, `Neo.Runtime.Serialize`, `Neo.Runtime.Deserialize`, `Neo.Blockchain.GetHeight`, `Neo.Blockchain.GetHeader`, `Neo.Blockchain.GetBlock`, `Neo.Blockchain.GetTransaction`, `Neo.Blockchain.GetTransactionHeight`, `Neo.Blockchain.GetAccount`, `Neo.Blockchain.GetValidators`, `Neo.Blockchain.GetAsset`, `Neo.Blockchain.GetContract`, `Neo.Header.GetHash`, `Neo.Header.GetVersion`, `Neo.Header.GetPrevHash`, `Neo.Header.GetMerkleRoot`, `Neo.Header.GetTimestamp`, `Neo.Header.GetIndex`,  `Neo.Header.GetConsensusData`, etc.

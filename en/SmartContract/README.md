@@ -61,6 +61,9 @@
             - [System.StorageContext.AsReadOnly](#systemstoragecontextasreadonly)
         - [Neo Part](#neo-part)
             - [Neo.Native.Deploy](#neonativedeploy)
+            - [Neo.Native.Tokens.NEO](#neonativetokensneo)
+            - [Neo.Native.Tokens.GAS](#neonativetokensgas)
+            - [Neo.Native.Policy](#neonativepolicy)
             - [Neo.Crypto.ECDsaVerify](#neocryptoecdsaverify)
             - [Neo.Crypto.ECDsaCheckMultiSig](#neocryptoecdsacheckmultisig)
     - [Accessing to Internet Resources](#accessing-to-internet-resources)
@@ -83,7 +86,7 @@ All transactions in NEO3 are the invocation of the smart contract. In addition t
     - [Accessing to network resources](#accessing-to-internet-resources): to be added
     - [System Trigger](#trigger): triggered when the node receives a new block and currently only triggers the execution of the native contract
     - Interop Service: `System.Binary.Serialize`, `System.Binary.Deserialize`, `System.Contract.Create`, `System.Contract.Update`, `System.Contract.Call`, `System.Contract.CallEx`, `System.Contract.IsStandard`, 
-    `System.Enumerator.Create`, `System.Enumerator.Next`, `System.Enumerator.Value`, `System.Enumerator.Concat`, `System.Iterator.Create`, `System.Iterator.Key`, `System.Iterator.Keys`, `System.Iterator.Values`, `System.Iterator.Concat`, `System.Json.Serialize`, `System.Json.Deserialize`, `System.Runtime.GetScriptContainer`, `System.Runtime.GetScriptContainer`,`System.Runtime.GetExecutingScriptHash`, `System.Runtime.GetCallingScriptHash`, `System.Runtime.GetEntryScriptHash`, `System.Runtime.GetInvocationCounter`, `System.Runtime.GetNotifications`, `System.Storage.Find`, `Neo.Native.Deploy`, `Neo.Crypto.ECDsaVerify`, `Neo.Crypto.ECDsaCheckMultiSig`.
+    `System.Enumerator.Create`, `System.Enumerator.Next`, `System.Enumerator.Value`, `System.Enumerator.Concat`, `System.Iterator.Create`, `System.Iterator.Key`, `System.Iterator.Keys`, `System.Iterator.Values`, `System.Iterator.Concat`, `System.Json.Serialize`, `System.Json.Deserialize`, `System.Runtime.GetScriptContainer`, `System.Runtime.GetScriptContainer`,`System.Runtime.GetExecutingScriptHash`, `System.Runtime.GetCallingScriptHash`, `System.Runtime.GetEntryScriptHash`, `System.Runtime.GetInvocationCounter`, `System.Runtime.GetNotifications`, `System.Storage.Find`, `Neo.Native.Deploy`, `Neo.Native.Tokens.NEO`, `Neo.Native.Tokens.GAS`, `Neo.Native.Policy`, `Neo.Crypto.ECDsaVerify`, `Neo.Crypto.ECDsaCheckMultiSig`.
     
 - UPDATE
     - Reduce the [system fee](#fees) for OpCode and interop services
@@ -1408,6 +1411,33 @@ Interop services are divided into System part and Neo part. The specific interfa
 |--|-- |
 | Explanation | It can only be invoked in the genesis block |
 | Fee (GAS) | 0 |
+
+#### Neo.Native.Tokens.NEO
+| Method Name | Description | Fee (GAS)|
+|--|-- |--|
+|registerValidator| Register to be a validator|0.05|
+|vote| Vote|5|
+|getRegisteredValidators| Get registered validators |1|
+|getValidators| Get validators|1|
+|unclaimedGas| Get unclaimed Gas |0.03|
+
+#### Neo.Native.Tokens.GAS
+| Method Name | Description | Fee (GAS)|
+|--|-- |--|
+|getSysFeeAmount| Get the amount of the system fee|0.01|
+
+#### Neo.Native.Policy
+| Method Name | Description | Fee (GAS) |
+|--|-- |--|
+|getMaxTransactionsPerBlock| Get max transaction number per block|0.01|
+|getMaxBlockSize|Get max block size|0.01|
+|getFeePerByte|Get fee per byte|0.01|
+|setMaxBlockSize|Set the max block size|0.03|
+|getBlockedAccounts|Get blocked accounts|0.01|
+|setMaxTransactionsPerBlock|Set max transaction per block|0.03|
+|setFeePerByte|Set fee per byte|0.03|
+|blockAccount|Set blocked accounts|0.03|
+|unblockAccount|Unblock accounts|0.03|
 
 #### Neo.Crypto.ECDsaVerify
 | Description | Verify signature of the current script container by public key |

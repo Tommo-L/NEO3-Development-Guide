@@ -66,7 +66,7 @@
     - [原生合约](cn/合约#原生合约)：不通过虚拟机执行，而直接运行在Neo原生代码中，目前包括：NeoToken，GasToken，以及PolicyToken。
     - [网络资源访问](cn/合约#网路资源访问)： 待补充。
     - [system 触发器](cn/合约#触发器)：用于节点收到新区块后，触发原生合约的执行。
-    - 互操作服务接口：`System.Binary.Serialize`, `System.Binary.Deserialize`, `System.Contract.Create`, `System.Contract.Update`, `System.Contract.Call`, `System.Contract.CallEx`, `System.Contract.IsStandard` 等。
+    - 互操作服务接口：`System.Binary.Serialize`, `System.Binary.Deserialize`, `System.Contract.Create`, `System.Contract.Update`, `System.Contract.Call`, `System.Contract.CallEx`, `System.Contract.IsStandard`, `Neo.Native.Tokens.NEO`, `Neo.Native.Tokens.GAS`, `Neo.Native.Policy` 等。
 
 - 更新
     - 降低了合约执行互操作接口所对应的[系统费用](cn/合约#费用)。
