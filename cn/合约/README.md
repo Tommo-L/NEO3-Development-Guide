@@ -52,6 +52,7 @@
             - [System.Runtime.Log](#systemruntimelog)
             - [System.Runtime.Notify](#systemruntimenotify)
             - [System.Runtime.GetNotifications](#systemruntimegetnotifications)
+            - [System.Runtime.GasLeft](#systemruntimegasleft)
             - [System.Storage.GetContext](#systemstoragegetcontext)
             - [System.Storage.GetReadOnlyContext](#systemstoragegetreadonlycontext)
             - [System.Storage.Get](#systemstorageget)
@@ -86,7 +87,7 @@ NEO3中所有交易都是智能合约的调用，除了一些互操作指令和O
     - [网络资源访问](#网路资源访问)： 待补充。
     - [system 触发器](#触发器)：用于节点收到新区块后，触发原生合约的执行。
     - 互操作服务接口：`System.Binary.Serialize`, `System.Binary.Deserialize`, `System.Contract.Create`, `System.Contract.Update`, `System.Contract.Call`, `System.Contract.CallEx`, `System.Contract.IsStandard`, 
-    `System.Enumerator.Create`, `System.Enumerator.Next`, `System.Enumerator.Value`, `System.Enumerator.Concat`, `System.Iterator.Create`, `System.Iterator.Key`, `System.Iterator.Keys`, `System.Iterator.Values`, `System.Iterator.Concat`, `System.Json.Serialize`, `System.Json.Deserialize`, `System.Runtime.GetScriptContainer`, `System.Runtime.GetScriptContainer`,`System.Runtime.GetExecutingScriptHash`, `System.Runtime.GetCallingScriptHash`, `System.Runtime.GetEntryScriptHash`, `System.Runtime.GetInvocationCounter`, `System.Runtime.GetNotifications`, `System.Storage.Find`, `Neo.Native.Deploy`, `Neo.Native.Tokens.NEO`, `Neo.Native.Tokens.GAS`, `Neo.Native.Policy`, `Neo.Crypto.ECDsaVerify`, `Neo.Crypto.ECDsaCheckMultiSig`.
+    `System.Enumerator.Create`, `System.Enumerator.Next`, `System.Enumerator.Value`, `System.Enumerator.Concat`, `System.Iterator.Create`, `System.Iterator.Key`, `System.Iterator.Keys`, `System.Iterator.Values`, `System.Iterator.Concat`, `System.Json.Serialize`, `System.Json.Deserialize`, `System.Runtime.GetScriptContainer`, `System.Runtime.GetScriptContainer`,`System.Runtime.GetExecutingScriptHash`, `System.Runtime.GetCallingScriptHash`, `System.Runtime.GetEntryScriptHash`, `System.Runtime.GetInvocationCounter`, `System.Runtime.GetNotifications`, `System.Runtime.GasLeft`, `System.Storage.Find`, `Neo.Native.Deploy`, `Neo.Native.Tokens.NEO`, `Neo.Native.Tokens.GAS`, `Neo.Native.Policy`, `Neo.Crypto.ECDsaVerify`, `Neo.Crypto.ECDsaCheckMultiSig`.
 - 更新
     - 降低了合约执行互操作接口所对应的[系统费用](#费用)。
 
@@ -1360,6 +1361,12 @@ namespace MyContract
 | 功能描述 | 获取某合约执行的所有通知 |
 |--|-- |
 | 费用 (GAS) | 0.0001 |
+
+#### System.Runtime.GasLeft
+
+| 功能描述 | 获取剩余的GAS数 |
+|--|-- |
+| 费用 (GAS) | 0.00000400 |
 
 #### System.Storage.GetContext
 

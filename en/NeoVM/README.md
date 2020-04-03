@@ -1,5 +1,6 @@
 ﻿# Neo Virtual Machine
 
+
 <!-- TOC -->
 
 - [Neo Virtual Machine](#neo-virtual-machine)
@@ -40,9 +41,9 @@
             - [CALL](#call)
             - [CALL_L](#call_l)
             - [CALLA](#calla)
+            - [ABORT](#abort)
+            - [ASSERT](#assert)
             - [THROW](#throw)
-            - [THROWIF](#throwif)
-            - [THROWIFNOT](#throwifnot)
             - [RET](#ret)
             - [SYSCALL](#syscall)
         - [Stack Operation](#stack-operation)
@@ -142,7 +143,6 @@
 
 <!-- /TOC -->
 
-
 NeoVM is a lightweighted, general-purpose virtual machine that executes Neo smart contract code. The concept of virtual machine described in this paadper is in narrow sense, it's not a simulation of physical machine by operating system. Unlike VMware or Hyper-V, it's mainly aimed at specific usage.
 
 For example, in JVM or CLR of .Net, source code will be compiled into relevant bytecodes, and be executed on the corresponding virtual machine. JVM or CLR will read instructions, decode, execute and write results back. Those steps are very similar to the concepts on real physical machines. The binary instructions are still running on the physical machine. It takes instructions from memory and transmits them to the CPU through the bus, then decodes, executes and stores the results.
@@ -151,7 +151,7 @@ For example, in JVM or CLR of .Net, source code will be compiled into relevant b
 
 - ADD
     -  OpCode:  `PUSHINT`, `JMP_L`, `JMPIF_L`, `JMPIFNOT_L`, `JMPEQ`, `JMPEQ_L`, `JMPNE`, `JMPNE_L`, `JMPGT`, `JMPGT_L`, 
-    `JMPGE`, `JMPGE_L`, `JMPLT`, `JMPLT_L`, `JMPLE`, `JMPLE_L`, `CALL_L`, `CALLA`, `THROWIF`, `CLEAR`, `REVERSE3`, `REVERSE4`, `REVERSEN`, [Slot](#Slot), `NEWBUFFER`, `MEMCPY`, `NOTEQUAL`, `LE`, `GE`, `NEWARRAY0`, `NEWARRAY_T`, `NEWSTRUCT0`, `REVERSEITEMS`, `CLEARITEMS`, `ISNULL`, `ISTYPE`, `CONVERT`
+    `JMPGE`, `JMPGE_L`, `JMPLT`, `JMPLT_L`, `JMPLE`, `JMPLE_L`, `CALL_L`, `CALLA`, `ASSERT`, `ABORT`, `CLEAR`, `REVERSE3`, `REVERSE4`, `REVERSEN`, [Slot](#Slot), `NEWBUFFER`, `MEMCPY`, `NOTEQUAL`, `LE`, `GE`, `NEWARRAY0`, `NEWARRAY_T`, `NEWSTRUCT0`, `REVERSEITEMS`, `CLEARITEMS`, `ISNULL`, `ISTYPE`, `CONVERT`
 
 - DELETE
     - `PUSHF`, `PUSHBYTES1`, `PUSHBYTES75`, `APPCALL`, `TAILCALL`, `XTUCK`, `XSWAP`, `FROMALTSTACK`, `TOALTSTACK`, `DUPFROMALTSTACK`, `SIZE`, `LTE`, `GTE`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `ARRAYSIZE`, `CALL_I`, `CALL_E`, `CALL_ED`, `CALL_ET`, `CALL_EDT`
@@ -212,9 +212,12 @@ NeoVM has seven built-in data types:
 
 | Type | Description |
 |------|------|
+| Any | Null Type                                                                                    |
+| Pointer | Implemented as a context script `Script` and a instruction position `Position`                                                                        |
 | Boolean |  Implemented as two byte arrays, `TRUE` and `FALSE`.  |
 | Integer | Implemented as a `BigInteger` value.  |
-| ByteArray |Implemented as a byte array.  |
+| ByteString        | Readonly byte array, implemented as a `byte[]`                                                                   |
+| Buffer        | Readonly byte array, implemented as a buffer array `byte[]`                                                                    |
 | Array |  Implemented as a `List<StackItem>`, the `StackItem` is an abstract class, and all the built-in data types are inherited from it. |
 | Struct |  Inherited from Array, a `Clone` method is added and `Equals` method is overridden. |
 | Map | Implemented as a key-value pair `Dictionary<StackItem, StackItem>`.  |
@@ -285,11 +288,11 @@ The constant instructions mainly complete the function of pushing constants or a
 
 #### PUSHN
 
-| Instruction   | PUSH1\~PUSH16                               |
+| Instruction   | PUSH0\~PUSH16                               |
 |----------|---------------------------------------------|
-| Bytecode | 0x11\~0x20                                  |
+| Bytecode | 0x10\~0x20                                  |
 | Fee | 0.00000030 GAS                                      |
-| Function   | The number `n` is pushed onto the stack，where n is specified by 1\~16. |
+| Function   | The number `n` is pushed onto the stack，where n is specified by 0\~16. |
 
 ### Flow Control
 
@@ -459,7 +462,7 @@ It's used to control the running process of NeoVM, including jump, call and othe
 
 | Instruction   | CALL_L                                                  |
 |----------|-------------------------------------------------------|
-| Bytecode | 0x65                                                  |
+| Bytecode | 0x35                                                  |
 | Fee | 0.00022000 GAS                           |
 | Function   | Calls the function at the target address which is represented as a 4-bytes signed offset from the beginning of the current instruction. |
 
@@ -471,29 +474,29 @@ It's used to control the running process of NeoVM, including jump, call and othe
 | Fee | 0.00022000 GAS                           |
 | Function   | Pop the address of a function from the stack, and call the function. |
 
+#### ABORT
+
+| Instruction   | ABORT                                                  |
+|----------|-------------------------------------------------------|
+| Bytecode | 0x37                                                  |
+| Fee | 0.00000030 GAS                           |
+| Function   | It turns the vm state to FAULT immediately, and the exception cannot be caught. |
+
+#### ASSERT
+
+| Instruction   | ASSERT                                                       |
+|----------|------------------------------------------------------------------|
+| Bytecode | 0x38                                                             |
+| Fee | 0.00000030 GAS                                                        |
+| Function   | Pop the top value of the stack, if it is false, then exit vm execution and set vm state to FAULT. |
+
 #### THROW
 
 | Instruction   | THROW                 |
 |----------|-----------------------|
-| Bytecode | 0x37                  |
+| Bytecode | 0x3A                  |
 | Fee | 0.0000003 GAS                                                        |
 | Function   | Set the state of vm to FAULT. |
-
-#### THROWIF
-
-| Instruction   | THROWIF                                                  |
-|----------|-------------------------------------------------------|
-| Bytecode | 0x38                                                  |
-| Fee | 0.0000003 GAS                           |
-| Function   | Read a boolean value from the top of the stack, and if it's True, then set the virtual machine state to FAULT. |
-
-#### THROWIFNOT
-
-| Instruction   | THROWIFNOT                                                       |
-|----------|------------------------------------------------------------------|
-| Bytecode | 0x39                                                             |
-| Fee | 0.0000003 GAS                                                        |
-| Function   | Read a boolean value from the top of the stack, and if it's False, then set the virtual machine state to FAULT. |
 
 #### RET
 

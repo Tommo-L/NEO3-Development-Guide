@@ -39,9 +39,9 @@
             - [CALL](#call)
             - [CALL_L](#call_l)
             - [CALLA](#calla)
+            - [ABORT](#abort)
+            - [ASSERT](#assert)
             - [THROW](#throw)
-            - [THROWIF](#throwif)
-            - [THROWIFNOT](#throwifnot)
             - [RET](#ret)
             - [SYSCALL](#syscall)
         - [栈操作](#栈操作)
@@ -149,7 +149,7 @@ NeoVM 是执行 Neo 智能合约代码的虚拟机。本文所讲述的虚拟机
 
 - 新增
     - `PUSHINT`, `JMP_L`, `JMPIF_L`, `JMPIFNOT_L`, `JMPEQ`, `JMPEQ_L`, `JMPNE`, `JMPNE_L`, `JMPGT`, `JMPGT_L`, 
-    `JMPGE`, `JMPGE_L`, `JMPLT`, `JMPLT_L`, `JMPLE`, `JMPLE_L`, `CALL_L`, `CALLA`, `THROWIF`, `CLEAR`, `REVERSE3`, `REVERSE4`, `REVERSEN`, [槽操作](#槽操作), `NEWBUFFER`, `MEMCPY`, `NOTEQUAL`, `LE`, `GE`, `NEWARRAY0`, `NEWARRAY_T`, `NEWSTRUCT0`, `REVERSEITEMS`, `CLEARITEMS`, `ISNULL`, `ISTYPE`, `CONVERT`        
+    `JMPGE`, `JMPGE_L`, `JMPLT`, `JMPLT_L`, `JMPLE`, `JMPLE_L`, `CALL_L`, `CALLA`, `ASSERT`, `ABORT`, `CLEAR`, `REVERSE3`, `REVERSE4`, `REVERSEN`, [槽操作](#槽操作), `NEWBUFFER`, `MEMCPY`, `NOTEQUAL`, `LE`, `GE`, `NEWARRAY0`, `NEWARRAY_T`, `NEWSTRUCT0`, `REVERSEITEMS`, `CLEARITEMS`, `ISNULL`, `ISTYPE`, `CONVERT`        
 - 删除
     - `PUSHF`, `PUSHBYTES1`, `PUSHBYTES75`, `APPCALL`, `TAILCALL`, `XTUCK`, `XSWAP`, `FROMALTSTACK`, `TOALTSTACK`, `DUPFROMALTSTACK`, `SIZE`, `LTE`, `GTE`, `SHA1`, `SHA256`, `HASH160`, `HASH256`, `CHECKSIG`, `VERIFY`, `CHECKMULTISIG`, `ARRAYSIZE`, `CALL_I`, `CALL_E`, `CALL_ED`, `CALL_ET`, `CALL_EDT`
 ## NeoVM 架构原理
@@ -202,18 +202,21 @@ NeoVM中一共有四种存储器，调用栈（InvocationStack）、计算栈（
 
 ## 内置数据类型
 
-NeoVM内置的数据类型一共有7种：
+NeoVM内置的数据类型一共有10种：
 
 
-| 类型 | 描述 |
-|------|------|
-| Boolean |  布尔类型，实现为一个bool值和两个字节数组TRUE和FALSE。|
-| Integer | 整型，实现为一个BigInteger值。 |
-| ByteArray | 字节数组，实现为一个byte[]。  |
-| Array |  数组，实现为一个List<StackItem\>，StackItem是一个抽象类，NeoVM内置的数据类型均继承自StackItem。 |
-| Struct | 结构体，继承自Array。结构与Array相同，只是添加了Clone方法和重写了Equals方法。 |
-| Map |  实现为一个键值对为StackItem的字典类型Dictionary<StackItem, StackItem> 。 |
-| InteropInterface |  互操作接口 |
+| 类型             | 描述                                                                                           |
+| ---------------- | ---------------------------------------------------------------------------------------------- |
+| Any | Null类型                                                                                     |
+| Pointer | 指针类型，实现为一个上下文脚本`Script`和一个指令位置`Position`                                                                        |
+| Boolean          | 布尔类型，实现为一个bool值和两个字节数组`TRUE`和`FALSE`。                                          |
+| Integer          | 整型，实现为一个`BigInteger`值。                                                                 |
+| ByteString        | 只读字节数组，实现为一个`byte[]`。                                                                   |
+| Buffer        | 只读字节数组，实现为一个缓存数组`byte[]`。                                                                   |
+| Array            | 数组，实现为一个`List<StackItem>`，`StackItem`是一个抽象类，NeoVM内置的数据类型均继承自`StackItem`。 |
+| Struct           | 结构体，继承自`Array`。结构与`Array`相同，只是添加了`Clone`方法和重写了`Equals`方法。                  |
+| Map              | 实现为一个键值对为`StackItem`的字典类型`Dictionary<StackItem, StackItem>`。                       |
+| InteropInterface | 互操作接口                                                                                     |
 
 
 ```c#
@@ -277,11 +280,11 @@ NeoVM虚拟机一共实现了184个指令，类别如下：
 
 #### PUSHN
 
-| 指令：   | PUSH1\~PUSH16                               |
+| 指令：   | PUSH0\~PUSH16                               |
 |----------|---------------------------------------------|
-| 字节码： | 0x11\~0x20                                  |
+| 字节码： | 0x10\~0x20                                  |
 | 系统费： | 0.00000030 GAS                                      |
-| 功能：   | 向计算栈中压入一个整数，其数值等于1\~16。 |
+| 功能：   | 向计算栈中压入一个整数，其数值等于0\~16。 |
 
 ### 流程控制
 用于控制的虚拟机运行流程，包括跳转、调用等指令。
@@ -450,7 +453,7 @@ NeoVM虚拟机一共实现了184个指令，类别如下：
 
 | 指令：   | CALL_L                                                  |
 |----------|-------------------------------------------------------|
-| 字节码： | 0x65                                                  |
+| 字节码： | 0x35                                                  |
 | 系统费： | 0.00022000 GAS                           |
 | 功能：   | 调用指定偏移位置的函数，偏移量由本指令后的4字节指定。 |
 
@@ -462,29 +465,30 @@ NeoVM虚拟机一共实现了184个指令，类别如下：
 | 系统费： | 0.00022000 GAS                           |
 | 功能：   | 从计算栈栈顶取出函数地址，并调用该函数 |
 
+#### ABORT
+
+| 指令   | ABORT                                                      |
+| ------ | ------------------------------------------------------------ |
+| 字节码 | 0x37                                                         |
+| 系统费 | 0.00000030 GAS                                                |
+| 功能   | 将虚拟机状态立即置为FAULT，且异常不能被捕获 |
+
+#### ASSERT
+
+| 指令   | ASSERT                                                   |
+| ------ | ------------------------------------------------------------ |
+| 字节码 | 0x38                                                         |
+| 系统费 | 0.00000030 GAS                                                |
+| 功能   | 从计算栈栈顶取出元素，若该值为False，则退出虚拟机执行，并将虚拟机状态置为FAULT |
+
+
 #### THROW
 
 | 指令：   | THROW                 |
 |----------|-----------------------|
-| 字节码： | 0x37                  |
-| 系统费： | 0.0000003 GAS                                                        |
+| 字节码： | 0x3A                  |
+| 系统费： | 0.00000030 GAS                                                        |
 | 功能：   | 将虚拟机状态置为FAULT |
-
-#### THROWIF
-
-| 指令：   | THROWIF                                                  |
-|----------|-------------------------------------------------------|
-| 字节码： | 0x38                                                  |
-| 系统费： | 0.0000003 GAS                           |
-| 功能：   | 从计算栈栈顶读取一个布尔值，如果为True，则将虚拟机状态置为FAULT |
-
-#### THROWIFNOT
-
-| 指令：   | THROWIFNOT                                                       |
-|----------|------------------------------------------------------------------|
-| 字节码： | 0x39                                                             |
-| 系统费： | 0.0000003 GAS                                                        |
-| 功能：   | 从计算栈栈顶读取一个布尔值，如果为False，则将虚拟机状态置为FAULT |
 
 #### RET
 

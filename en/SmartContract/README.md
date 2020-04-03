@@ -51,6 +51,7 @@
             - [System.Runtime.Log](#systemruntimelog)
             - [System.Runtime.Notify](#systemruntimenotify)
             - [System.Runtime.GetNotifications](#systemruntimegetnotifications)
+            - [System.Runtime.GasLeft](#systemruntimegasleft)
             - [System.Storage.GetContext](#systemstoragegetcontext)
             - [System.Storage.GetReadOnlyContext](#systemstoragegetreadonlycontext)
             - [System.Storage.Get](#systemstorageget)
@@ -86,7 +87,7 @@ All transactions in NEO3 are the invocation of the smart contract. In addition t
     - [Accessing to network resources](#accessing-to-internet-resources): to be added
     - [System Trigger](#trigger): triggered when the node receives a new block and currently only triggers the execution of the native contract
     - Interop Service: `System.Binary.Serialize`, `System.Binary.Deserialize`, `System.Contract.Create`, `System.Contract.Update`, `System.Contract.Call`, `System.Contract.CallEx`, `System.Contract.IsStandard`, 
-    `System.Enumerator.Create`, `System.Enumerator.Next`, `System.Enumerator.Value`, `System.Enumerator.Concat`, `System.Iterator.Create`, `System.Iterator.Key`, `System.Iterator.Keys`, `System.Iterator.Values`, `System.Iterator.Concat`, `System.Json.Serialize`, `System.Json.Deserialize`, `System.Runtime.GetScriptContainer`, `System.Runtime.GetScriptContainer`,`System.Runtime.GetExecutingScriptHash`, `System.Runtime.GetCallingScriptHash`, `System.Runtime.GetEntryScriptHash`, `System.Runtime.GetInvocationCounter`, `System.Runtime.GetNotifications`, `System.Storage.Find`, `Neo.Native.Deploy`, `Neo.Native.Tokens.NEO`, `Neo.Native.Tokens.GAS`, `Neo.Native.Policy`, `Neo.Crypto.ECDsaVerify`, `Neo.Crypto.ECDsaCheckMultiSig`.
+    `System.Enumerator.Create`, `System.Enumerator.Next`, `System.Enumerator.Value`, `System.Enumerator.Concat`, `System.Iterator.Create`, `System.Iterator.Key`, `System.Iterator.Keys`, `System.Iterator.Values`, `System.Iterator.Concat`, `System.Json.Serialize`, `System.Json.Deserialize`, `System.Runtime.GetScriptContainer`, `System.Runtime.GetScriptContainer`,`System.Runtime.GetExecutingScriptHash`, `System.Runtime.GetCallingScriptHash`, `System.Runtime.GetEntryScriptHash`, `System.Runtime.GetInvocationCounter`, `System.Runtime.GetNotifications`, `System.Runtime.GasLeft`, `System.Storage.Find`, `Neo.Native.Deploy`, `Neo.Native.Tokens.NEO`, `Neo.Native.Tokens.GAS`, `Neo.Native.Policy`, `Neo.Crypto.ECDsaVerify`, `Neo.Crypto.ECDsaCheckMultiSig`.
     
 - UPDATE
     - Reduce the [system fee](#fees) for OpCode and interop services
@@ -1349,6 +1350,12 @@ Interop services are divided into System part and Neo part. The specific interfa
 | Description | Get notifications of a contract |
 |--|-- |
 | Fee (GAS) | 0.0001 |
+
+#### System.Runtime.GasLeft
+
+| Description | Get the unconsumed GAS |
+|--|-- |
+| Fee (GAS) | 0.00000400 |
 
 #### System.Storage.GetContext
 
